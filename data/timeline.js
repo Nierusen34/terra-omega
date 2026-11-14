@@ -193,8 +193,7 @@ window.TerraZData.timeline = [
         "category": "history",
         "sortKey": 20072002,
         "year": "20 de Fevereiro de 2007",
-        "title": "Nascimento de Tristan Queen",
-        "text": "",
+        "text": "Nascimento de Tristan Queen",
         "characters": [
           "Tristan Queen"
         ],
