@@ -73,6 +73,7 @@ Implementado no checkpoint visual de 14/11/2026:
 Implementado no checkpoint visual seguinte:
 
 - A aba **Universo** mantém a identidade editorial da **Sentinela Dourada** (tipografia, rosa/dourado, masthead e linguagem de publicação), mas compartilha o mesmo papel/fundo do Dossiê Central do Universo Oblívio.
+- **Cidade**, **Mapas**, **Transporte** e **Universo** passam a compartilhar o mesmo papel/fundo do Dossiê Central; cada aba preserva sua publicação ficcional: **O Farol de Vanguard**, **VBN**, **O Diário do Cais** e **A Sentinela Dourada**.
 - Breadcrumbs e navegação da aba Universo voltam a identificar **A Sentinela Dourada**, enquanto Terra Omega e Universo Oblívio permanecem como identidade global do site.
 - Personagens recebem ferramentas, filtros, cards e retratos com acabamento de arquivo.
 - Organizações recebem visão geral e cards com hierarquia consistente de facção/instituição.
