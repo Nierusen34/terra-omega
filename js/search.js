@@ -776,9 +776,9 @@ async function translateFandomArticle(){
     if(translator.kind === 'bergamot'){
       updateFandomTranslateButton('preparing');
       try{
-        if(localStorage.getItem('terra-z-bergamot-first-use') !== '1'){
+        if(localStorage.getItem('terra-omega-bergamot-first-use') !== '1'){
           showToast('Primeiro uso: baixando o modelo local EN→PT. Depois ele fica em cache no aparelho.','info',6000);
-          localStorage.setItem('terra-z-bergamot-first-use','1');
+          localStorage.setItem('terra-omega-bergamot-first-use','1');
         }
       }catch(error){}
     }

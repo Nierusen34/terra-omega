@@ -1,12 +1,12 @@
-# Módulos JavaScript — Terra Z
+# Módulos JavaScript — Terra Omega
 
-O Terra Z usa JavaScript puro dividido em dois níveis de carregamento: **runtime público** e **ferramentas administrativas sob demanda**.
+O Terra Omega usa JavaScript puro dividido em dois níveis de carregamento: **runtime público** e **ferramentas administrativas sob demanda**.
 
 ## Runtime público
 
 Carregado diretamente por `index.html`:
 
-1. `terra-z.js` — núcleo compartilhado (`TerraZCore` / `TerraZApp`);
+1. `terra-omega.js` — núcleo compartilhado (`TerraOmegaCore` / `TerraOmegaApp`);
 2. `js/backend-client.js` — cliente do backend;
 3. `js/admin-loader.js` — lazy loader administrativo;
 4. `js/runtime-data.js` — atualização dos dados públicos em runtime;
@@ -54,14 +54,14 @@ O objetivo é manter o boot público leve. Ferramentas de escrita não devem ser
 
 ## Namespace
 
-`terra-z.js` expõe:
+`terra-omega.js` expõe:
 
 ```js
-window.TerraZCore
-window.TerraZApp
+window.TerraOmegaCore
+window.TerraOmegaApp
 ```
 
-### TerraZCore
+### TerraOmegaCore
 
 Helpers compartilhados de UI e segurança, como:
 
@@ -71,14 +71,14 @@ Helpers compartilhados de UI e segurança, como:
 - `escapeAttr`;
 - `escapeRegex`.
 
-### TerraZApp
+### TerraOmegaApp
 
 Cada módulo publica somente a pequena API necessária para comunicação entre sistemas.
 
 Novos módulos devem preferir:
 
 ```js
-window.TerraZApp.nomeDoModulo
+window.TerraOmegaApp.nomeDoModulo
 ```
 
 Algumas funções continuam em `window` exclusivamente por compatibilidade com listeners/HTML antigos que ainda as chamam.
@@ -87,7 +87,7 @@ Algumas funções continuam em `window` exclusivamente por compatibilidade com l
 
 1. Um módulo deve ter responsabilidade principal clara.
 2. Estado interno permanece dentro do IIFE quando possível.
-3. Comunicação entre módulos ocorre por `TerraZApp`, `TerraZCore` ou eventos `terra-z:*`.
+3. Comunicação entre módulos ocorre por `TerraOmegaApp`, `TerraOmegaCore` ou eventos `terra-omega:*`.
 4. Evitar novas variáveis globais.
 5. Dados canônicos pertencem a `data/`, não aos módulos de UI.
 6. Ferramentas administrativas novas entram no lazy loader, não no boot público.

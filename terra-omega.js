@@ -14,6 +14,7 @@ window.TerraOmegaConfig = config;
 window.TerraZConfig = config;
 
 var keyPairs = [
+  ["terra-z-bergamot-first-use","terra-omega-bergamot-first-use"],
   ["terraZ_character_card_size","terraOmega_character_card_size"],
   ["terraZ_editor_session","terraOmega_editor_session"],
   ["terraZ_favorites","terraOmega_favorites"],
