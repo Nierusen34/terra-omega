@@ -1,8 +1,8 @@
 (function(){
 "use strict";
 
-window.TerraZApp=window.TerraZApp || {};
-var core=window.TerraZCore;
+window.TerraOmegaApp=window.TerraOmegaApp || {};
+var core=window.TerraOmegaCore;
 if(!core) throw new Error("Terra Omega: núcleo não carregado antes de js/graph.js");
 
 var showToast=core.showToast;
@@ -10,8 +10,8 @@ var showConfirm=core.showConfirm;
 var escapeHtml=core.escapeHtml;
 var escapeAttr=core.escapeAttr;
 
-var GRAPH_KEY="terraZ_graph_v3";
-var GRAPH_BACKUP_KEY="terraZ_graph_backup_v3";
+var GRAPH_KEY="terraOmega_graph_v3";
+var GRAPH_BACKUP_KEY="terraOmega_graph_backup_v3";
 
 var KIND={
   character:{label:"Personagem",icon:"👤",color:"#8b1a1a"},
@@ -48,8 +48,8 @@ var legacyCharacterMap={
   jonn:"J'onn J'onzz",lobo:"Lobo",riot:"Riot",kendra:"Kendra Saunders"
 };
 
-var defaultGraph=(window.TerraZData && window.TerraZData.defaultGraph) || {version:3,quadrants:[],nodes:[],edges:[]};
-var publishedGraph=(window.TerraZData && window.TerraZData.graphOverride) || null;
+var defaultGraph=(window.TerraOmegaData && window.TerraOmegaData.defaultGraph) || {version:3,quadrants:[],nodes:[],edges:[]};
+var publishedGraph=(window.TerraOmegaData && window.TerraOmegaData.graphOverride) || null;
 var graphData=null;
 var selectedNodeId="";
 var selectedEdgeId="";
@@ -61,7 +61,7 @@ var graphNucleusViewMode="only";
 var graphNucleusMenuOpen=false;
 var visibilityCapability=null;
 var graphV3Capability=null;
-var GRAPH_SCALE_KEY="terraZ_graph_scale_v1";
+var GRAPH_SCALE_KEY="terraOmega_graph_scale_v1";
 var graphScale=1.3;
 var graphPortraitPending=Object.create(null);
 
@@ -94,9 +94,9 @@ var quickRelationState={
 };
 
 function clone(value){ return JSON.parse(JSON.stringify(value)); }
-function backend(){ return window.TerraZApp && window.TerraZApp.backend; }
-function router(){ return window.TerraZApp && window.TerraZApp.router; }
-function privateContent(){ return window.TerraZApp && window.TerraZApp.privateContent; }
+function backend(){ return window.TerraOmegaApp && window.TerraOmegaApp.backend; }
+function router(){ return window.TerraOmegaApp && window.TerraOmegaApp.router; }
+function privateContent(){ return window.TerraOmegaApp && window.TerraOmegaApp.privateContent; }
 
 function slugify(value){
   var r=router();
@@ -303,7 +303,7 @@ function loadGraph(){
   if(!publishedGraph){
     try{
       var saved=localStorage.getItem(GRAPH_KEY);
-      if(!saved) saved=localStorage.getItem("terraZ_graph_v2");
+      if(!saved) saved=localStorage.getItem("terraOmega_graph_v2");
       if(saved) base=JSON.parse(saved);
     }catch(error){ console.error(error); }
   }
@@ -335,7 +335,7 @@ function storeLayoutBackup(graph){
 }
 
 function allowed(level){
-  var visibility=window.TerraZApp && window.TerraZApp.visibility;
+  var visibility=window.TerraOmegaApp && window.TerraOmegaApp.visibility;
   return !visibility || !visibility.isLevelAllowed || visibility.isLevelAllowed(normalizeVisibility(level));
 }
 
@@ -664,9 +664,9 @@ async function saveQuickRelation(){
     renderGraph();renderInspector();
     showToast("Conexão criada com sucesso.","success",4200);
 
-    var runtime=window.TerraZApp && window.TerraZApp.runtimeData;
+    var runtime=window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
     if(runtime && runtime.refresh) runtime.refresh({force:true,bust:result.sha,silent:true});
-    var publishing=window.TerraZApp && window.TerraZApp.publishing;
+    var publishing=window.TerraOmegaApp && window.TerraOmegaApp.publishing;
     if(publishing && publishing.trackDeployment && result.status_url) publishing.trackDeployment(result.status_url);
   }catch(error){
     console.error("Terra Omega quick relation:",error);
@@ -1211,17 +1211,17 @@ function svgId(value){
 }
 
 function characterMediaApi(){
-  return window.TerraZApp && window.TerraZApp.characterMedia;
+  return window.TerraOmegaApp && window.TerraOmegaApp.characterMedia;
 }
 
 function mediaLibraryApi(){
-  return window.TerraZApp && window.TerraZApp.mediaLibrary;
+  return window.TerraOmegaApp && window.TerraOmegaApp.mediaLibrary;
 }
 
 function libraryAsset(id){
   var api=mediaLibraryApi();
   if(api && api.getAsset) return api.getAsset(id);
-  var library=(window.TerraZData && window.TerraZData.mediaLibrary) || {};
+  var library=(window.TerraOmegaData && window.TerraOmegaData.mediaLibrary) || {};
   return (library.assets || []).find(function(asset){ return asset && asset.id===id; }) || null;
 }
 
@@ -1230,7 +1230,7 @@ function libraryAssetUrl(asset){
   if(api && api.assetUrl) return api.assetUrl(asset);
   if(!asset) return "";
   var src=String(asset.src || "");
-  var runtime=window.TerraZApp && window.TerraZApp.runtimeData;
+  var runtime=window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
   return runtime && runtime.mediaUrl ? runtime.mediaUrl(src) : src;
 }
 
@@ -1681,7 +1681,7 @@ function renderGraph(){
   updateGraphViewResetButton();
   updateGraphStats(nodes,edges);
   renderLegend();
-  document.dispatchEvent(new CustomEvent("terra-z:graph-rendered",{detail:{nodes:nodes.length,edges:edges.length}}));
+  document.dispatchEvent(new CustomEvent("terra-omega:graph-rendered",{detail:{nodes:nodes.length,edges:edges.length}}));
 }
 
 function updateGraphStats(nodes,edges){
@@ -2387,7 +2387,7 @@ function nucleusChecklist(selected){
 }
 
 function mediaAssetOptions(value){
-  var library=(window.TerraZData && window.TerraZData.mediaLibrary) || {};
+  var library=(window.TerraOmegaData && window.TerraOmegaData.mediaLibrary) || {};
   var list=Array.isArray(library.assets) ? library.assets : [];
   return '<option value="">Selecione um ativo…</option>'+list.map(function(asset){
     return '<option value="'+escapeAttr(asset.id)+'"'+(value===asset.id?' selected':'')+'>'+escapeHtml(asset.label || asset.id)+'</option>';
@@ -2948,7 +2948,7 @@ function renderEditorDetail(){
 
   var libraryButton=document.getElementById("geOpenMediaLibrary");
   if(libraryButton) libraryButton.addEventListener("click",function(){
-    var library=window.TerraZApp && window.TerraZApp.mediaLibrary;
+    var library=window.TerraOmegaApp && window.TerraOmegaApp.mediaLibrary;
     if(library && library.open) library.open();
   });
 
@@ -3051,7 +3051,7 @@ function autoArrangeDraft(){
 async function openGraphEditor(mode,id){
   if(!canEdit()){
     showToast("Entre como editor para administrar Relações 2.0.","warning",5000);
-    if(window.TerraZApp.publishing) window.TerraZApp.publishing.open();
+    if(window.TerraOmegaApp.publishing) window.TerraOmegaApp.publishing.open();
     return;
   }
 
@@ -3317,10 +3317,10 @@ async function saveGraphEditor(){
     renderGraph();renderInspector();
     showToast("Relações 2.0 salvas com sucesso.","success",4500);
 
-    var runtime=window.TerraZApp && window.TerraZApp.runtimeData;
+    var runtime=window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
     if(runtime && runtime.refresh) runtime.refresh({force:true,bust:result.sha,silent:true});
 
-    var publishing=window.TerraZApp && window.TerraZApp.publishing;
+    var publishing=window.TerraOmegaApp && window.TerraOmegaApp.publishing;
     if(publishing && publishing.trackDeployment && result.status_url){
       publishing.trackDeployment(result.status_url);
     }
@@ -3399,24 +3399,24 @@ function refreshGraphFromSources(){
   renderGraph();renderInspector();
 }
 
-document.addEventListener("terra-z:runtime-data-loaded",function(){
-  publishedGraph=(window.TerraZData && window.TerraZData.graphOverride) || publishedGraph;
+document.addEventListener("terra-omega:runtime-data-loaded",function(){
+  publishedGraph=(window.TerraOmegaData && window.TerraOmegaData.graphOverride) || publishedGraph;
   refreshGraphFromSources();
 });
-document.addEventListener("terra-z:private-content-loaded",refreshGraphFromSources);
-document.addEventListener("terra-z:private-content-cleared",refreshGraphFromSources);
-document.addEventListener("terra-z:visibility-changed",function(){ renderGraph();renderInspector(); });
-document.addEventListener("terra-z:auto-portrait-resolved",function(){
+document.addEventListener("terra-omega:private-content-loaded",refreshGraphFromSources);
+document.addEventListener("terra-omega:private-content-cleared",refreshGraphFromSources);
+document.addEventListener("terra-omega:visibility-changed",function(){ renderGraph();renderInspector(); });
+document.addEventListener("terra-omega:auto-portrait-resolved",function(){
   renderGraph();
   if(selectedNodeId || selectedEdgeId) renderInspector();
 });
-document.addEventListener("terra-z:media-library-changed",function(){
+document.addEventListener("terra-omega:media-library-changed",function(){
   renderGraph();
   renderInspector();
   var modal=document.getElementById("graphEditorModal");
   if(modal && modal.classList.contains("show") && editorMode==="nodes") renderEditorDetail();
 });
-document.addEventListener("terra-z:auth-changed",function(){
+document.addEventListener("terra-omega:auth-changed",function(){
   visibilityCapability=null;
   graphV3Capability=null;
   refreshGraphAccess();
@@ -3498,7 +3498,7 @@ function focusEntityInGraph(kind,value){
   return true;
 }
 
-window.TerraZApp.graph={
+window.TerraOmegaApp.graph={
   render:renderGraph,
   openEditor:openGraphEditor,
   closeEditor:closeGraphEditor,

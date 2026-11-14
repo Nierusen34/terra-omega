@@ -1,9 +1,9 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
+window.TerraOmegaApp = window.TerraOmegaApp || {};
 
-var core = window.TerraZCore;
+var core = window.TerraOmegaCore;
 if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/portrait-browser.js');
 
 var escapeHtml = core.escapeHtml;
@@ -19,10 +19,10 @@ var versions = [];
 var activeSource = 'dc';
 
 function el(id){ return document.getElementById(id); }
-function backend(){ return window.TerraZApp && window.TerraZApp.backend; }
+function backend(){ return window.TerraOmegaApp && window.TerraOmegaApp.backend; }
 
 function mediaItem(name){
-  var all = (window.TerraZData && window.TerraZData.characterMedia) || {};
+  var all = (window.TerraOmegaData && window.TerraOmegaData.characterMedia) || {};
   return all[name] || {};
 }
 
@@ -243,7 +243,7 @@ function bindVersionActions(){
     button.addEventListener('click',function(){
       var page = versions[Number(button.getAttribute('data-preview-version'))];
       var src = fullPageImage(page);
-      var nav = window.TerraZApp && window.TerraZApp.navigation;
+      var nav = window.TerraOmegaApp && window.TerraOmegaApp.navigation;
       if(src && nav && nav.openLightbox) nav.openLightbox(src,page.title || currentCharacter);
     });
   });
@@ -454,7 +454,7 @@ function renderGallery(page,files){
     button.addEventListener('click',function(){
       var file = files[Number(button.getAttribute('data-preview-image'))];
       var info = file && file.imageinfo && file.imageinfo[0];
-      var nav = window.TerraZApp && window.TerraZApp.navigation;
+      var nav = window.TerraOmegaApp && window.TerraOmegaApp.navigation;
 
       if(info && info.url && nav && nav.openLightbox){
         nav.openLightbox(info.url,file.title || page.title);
@@ -488,7 +488,7 @@ function withLocalPortraitRemoved(next){
     'Substituir imagem própria',
     'Este personagem usa uma imagem própria, que sempre tem prioridade. Para aplicar a escolha da DC Database, essa imagem própria será removida de Terra Omega. Continuar?',
     function(){
-      var manager = window.TerraZApp && window.TerraZApp.mediaManager;
+      var manager = window.TerraOmegaApp && window.TerraOmegaApp.mediaManager;
 
       if(!manager || !manager.remove){
         showToast('O gerenciador de mídia não está disponível.','error',5000);
@@ -563,12 +563,12 @@ async function saveSource(source){
       body:body
     });
 
-    window.TerraZData = window.TerraZData || {};
-    window.TerraZData.characterMedia = window.TerraZData.characterMedia || {};
-    window.TerraZData.characterMedia[currentCharacter] =
-      result.media || window.TerraZData.characterMedia[currentCharacter] || {};
+    window.TerraOmegaData = window.TerraOmegaData || {};
+    window.TerraOmegaData.characterMedia = window.TerraOmegaData.characterMedia || {};
+    window.TerraOmegaData.characterMedia[currentCharacter] =
+      result.media || window.TerraOmegaData.characterMedia[currentCharacter] || {};
 
-    var characterMedia = window.TerraZApp && window.TerraZApp.characterMedia;
+    var characterMedia = window.TerraOmegaApp && window.TerraOmegaApp.characterMedia;
 
     if(characterMedia && characterMedia.clearAutomaticCache){
       characterMedia.clearAutomaticCache(currentCharacter);
@@ -582,18 +582,18 @@ async function saveSource(source){
       characterMedia.refresh(document);
     }
 
-    document.dispatchEvent(new CustomEvent('terra-z:character-media-changed',{
+    document.dispatchEvent(new CustomEvent('terra-omega:character-media-changed',{
       detail:{character:currentCharacter,sourceChanged:true}
     }));
 
     showToast('Novo retrato aplicado a ' + currentCharacter + '.','success',4500);
 
-    var runtime = window.TerraZApp && window.TerraZApp.runtimeData;
+    var runtime = window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
     if(runtime && runtime.refresh){
       runtime.refresh({force:true,bust:result.sha,silent:true});
     }
 
-    var publishing = window.TerraZApp && window.TerraZApp.publishing;
+    var publishing = window.TerraOmegaApp && window.TerraOmegaApp.publishing;
     if(publishing && publishing.trackDeployment && result.status_url){
       publishing.trackDeployment(result.status_url);
     }
@@ -611,7 +611,7 @@ function open(name){
 
   if(!canEdit()){
     showToast('Entre como editor para escolher retratos.','warning',5000);
-    if(window.TerraZApp.publishing) window.TerraZApp.publishing.open();
+    if(window.TerraOmegaApp.publishing) window.TerraOmegaApp.publishing.open();
     return;
   }
 
@@ -883,14 +883,14 @@ function setup(){
     }
   },true);
 
-  document.addEventListener('terra-z:auth-changed',function(){
+  document.addEventListener('terra-omega:auth-changed',function(){
     if(modal && modal.classList.contains('show') && !canEdit()) close();
   });
 }
 
 setup();
 
-window.TerraZApp.portraitBrowser = {
+window.TerraOmegaApp.portraitBrowser = {
   open:open,
   close:close,
   search:runSearch

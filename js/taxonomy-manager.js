@@ -1,15 +1,15 @@
 (function(){
 "use strict";
 
-window.TerraZApp=window.TerraZApp||{};
-var core=window.TerraZCore;
-if(!core) throw new Error("Terra Z: núcleo não carregado antes de js/taxonomy-manager.js");
+window.TerraOmegaApp=window.TerraOmegaApp||{};
+var core=window.TerraOmegaCore;
+if(!core) throw new Error("Terra Omega: núcleo não carregado antes de js/taxonomy-manager.js");
 
 var showToast=core.showToast;
 var showConfirm=core.showConfirm;
 var escapeHtml=core.escapeHtml;
 var escapeAttr=core.escapeAttr;
-var foundation=window.TerraZApp.adminFoundation||{};
+var foundation=window.TerraOmegaApp.adminFoundation||{};
 
 var activeKind="nuclei";
 var draft={nuclei:[],types:[],statuses:[],tags:[]};
@@ -23,9 +23,9 @@ var DEFINITIONS={
 };
 
 function el(id){return document.getElementById(id);}
-function backend(){return window.TerraZApp&&window.TerraZApp.backend;}
+function backend(){return window.TerraOmegaApp&&window.TerraOmegaApp.backend;}
 function taxonomy(){
-  var value=window.TerraZData&&window.TerraZData.characterTaxonomy;
+  var value=window.TerraOmegaData&&window.TerraOmegaData.characterTaxonomy;
   return value&&typeof value==="object"?value:{nuclei:[],types:[],statuses:[],tags:[],characters:{}};
 }
 function canEdit(){
@@ -75,7 +75,7 @@ function countUse(kind,id){
     if(metaUses(all[name],kind,id)) names.add(name);
   });
 
-  var p=window.TerraZApp&&window.TerraZApp.privateContent;
+  var p=window.TerraOmegaApp&&window.TerraOmegaApp.privateContent;
   if(p&&p.getPrivateCharacterNames&&p.getCharacterProfile){
     p.getPrivateCharacterNames().forEach(function(name){
       var profile=p.getCharacterProfile(name);
@@ -210,19 +210,19 @@ async function save(){
       action:"update-taxonomy",
       nuclei:draft.nuclei,types:draft.types,statuses:draft.statuses,tags:draft.tags
     }});
-    window.TerraZData=window.TerraZData||{};
-    window.TerraZData.characterTaxonomy=result.taxonomy||taxonomy();
+    window.TerraOmegaData=window.TerraOmegaData||{};
+    window.TerraOmegaData.characterTaxonomy=result.taxonomy||taxonomy();
     resetDraft();render();setStatus("Taxonomias atualizadas com sucesso.","success");
-    var filters=window.TerraZApp&&window.TerraZApp.characterFilters;
+    var filters=window.TerraOmegaApp&&window.TerraOmegaApp.characterFilters;
     if(filters&&filters.refreshTaxonomy)filters.refreshTaxonomy();
-    document.dispatchEvent(new CustomEvent("terra-z:taxonomy-changed",{detail:{taxonomy:window.TerraZData.characterTaxonomy}}));
-    var runtime=window.TerraZApp&&window.TerraZApp.runtimeData;
+    document.dispatchEvent(new CustomEvent("terra-omega:taxonomy-changed",{detail:{taxonomy:window.TerraOmegaData.characterTaxonomy}}));
+    var runtime=window.TerraOmegaApp&&window.TerraOmegaApp.runtimeData;
     if(runtime&&runtime.refresh)await runtime.refresh({force:true,bust:result.sha,silent:true});
-    var publishing=window.TerraZApp&&window.TerraZApp.publishing;
+    var publishing=window.TerraOmegaApp&&window.TerraOmegaApp.publishing;
     if(publishing&&publishing.trackDeployment&&result.status_url)publishing.trackDeployment(result.status_url);
     showToast("Organização do universo atualizada.","success",4200);
   }catch(error){
-    console.error("Terra Z taxonomy manager:",error);
+    console.error("Terra Omega taxonomy manager:",error);
     setStatus(error.message||"Falha ao salvar taxonomias.","error");
     showToast(error.message||"Falha ao salvar taxonomias.","error",6000);
   }finally{
@@ -235,7 +235,7 @@ async function open(){
     showToast("Taxonomias v2 aguardam o novo checkpoint da Vercel.","warning",6500);
     return;
   }
-  var p=window.TerraZApp&&window.TerraZApp.privateContent;
+  var p=window.TerraOmegaApp&&window.TerraOmegaApp.privateContent;
   if(p&&p.load) await p.load();
   resetDraft();render();setStatus("","idle");
   var panel=el("taxonomyManagerPanel");if(panel)panel.classList.add("show");
@@ -252,12 +252,12 @@ function setup(){
   });
   var input=el("taxonomyManagerNewLabel");if(input)input.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();add();}});
   var panel=el("taxonomyManagerPanel");if(panel)panel.addEventListener("click",function(e){if(e.target===panel)close();});
-  document.addEventListener("terra-z:runtime-data-loaded",function(){if(panel&&panel.classList.contains("show")){resetDraft();render();}});
-  document.addEventListener("terra-z:auth-changed",function(){
+  document.addEventListener("terra-omega:runtime-data-loaded",function(){if(panel&&panel.classList.contains("show")){resetDraft();render();}});
+  document.addEventListener("terra-omega:auth-changed",function(){
     capability=null;
     if(panel&&panel.classList.contains("show")&&!canEdit())close();
   });
 }
 setup();
-window.TerraZApp.taxonomyManager={open:open,close:close,refresh:function(){resetDraft();render();}};
+window.TerraOmegaApp.taxonomyManager={open:open,close:close,refresh:function(){resetDraft();render();}};
 })();

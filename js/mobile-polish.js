@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
+window.TerraOmegaApp = window.TerraOmegaApp || {};
 
 var MOBILE_QUERY = '(max-width: 900px)';
 
@@ -119,8 +119,8 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 [
-  'terra-z:runtime-data-loaded',
-  'terra-z:characters-rendered'
+  'terra-omega:runtime-data-loaded',
+  'terra-omega:characters-rendered'
 ].forEach(function(name){
   document.addEventListener(name,function(){ enhanceTables(document); });
 });
@@ -131,7 +131,7 @@ window.addEventListener('resize',function(){
   resizeTimer = setTimeout(apply,120);
 },{passive:true});
 
-window.TerraZApp.mobilePolish = {
+window.TerraOmegaApp.mobilePolish = {
   apply:apply,
   enhanceTables:enhanceTables
 };

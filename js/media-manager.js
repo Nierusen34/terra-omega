@@ -1,15 +1,15 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/media-manager.js');
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/media-manager.js');
 
 var showToast = core.showToast;
 var showConfirm = core.showConfirm;
 
-function backend(){ return window.TerraZApp && window.TerraZApp.backend; }
-function publishing(){ return window.TerraZApp && window.TerraZApp.publishing; }
+function backend(){ return window.TerraOmegaApp && window.TerraOmegaApp.backend; }
+function publishing(){ return window.TerraOmegaApp && window.TerraOmegaApp.publishing; }
 
 function canUpload(){
   var b = backend();
@@ -46,11 +46,11 @@ async function upload(character,file){
     }
   });
 
-  window.TerraZData = window.TerraZData || {};
-  window.TerraZData.characterMedia = window.TerraZData.characterMedia || {};
-  window.TerraZData.characterMedia[character] = Object.assign(
+  window.TerraOmegaData = window.TerraOmegaData || {};
+  window.TerraOmegaData.characterMedia = window.TerraOmegaData.characterMedia || {};
+  window.TerraOmegaData.characterMedia[character] = Object.assign(
     {},
-    window.TerraZData.characterMedia[character] || {},
+    window.TerraOmegaData.characterMedia[character] || {},
     {
       src:result.path,
       alt:character,
@@ -58,17 +58,17 @@ async function upload(character,file){
     }
   );
 
-  if(window.TerraZApp.characterMedia && window.TerraZApp.characterMedia.refresh){
-    window.TerraZApp.characterMedia.refresh(document);
+  if(window.TerraOmegaApp.characterMedia && window.TerraOmegaApp.characterMedia.refresh){
+    window.TerraOmegaApp.characterMedia.refresh(document);
   }
 
-  document.dispatchEvent(new CustomEvent('terra-z:character-media-changed',{
+  document.dispatchEvent(new CustomEvent('terra-omega:character-media-changed',{
     detail:{character:character,hasPortrait:true}
   }));
 
   showToast('Retrato salvo com sucesso.','success',4500);
 
-  var runtime = window.TerraZApp && window.TerraZApp.runtimeData;
+  var runtime = window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
   if(runtime && runtime.refresh) runtime.refresh({force:true,bust:result.sha,silent:true});
 
   var p = publishing();
@@ -89,27 +89,27 @@ async function remove(character){
     body:{character:character}
   });
 
-  window.TerraZData = window.TerraZData || {};
-  window.TerraZData.characterMedia = window.TerraZData.characterMedia || {};
+  window.TerraOmegaData = window.TerraOmegaData || {};
+  window.TerraOmegaData.characterMedia = window.TerraOmegaData.characterMedia || {};
 
-  var current = window.TerraZData.characterMedia[character] || {};
-  window.TerraZData.characterMedia[character] = Object.assign({},current,{
+  var current = window.TerraOmegaData.characterMedia[character] || {};
+  window.TerraOmegaData.characterMedia[character] = Object.assign({},current,{
     src:'',
     source:current.auto ? 'auto' : 'local',
     credit:''
   });
 
-  if(window.TerraZApp.characterMedia && window.TerraZApp.characterMedia.refresh){
-    window.TerraZApp.characterMedia.refresh(document);
+  if(window.TerraOmegaApp.characterMedia && window.TerraOmegaApp.characterMedia.refresh){
+    window.TerraOmegaApp.characterMedia.refresh(document);
   }
 
-  document.dispatchEvent(new CustomEvent('terra-z:character-media-changed',{
+  document.dispatchEvent(new CustomEvent('terra-omega:character-media-changed',{
     detail:{character:character,hasPortrait:false}
   }));
 
   showToast('Retrato removido com sucesso.','success',4200);
 
-  var runtime = window.TerraZApp && window.TerraZApp.runtimeData;
+  var runtime = window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
   if(runtime && runtime.refresh) runtime.refresh({force:true,bust:result.sha,silent:true});
 
   var p = publishing();
@@ -123,11 +123,11 @@ async function remove(character){
 function requestRemove(character){
   if(!canUpload()){
     showToast('Entre como editor para remover retratos.','warning',5000);
-    if(window.TerraZApp.publishing) window.TerraZApp.publishing.open();
+    if(window.TerraOmegaApp.publishing) window.TerraOmegaApp.publishing.open();
     return;
   }
 
-  var media = (window.TerraZData && window.TerraZData.characterMedia) || {};
+  var media = (window.TerraOmegaData && window.TerraOmegaData.characterMedia) || {};
   var item = media[character] || {};
   var hasAutomatic = !!(item.auto && (
     (item.auto.provider === 'dc-fandom' && item.auto.wikiTitle) ||
@@ -153,7 +153,7 @@ function requestRemove(character){
 function choose(character){
   if(!canUpload()){
     showToast('Entre como editor no painel Publicar para enviar retratos.','warning',5000);
-    if(window.TerraZApp.publishing) window.TerraZApp.publishing.open();
+    if(window.TerraOmegaApp.publishing) window.TerraOmegaApp.publishing.open();
     return;
   }
 
@@ -183,7 +183,7 @@ function choose(character){
   input.click();
 }
 
-window.TerraZApp.mediaManager = {
+window.TerraOmegaApp.mediaManager = {
   canUpload:canUpload,
   choose:choose,
   upload:upload,

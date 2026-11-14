@@ -1,12 +1,12 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
+window.TerraOmegaApp = window.TerraOmegaApp || {};
 
 var cache = null;
 var appliedSnapshots = Object.create(null);
 
-function backend(){ return window.TerraZApp && window.TerraZApp.backend; }
+function backend(){ return window.TerraOmegaApp && window.TerraOmegaApp.backend; }
 
 function clone(value){
   if(value === undefined) return undefined;
@@ -14,11 +14,11 @@ function clone(value){
 }
 
 function ensureRuntimeContainers(){
-  window.TerraZData = window.TerraZData || {};
-  window.TerraZData.characterOverrides = window.TerraZData.characterOverrides || {};
-  window.TerraZData.characterTaxonomy = window.TerraZData.characterTaxonomy || {nuclei:[],types:[],statuses:[],characters:{}};
-  window.TerraZData.characterTaxonomy.characters = window.TerraZData.characterTaxonomy.characters || {};
-  window.TerraZData.characterMedia = window.TerraZData.characterMedia || {};
+  window.TerraOmegaData = window.TerraOmegaData || {};
+  window.TerraOmegaData.characterOverrides = window.TerraOmegaData.characterOverrides || {};
+  window.TerraOmegaData.characterTaxonomy = window.TerraOmegaData.characterTaxonomy || {nuclei:[],types:[],statuses:[],characters:{}};
+  window.TerraOmegaData.characterTaxonomy.characters = window.TerraOmegaData.characterTaxonomy.characters || {};
+  window.TerraOmegaData.characterMedia = window.TerraOmegaData.characterMedia || {};
 }
 
 function restorePrivateProfiles(silent){
@@ -27,20 +27,20 @@ function restorePrivateProfiles(silent){
   Object.keys(appliedSnapshots).forEach(function(name){
     var snapshot=appliedSnapshots[name];
 
-    if(snapshot.overrideHad) window.TerraZData.characterOverrides[name]=snapshot.override;
-    else delete window.TerraZData.characterOverrides[name];
+    if(snapshot.overrideHad) window.TerraOmegaData.characterOverrides[name]=snapshot.override;
+    else delete window.TerraOmegaData.characterOverrides[name];
 
-    if(snapshot.metaHad) window.TerraZData.characterTaxonomy.characters[name]=snapshot.meta;
-    else delete window.TerraZData.characterTaxonomy.characters[name];
+    if(snapshot.metaHad) window.TerraOmegaData.characterTaxonomy.characters[name]=snapshot.meta;
+    else delete window.TerraOmegaData.characterTaxonomy.characters[name];
 
-    if(snapshot.mediaHad) window.TerraZData.characterMedia[name]=snapshot.media;
-    else delete window.TerraZData.characterMedia[name];
+    if(snapshot.mediaHad) window.TerraOmegaData.characterMedia[name]=snapshot.media;
+    else delete window.TerraOmegaData.characterMedia[name];
   });
 
   appliedSnapshots=Object.create(null);
 
   if(!silent){
-    document.dispatchEvent(new CustomEvent('terra-z:private-profiles-changed',{
+    document.dispatchEvent(new CustomEvent('terra-omega:private-profiles-changed',{
       detail:{names:[],cleared:true}
     }));
   }
@@ -72,12 +72,12 @@ function applyPrivateProfiles(options){
     if(!profile && !masterSections.length) return;
 
     appliedSnapshots[name]={
-      overrideHad:Object.prototype.hasOwnProperty.call(window.TerraZData.characterOverrides,name),
-      override:clone(window.TerraZData.characterOverrides[name]),
-      metaHad:Object.prototype.hasOwnProperty.call(window.TerraZData.characterTaxonomy.characters,name),
-      meta:clone(window.TerraZData.characterTaxonomy.characters[name]),
-      mediaHad:Object.prototype.hasOwnProperty.call(window.TerraZData.characterMedia,name),
-      media:clone(window.TerraZData.characterMedia[name])
+      overrideHad:Object.prototype.hasOwnProperty.call(window.TerraOmegaData.characterOverrides,name),
+      override:clone(window.TerraOmegaData.characterOverrides[name]),
+      metaHad:Object.prototype.hasOwnProperty.call(window.TerraOmegaData.characterTaxonomy.characters,name),
+      meta:clone(window.TerraOmegaData.characterTaxonomy.characters[name]),
+      mediaHad:Object.prototype.hasOwnProperty.call(window.TerraOmegaData.characterMedia,name),
+      media:clone(window.TerraOmegaData.characterMedia[name])
     };
 
     var hasPublicOverride=appliedSnapshots[name].overrideHad &&
@@ -91,7 +91,7 @@ function applyPrivateProfiles(options){
     if(profile && !publicCharacterCollision){
       // Personagem realmente privado: não existe uma ficha pública canônica com
       // o mesmo nome, então o perfil autenticado continua sendo Mestre.
-      window.TerraZData.characterOverrides[name]={
+      window.TerraOmegaData.characterOverrides[name]={
         eyebrow:String(profile.eyebrow || ''),
         sections:Array.isArray(profile.sections) ? clone(profile.sections) : [],
         card:profile.card && typeof profile.card === 'object' ? clone(profile.card) : {},
@@ -99,7 +99,7 @@ function applyPrivateProfiles(options){
         privateRuntime:true
       };
 
-      window.TerraZData.characterTaxonomy.characters[name]={
+      window.TerraOmegaData.characterTaxonomy.characters[name]={
         ...(profile.meta && typeof profile.meta === 'object' ? clone(profile.meta) : {}),
         visibility:'master'
       };
@@ -113,12 +113,12 @@ function applyPrivateProfiles(options){
         profileMedia.source='private';
       }
 
-      window.TerraZData.characterMedia[name]=profileMedia;
+      window.TerraOmegaData.characterMedia[name]=profileMedia;
     }else{
       // A ficha pública é canônica. Um profile antigo no cofre com o mesmo nome
       // não pode transformar o personagem inteiro em Mestre (caso Camila Vargas).
       // Conteúdo privado legado continua disponível apenas como seções Mestre.
-      var publicOverride=window.TerraZData.characterOverrides[name];
+      var publicOverride=window.TerraOmegaData.characterOverrides[name];
       if(publicOverride && typeof publicOverride === 'object'){
         var publicSections=Array.isArray(publicOverride.sections)
           ? clone(publicOverride.sections).filter(function(section){
@@ -168,14 +168,14 @@ function applyPrivateProfiles(options){
           };
         }).concat(privateSections);
 
-        window.TerraZData.characterOverrides[name]={...publicOverride,sections:combined};
+        window.TerraOmegaData.characterOverrides[name]={...publicOverride,sections:combined};
       }
     }
 
     applied.push(name);
   });
 
-  document.dispatchEvent(new CustomEvent('terra-z:private-profiles-changed',{
+  document.dispatchEvent(new CustomEvent('terra-omega:private-profiles-changed',{
     detail:{names:applied,cleared:false}
   }));
 }
@@ -189,10 +189,10 @@ async function load(){
     var result = await b.request('/api/master',{method:'GET'});
     cache = result.content || {};
     applyPrivateProfiles();
-    document.dispatchEvent(new CustomEvent('terra-z:private-content-loaded'));
+    document.dispatchEvent(new CustomEvent('terra-omega:private-content-loaded'));
     return cache;
   } catch(err){
-    if(err.status !== 503) console.error('Terra Z private content:',err);
+    if(err.status !== 503) console.error('Terra Omega private content:',err);
     return null;
   }
 }
@@ -259,13 +259,13 @@ function getMasterState(){
 function setMasterState(master){
   if(!cache) cache = {};
   cache.master = master || emptyMasterState();
-  document.dispatchEvent(new CustomEvent('terra-z:private-content-loaded'));
+  document.dispatchEvent(new CustomEvent('terra-omega:private-content-loaded'));
 }
 
 function clear(){
   restorePrivateProfiles(false);
   cache = null;
-  document.dispatchEvent(new CustomEvent('terra-z:private-content-cleared'));
+  document.dispatchEvent(new CustomEvent('terra-omega:private-content-cleared'));
 }
 
 
@@ -279,28 +279,28 @@ function setCharacterSecrets(name,secrets){
   if(!cache.characters || typeof cache.characters !== 'object') cache.characters = {};
   cache.characters[name] = cache.characters[name] || {};
   cache.characters[name].secrets = Array.isArray(secrets) ? secrets.slice() : [];
-  document.dispatchEvent(new CustomEvent('terra-z:private-content-loaded'));
+  document.dispatchEvent(new CustomEvent('terra-omega:private-content-loaded'));
 }
 
 
 function removeCharacter(name){
   if(!cache || !cache.characters || typeof cache.characters !== 'object') return;
   delete cache.characters[name];
-  document.dispatchEvent(new CustomEvent('terra-z:private-content-loaded'));
+  document.dispatchEvent(new CustomEvent('terra-omega:private-content-loaded'));
 }
 
-document.addEventListener('terra-z:auth-changed',function(){
+document.addEventListener('terra-omega:auth-changed',function(){
   clear();
   load();
 });
 
-document.addEventListener('terra-z:runtime-data-loaded',function(){
+document.addEventListener('terra-omega:runtime-data-loaded',function(){
   if(cache) applyPrivateProfiles({freshBase:true});
 });
 
 if(backend() && backend().isAuthenticated()) load();
 
-window.TerraZApp.privateContent = {
+window.TerraOmegaApp.privateContent = {
   load:load,
   clear:clear,
   reload:reload,

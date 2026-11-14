@@ -1,9 +1,9 @@
 (function(){
 "use strict";
 
-window.TerraZApp=window.TerraZApp || {};
-var core=window.TerraZCore;
-if(!core) throw new Error("Terra Z: núcleo não carregado antes de js/organization-editor.js");
+window.TerraOmegaApp=window.TerraOmegaApp || {};
+var core=window.TerraOmegaCore;
+if(!core) throw new Error("Terra Omega: núcleo não carregado antes de js/organization-editor.js");
 
 var showToast=core.showToast;
 var showConfirm=core.showConfirm;
@@ -11,10 +11,10 @@ var currentId="";
 var creating=false;
 
 function el(id){return document.getElementById(id);}
-function backend(){return window.TerraZApp && window.TerraZApp.backend;}
+function backend(){return window.TerraOmegaApp && window.TerraOmegaApp.backend;}
 function organizations(){
-  return Array.isArray(window.TerraZData && window.TerraZData.organizations)
-    ? window.TerraZData.organizations
+  return Array.isArray(window.TerraOmegaData && window.TerraOmegaData.organizations)
+    ? window.TerraOmegaData.organizations
     : [];
 }
 function byId(id){return organizations().find(function(item){return item&&item.id===id;})||null;}
@@ -148,15 +148,15 @@ function renderList(){
 function refreshPublic(){
   var root=el("organizationsData");
   if(root) root.innerHTML="";
-  if(window.TerraZApp.dataRenderer && window.TerraZApp.dataRenderer.render) window.TerraZApp.dataRenderer.render();
-  if(window.TerraZApp.commandPalette && window.TerraZApp.commandPalette.refresh) window.TerraZApp.commandPalette.refresh();
-  document.dispatchEvent(new CustomEvent("terra-z:organizations-changed"));
+  if(window.TerraOmegaApp.dataRenderer && window.TerraOmegaApp.dataRenderer.render) window.TerraOmegaApp.dataRenderer.render();
+  if(window.TerraOmegaApp.commandPalette && window.TerraOmegaApp.commandPalette.refresh) window.TerraOmegaApp.commandPalette.refresh();
+  document.dispatchEvent(new CustomEvent("terra-omega:organizations-changed"));
 }
 function open(id){
   var b=backend();
   if(!b||!b.isAuthenticated||!b.isAuthenticated()){
     showToast("Entre como editor para editar organizações.","warning",4500);
-    if(window.TerraZApp.adminLoader&&window.TerraZApp.adminLoader.open) window.TerraZApp.adminLoader.open();
+    if(window.TerraOmegaApp.adminLoader&&window.TerraOmegaApp.adminLoader.open) window.TerraOmegaApp.adminLoader.open();
     return;
   }
   creating=false;
@@ -217,7 +217,7 @@ async function save(){
       method:"POST",
       body:{id:creating?"":currentId,organization:item}
     });
-    if(Array.isArray(result.organizations)) window.TerraZData.organizations=result.organizations;
+    if(Array.isArray(result.organizations)) window.TerraOmegaData.organizations=result.organizations;
     currentId=result.organization&&result.organization.id?result.organization.id:item.id;
     creating=false;
     renderList();
@@ -225,8 +225,8 @@ async function save(){
     refreshPublic();
     status("Organização salva no GitHub.","success");
     showToast("Organização salva com sucesso.","success",4200);
-    if(window.TerraZApp.publishing&&window.TerraZApp.publishing.trackDeployment&&result.status_url){
-      window.TerraZApp.publishing.trackDeployment(result.status_url);
+    if(window.TerraOmegaApp.publishing&&window.TerraOmegaApp.publishing.trackDeployment&&result.status_url){
+      window.TerraOmegaApp.publishing.trackDeployment(result.status_url);
     }
   }catch(error){
     console.error(error);
@@ -246,15 +246,15 @@ function remove(){
       status("Excluindo organização…","working");
       try{
         var result=await backend().request("/api/organization",{method:"DELETE",body:{id:currentId}});
-        if(Array.isArray(result.organizations)) window.TerraZData.organizations=result.organizations;
+        if(Array.isArray(result.organizations)) window.TerraOmegaData.organizations=result.organizations;
         currentId="";
         creating=true;
         renderList();
         fill(emptyOrganization());
         refreshPublic();
         showToast("Organização excluída.","success",4200);
-        if(window.TerraZApp.publishing&&window.TerraZApp.publishing.trackDeployment&&result.status_url){
-          window.TerraZApp.publishing.trackDeployment(result.status_url);
+        if(window.TerraOmegaApp.publishing&&window.TerraOmegaApp.publishing.trackDeployment&&result.status_url){
+          window.TerraOmegaApp.publishing.trackDeployment(result.status_url);
         }
       }catch(error){
         console.error(error);
@@ -291,5 +291,5 @@ function setup(){
   });
 }
 setup();
-window.TerraZApp.organizationEditor={open:open,openManager:openManager,openCreate:openCreate,close:close,save:save};
+window.TerraOmegaApp.organizationEditor={open:open,openManager:openManager,openCreate:openCreate,close:close,save:save};
 })();

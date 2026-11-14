@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
+window.TerraOmegaApp = window.TerraOmegaApp || {};
 
 function sourceCards(){
   return Array.from(document.querySelectorAll('#sub-tz-personagens .card[data-ficha]'));
@@ -14,7 +14,7 @@ function sourceCardFor(name){
 }
 
 function currentTaxonomy(){
-  return (window.TerraZData && window.TerraZData.characterTaxonomy) || {characters:{}};
+  return (window.TerraOmegaData && window.TerraOmegaData.characterTaxonomy) || {characters:{}};
 }
 
 function isEligible(name, meta){
@@ -24,7 +24,7 @@ function isEligible(name, meta){
   // sai automaticamente da seleção viva da Capa.
   if(meta.status === 'dead') return false;
 
-  var characters = window.TerraZApp && window.TerraZApp.characters;
+  var characters = window.TerraOmegaApp && window.TerraOmegaApp.characters;
   if(!characters || !characters.get || !characters.get(name)) return false;
   if(characters.isDeleted && characters.isDeleted(name)) return false;
   if(characters.canView && !characters.canView(name)) return false;
@@ -46,7 +46,7 @@ function navigateToCharacters(name){
       source.scrollIntoView({block:'center',behavior:'auto'});
     }
 
-    var characters = window.TerraZApp && window.TerraZApp.characters;
+    var characters = window.TerraOmegaApp && window.TerraOmegaApp.characters;
     if(characters && characters.open) characters.open(name);
   }, 360);
 }
@@ -100,8 +100,8 @@ function render(){
 
     grid.appendChild(clone);
 
-    if(window.TerraZApp.characterMedia && window.TerraZApp.characterMedia.hydrate){
-      window.TerraZApp.characterMedia.hydrate(clone);
+    if(window.TerraOmegaApp.characterMedia && window.TerraOmegaApp.characterMedia.hydrate){
+      window.TerraOmegaApp.characterMedia.hydrate(clone);
     }
   });
 
@@ -115,17 +115,17 @@ if(allCharactersBtn){
   });
 }
 
-document.addEventListener('terra-z:characters-rendered',render);
-document.addEventListener('terra-z:runtime-data-loaded',function(){
+document.addEventListener('terra-omega:characters-rendered',render);
+document.addEventListener('terra-omega:runtime-data-loaded',function(){
   window.setTimeout(render,0);
 });
-document.addEventListener('terra-z:auth-changed',function(){
+document.addEventListener('terra-omega:auth-changed',function(){
   window.setTimeout(render,0);
 });
 
 render();
 
-window.TerraZApp.homeProtagonists = {
+window.TerraOmegaApp.homeProtagonists = {
   render:render,
   open:navigateToCharacters
 };

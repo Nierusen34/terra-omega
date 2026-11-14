@@ -1,16 +1,16 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/session-editor.js');
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/session-editor.js');
 
 var showToast = core.showToast;
 var showConfirm = core.showConfirm;
 var currentId = '';
 
 function el(id){ return document.getElementById(id); }
-function backend(){ return window.TerraZApp && window.TerraZApp.backend; }
+function backend(){ return window.TerraOmegaApp && window.TerraOmegaApp.backend; }
 
 var visibilityCapability=null;
 
@@ -69,11 +69,11 @@ function open(id){
   var b = backend();
   if(!b || !b.isConfigured() || !b.isAuthenticated()){
     showToast('Entre como editor no painel Publicar para registrar sessões.','warning',5000);
-    if(window.TerraZApp.publishing) window.TerraZApp.publishing.open();
+    if(window.TerraOmegaApp.publishing) window.TerraOmegaApp.publishing.open();
     return;
   }
-  var manager = window.TerraZApp && window.TerraZApp.sessions;
-  var all = manager && manager.getAll ? manager.getAll() : ((window.TerraZData && window.TerraZData.sessions) || []);
+  var manager = window.TerraOmegaApp && window.TerraOmegaApp.sessions;
+  var all = manager && manager.getAll ? manager.getAll() : ((window.TerraOmegaData && window.TerraOmegaData.sessions) || []);
   var session = id ? all.find(function(item){ return item && item.id === id; }) : null;
   fill(session || {});
 
@@ -148,7 +148,7 @@ async function save(){
       body:{session:sessionPayload}
     });
 
-    var manager = window.TerraZApp && window.TerraZApp.sessions;
+    var manager = window.TerraOmegaApp && window.TerraOmegaApp.sessions;
     if(manager && manager.upsert && result.session) manager.upsert(result.session);
 
     close();
@@ -158,10 +158,10 @@ async function save(){
       4500
     );
 
-    var runtime = window.TerraZApp && window.TerraZApp.runtimeData;
+    var runtime = window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
     if(runtime && runtime.refresh) runtime.refresh({force:true,bust:result.sha,silent:true});
 
-    var publishing = window.TerraZApp && window.TerraZApp.publishing;
+    var publishing = window.TerraOmegaApp && window.TerraOmegaApp.publishing;
     if(publishing && publishing.trackDeployment && result.status_url){
       publishing.trackDeployment(result.status_url);
     }
@@ -177,7 +177,7 @@ async function save(){
 function requestDelete(){
   if(!currentId) return;
 
-  var manager = window.TerraZApp && window.TerraZApp.sessions;
+  var manager = window.TerraOmegaApp && window.TerraOmegaApp.sessions;
   var all = manager && manager.getAll ? manager.getAll() : [];
   var session = all.find(function(item){ return item && item.id === currentId; });
   var title = session && session.title ? session.title : 'esta sessão';
@@ -216,21 +216,21 @@ async function performDelete(){
       body:{session:{id:id}}
     });
 
-    var manager = window.TerraZApp && window.TerraZApp.sessions;
+    var manager = window.TerraOmegaApp && window.TerraOmegaApp.sessions;
     if(manager && manager.remove) manager.remove(result.deleted || id);
 
     close();
     showToast('Sessão apagada com sucesso.','success',4500);
 
-    var runtime = window.TerraZApp && window.TerraZApp.runtimeData;
+    var runtime = window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
     if(runtime && runtime.refresh) runtime.refresh({force:true,bust:result.sha,silent:true});
 
-    var publishing = window.TerraZApp && window.TerraZApp.publishing;
+    var publishing = window.TerraOmegaApp && window.TerraOmegaApp.publishing;
     if(publishing && publishing.trackDeployment && result.status_url){
       publishing.trackDeployment(result.status_url);
     }
   } catch(error){
-    console.error('Terra Z session delete:',error);
+    console.error('Terra Omega session delete:',error);
     showToast(error.message || 'Falha ao apagar a sessão.','error',6000);
   } finally {
     if(deleteBtn){
@@ -256,7 +256,7 @@ function setup(){
   if(deleteBtn) deleteBtn.addEventListener('click',requestDelete);
   if(panel) panel.addEventListener('click',function(e){ if(e.target === panel) close(); });
 
-  document.addEventListener('terra-z:auth-changed',function(){
+  document.addEventListener('terra-omega:auth-changed',function(){
     visibilityCapability=null;
     refresh();
   });
@@ -265,7 +265,7 @@ function setup(){
 
 setup();
 
-window.TerraZApp.sessionEditor = {
+window.TerraOmegaApp.sessionEditor = {
   open:open,
   openDraft:openDraft,
   close:close,
