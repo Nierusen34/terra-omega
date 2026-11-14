@@ -131,8 +131,8 @@ function renderTimelineData(){
     html += '<div class="timeline">';
     group.items.forEach(function(item){
       html += '<div class="timeline-item">';
-      html += '<div' + editAttrs(item.edit.year) + ' class="timeline-year">' + escapeHtml(item.year) + '</div>';
-      html += '<div' + editAttrs(item.edit.text) + ' class="timeline-text">' + escapeHtml(item.text) + '</div>';
+      var edit=item && item.edit ? item.edit : {};\n      html += '<div' + editAttrs(edit.year) + ' class="timeline-year">' + escapeHtml(item.year) + '</div>';
+      html += '<div' + editAttrs(edit.text) + ' class="timeline-text">' + escapeHtml(item.text) + '</div>';
       html += '</div>';
     });
     html += '</div>';
