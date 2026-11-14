@@ -1173,11 +1173,11 @@ function checkPhase15(){
   }
 
   if(!health.includes("table_mode_v1:true")) fail("Etapa 15 · backend não anuncia table_mode_v1.");
-  if(pkg.version!=="1.4.0") fail("Terra Omega não foi promovido para package version 1.4.0.");
-  if(!html.includes("v1.4.0") || !nav.includes("v1.4.0") || !bootstrap.includes("Universo Oblívio · Terra Omega · v1.4.0")) fail("Identidade visual ainda não anuncia v1.4.0 em todos os pontos de entrada.");
+  if(pkg.version!=="2.0.0") fail("Terra Omega não foi promovido para package version 2.0.0.");
+  if(!html.includes("v2.0") || !nav.includes("v2.0") || !bootstrap.includes("Universo Oblívio · Terra Omega · v2.0")) fail("Identidade visual ainda não anuncia v2.0 em todos os pontos de entrada.");
   if(!exists("docs/PHASE_15.md")) fail("docs/PHASE_15.md ausente.");
 
-  pass("Etapa 15 · Modo Mesa e Universo Oblívio / Terra Omega v1.4.0 validados");
+  pass("Etapa 15 · Modo Mesa e Universo Oblívio / Terra Omega v2.0 validados");
 }
 
 function checkEncryptedFiles(){
