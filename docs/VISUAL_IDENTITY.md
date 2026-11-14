@@ -66,3 +66,18 @@ Implementado no checkpoint visual de 14/11/2026:
 - Capa com moldura de arquivo visual, selo legível em telas menores e legenda integrada.
 - Rodapé inicial identificado como Arquivo Central.
 - Rodapé global atualiza apenas seu texto, preservando o histórico de versões e seus controles.
+
+
+## Passo 2 — seções internas
+
+Implementado no checkpoint visual seguinte:
+
+- A aba **Universo** deixa de herdar a identidade da Sentinela Dourada e passa a usar o tema central do Universo Oblívio.
+- Breadcrumbs e navegação lateral identificam o arquivo de Terra Omega, preservando os jornais ficcionais apenas nas áreas em que eles realmente são a fonte editorial.
+- Personagens recebem ferramentas, filtros, cards e retratos com acabamento de arquivo.
+- Organizações recebem visão geral e cards com hierarquia consistente de facção/instituição.
+- Linha do Tempo mantém suas categorias funcionais, mas passa a usar a mesma linguagem de cronologia documental do dossiê central.
+- Diário da Campanha recebe toolbar, entradas e indicadores visualmente integrados ao arquivo.
+- Sala do Mestre e Conteúdo Mestre usam identidade própria do Universo Oblívio mesmo quando abertos a partir de outra seção do site.
+- Editores de personagem, organização e sessão recebem as variáveis visuais do arquivo central sem alterar sua lógica.
+- O cache PWA é atualizado para `terra-z-pwa-v1.4.0-20261114-oblivio-ui2`.
