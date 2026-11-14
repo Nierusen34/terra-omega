@@ -52,3 +52,17 @@ A antiga marca neon VB é específica de Vanguard Bay; não deve representar o U
 O tema principal da capa usa `data-paper="oblivio"`. Os temas editoriais das demais áreas são preservados para não descaracterizar as publicações ficcionais existentes.
 
 O Service Worker inclui o emblema no cache central e recebe um novo identificador de cache sempre que os arquivos visuais centrais mudarem.
+
+
+## Passo 1 — identidade global e capa
+
+Implementado no checkpoint visual de 14/11/2026:
+
+- Cabeçalho global com emblema do Universo Oblívio e identificação de Terra Omega.
+- Masthead contextual: a capa usa “Dossiê Central”; as seções de publicação mantêm Farol, VBN, Diário do Cais e Sentinela.
+- Metadados do masthead acompanham a publicação ativa, sem reutilizar a edição do Farol em todas as áreas.
+- Tipografia do arquivo central padronizada em Cormorant Garamond, Lora e Share Tech Mono.
+- Barra de ferramentas e busca com cantos, foco e cores alinhados ao sistema editorial.
+- Capa com moldura de arquivo visual, selo legível em telas menores e legenda integrada.
+- Rodapé inicial identificado como Arquivo Central.
+- Rodapé global atualiza apenas seu texto, preservando o histórico de versões e seus controles.

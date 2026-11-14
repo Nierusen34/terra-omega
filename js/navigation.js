@@ -9,11 +9,51 @@ var showToast = core.showToast;
 
 /* ===== CONFIGURAÇÃO DOS JORNAIS ===== */
 var paperConfig = {
-  "farol":{title:'O Farol de <span class="city">Vanguard</span>',subtitle:'"A verdade ilumina a Cidade Dourada"',section:'Dossiê Completo Universo',footer:'O FAROL DE VANGUARD · Dossiê Especial · v1.4.0 · Jan 2027'},
-  "oblivio":{title:'O Farol de <span class="city">Vanguard</span>',subtitle:'"A verdade ilumina a Cidade Dourada"',section:'Arquivo Central · Terra Omega',footer:'UNIVERSO OBLÍVIO · TERRA OMEGA · Dossiê Central · v1.4.0 · Jan 2027'},
-  "vbn":{title:'VBN · Vanguard <span class="city">Broadcasting</span>',subtitle:'🔴 AO VIVO · Informação em Tempo Real',section:'VBN Mapas · Transmissão Contínua',footer:'VBN – VANGUARD BROADCASTING NETWORK · Dossiê Especial · Jan 2027'},
-  "cais":{title:'O Diário do <span class="city">Cais</span>',subtitle:'"O jornal do povo trabalhador"',section:'Caderno Cotidiano · Transporte & Serviço',footer:'O DIÁRIO DO CAIS · Caderno de Serviço · v1.4.0 · Jan 2027'},
-  "sentinela":{title:'A Sentinela <span class="city">Dourada</span>',subtitle:'🔥 Nada escapa do nosso radar',section:'🔥 EXCLUSIVO · O que ninguém quer que você saiba',footer:'A SENTINELA DOURADA · Edição Especial · v1.4.0 · Jan 2027'}
+  "oblivio":{
+    title:'Dossiê <span class="city">Central</span>',
+    subtitle:'Terra Omega · Arquivo central do Universo Oblívio',
+    section:'Arquivo de Continuidade · Terra Omega',
+    footer:'UNIVERSO OBLÍVIO · TERRA OMEGA · DOSSIÊ CENTRAL · v1.4.0 · JAN 2027',
+    edition:'✦ Arquivo Central ✦',
+    context:'Terra Omega · Universo Oblívio',
+    issue:'Continuidade Narrativa'
+  },
+  "farol":{
+    title:'O Farol de <span class="city">Vanguard</span>',
+    subtitle:'"A verdade ilumina a Cidade Dourada"',
+    section:'Dossiê Completo Universo',
+    footer:'O FAROL DE VANGUARD · Dossiê Especial · v1.4.0 · Jan 2027',
+    edition:'✦ Edição Especial ✦',
+    context:'Fundação 1882 · Cidade Dourada',
+    issue:'Nº 145 · Jan/2027'
+  },
+  "vbn":{
+    title:'VBN · Vanguard <span class="city">Broadcasting</span>',
+    subtitle:'🔴 AO VIVO · Informação em Tempo Real',
+    section:'VBN Mapas · Transmissão Contínua',
+    footer:'VBN – VANGUARD BROADCASTING NETWORK · Dossiê Especial · Jan 2027',
+    edition:'Vanguard Broadcasting Network',
+    context:'Informação em Tempo Real',
+    issue:'Mapas · Terra Omega'
+  },
+  "cais":{
+    title:'O Diário do <span class="city">Cais</span>',
+    subtitle:'"O jornal do povo trabalhador"',
+    section:'Caderno Cotidiano · Transporte & Serviço',
+    footer:'O DIÁRIO DO CAIS · Caderno de Serviço · v1.4.0 · Jan 2027',
+    edition:'Caderno Cotidiano',
+    context:'O jornal do povo trabalhador',
+    issue:'Transporte & Serviço'
+  },
+  "sentinela":{
+    title:'A Sentinela <span class="city">Dourada</span>',
+    subtitle:'🔥 Nada escapa do nosso radar',
+    section:'🔥 EXCLUSIVO · O que ninguém quer que você saiba',
+    footer:'A SENTINELA DOURADA · Edição Especial · Jan 2027',
+    edition:'Edição Especial',
+    context:'A Sentinela Dourada',
+    issue:'Nada escapa do nosso radar'
+  }
 };
 
 function applyPaper(k){
@@ -24,11 +64,19 @@ function applyPaper(k){
   var ms = document.getElementById('mastSubtitle');
   var msec = document.getElementById('mastSection');
   var ft = document.getElementById('footerText');
+  var edition = document.getElementById('mastEdition');
+  var context = document.getElementById('mastContext');
+  var issue = document.getElementById('mastIssue');
   if(mt) mt.innerHTML = c.title;
   if(ms) ms.textContent = c.subtitle;
   if(msec) msec.textContent = c.section;
   if(ft) ft.textContent = c.footer;
+  if(edition) edition.textContent = c.edition || '';
+  if(context) context.textContent = c.context || '';
+  if(issue) issue.textContent = c.issue || '';
 }
+
+applyPaper(document.documentElement.getAttribute('data-paper') || 'oblivio');
 
 
 

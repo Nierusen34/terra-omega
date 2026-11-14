@@ -14,6 +14,8 @@ Arquivos:
 - `images/pwa/icon-maskable.svg` — versão adaptável com área segura.
 - `images/brand/oblivio-emblem.svg` — emblema transparente usado no cabeçalho do dossiê.
 
+A barra superior do aplicativo e a tela inicial usam o mesmo grafite ameixa e dourado envelhecido da identidade global. O nome curto instalado permanece **Terra Omega**, enquanto **Universo Oblívio** identifica a continuidade narrativa.
+
 ## Instalação
 
 O manifesto usa caminhos relativos para funcionar tanto na Vercel, na raiz do domínio, quanto no GitHub Pages em `/terra-z/`.
@@ -41,7 +43,7 @@ O token do editor continua em `sessionStorage`, fora do Service Worker.
 
 Uma nova versão não assume o controle silenciosamente durante uma sessão. Quando um Service Worker novo fica aguardando, a interface mostra **Nova versão do Terra Omega disponível**. O usuário decide quando clicar em **Atualizar**.
 
-O identificador do cache deve ser atualizado sempre que o núcleo visual ou os arquivos estáticos centrais mudarem, garantindo que instalações existentes recebam a nova identidade.
+O identificador do cache deve ser atualizado sempre que o núcleo visual ou os arquivos estáticos centrais mudarem, garantindo que instalações existentes recebam a nova identidade. O checkpoint visual global de 14/11/2026 usa o identificador `terra-z-pwa-v1.4.0-20261114-oblivio-ui1`.
 
 ## Offline e administração
 

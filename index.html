@@ -44,13 +44,13 @@
 </div>
 
 <div class="masthead">
-<div class="mast-top">
-<span>✦ Edição Especial ✦</span>
-<span>Fundação 1882 · Cidade Dourada</span>
-<span>Nº 145 · Jan/2027</span>
+<div class="mast-top" aria-label="Identificação da publicação">
+<span id="mastEdition">✦ Arquivo Central ✦</span>
+<span id="mastContext">Terra Omega · Universo Oblívio</span>
+<span id="mastIssue">Continuidade Narrativa</span>
 </div>
-<h1 data-edit-id="tz-0001" data-legacy-edit-id="e_0" class="mast-title" id="mastTitle">O Farol de <span class="city">Vanguard</span></h1>
-<div data-edit-id="tz-0002" data-legacy-edit-id="e_1" class="mast-subtitle" id="mastSubtitle">"A verdade ilumina a Cidade Dourada"</div>
+<h1 class="mast-title" id="mastTitle">Dossiê <span class="city">Central</span></h1>
+<div class="mast-subtitle" id="mastSubtitle">Terra Omega · Arquivo central do Universo Oblívio</div>
 <div class="mast-rules">
 <span class="rule"></span><span class="dot"></span>
 <span id="mastSection">Arquivo Central · Terra Omega</span>
@@ -933,15 +933,17 @@
 <!-- CAPA -->
 <div class="tab-content active" id="tab-home">
 <div class="home-hero">
-<div class="home-badge">✦ Dossiê Central · Universo Oblívio ✦</div>
+<div class="home-badge">✦ Realidade Alternativa · Multiverso DC ✦</div>
 <h2 data-edit-id="tz-0003" data-legacy-edit-id="e_2">Bem-vindo à <span class="accent">Terra Omega</span></h2>
 <p data-edit-id="tz-0004" data-legacy-edit-id="e_3" class="lead">Onde os heróis vão para desaparecer — e os monstros vão para se esconder. Terra Omega é o mundo central do Universo Oblívio: uma realidade alternativa do multiverso DC onde a nova geração enfrenta os fantasmas de seus pais.</p>
 <div class="dateline">Vanguard Bay · Flórida · Janeiro de 2027</div>
 </div>
-<figure class="photo home-dossier-visual">
+<figure class="photo home-dossier-visual" aria-label="Capa visual do dossiê de Terra Omega">
+<div class="home-dossier-frame">
 <span class="home-dossier-stamp">ARQUIVO VISUAL 01 · TERRA OMEGA</span>
-<img data-src="images/editorial/dossie-terra-omega.webp" alt="Painel investigativo de Terra Omega e do Universo Oblívio com mapas, arquivos, fotografias, ameaças ocultas e referências ao legado heroico" loading="eager" decoding="async" fetchpriority="high" onerror="this.parentElement.classList.add('missing')">
-<figcaption>Dossiê de Terra Omega — cenário central do Universo Oblívio, marcado por legado, crise, mistério e vigilância.</figcaption>
+<img data-src="images/editorial/dossie-terra-omega.webp" alt="Painel investigativo de Terra Omega e do Universo Oblívio com mapas, arquivos, fotografias, ameaças ocultas e referências ao legado heroico" loading="eager" decoding="async" fetchpriority="high" onerror="this.parentElement.parentElement.classList.add('missing')">
+</div>
+<figcaption>Dossiê visual de Terra Omega — cenário central do Universo Oblívio, marcado por legado, crise, mistério e vigilância.</figcaption>
 </figure>
 
 <section class="home-protagonists" id="homeProtagonists" aria-labelledby="homeProtagonistsTitle" hidden>
@@ -998,9 +1000,9 @@
 <div class="event-item"><span class="date">2019</span><div data-edit-id="tz-0034" data-legacy-edit-id="e_33" class="title">A Tragédia de Gotham</div><div data-edit-id="tz-0035" data-legacy-edit-id="e_34" class="desc">Bárbara baleada. Jason morto. A família Wayne nunca mais foi a mesma.</div></div>
 </div>
 </div>
-<div class="page-footer">
-O FAROL DE VANGUARD · Dossiê Especial do Universo Oblívio · Terra Omega · v1.4.0
-<div class="seal">Confidencial</div>
+<div class="page-footer home-footer">
+UNIVERSO OBLÍVIO · TERRA OMEGA · DOSSIÊ CENTRAL · v1.4.0 · JAN 2027
+<div class="seal">Arquivo Central</div>
 </div>
 </div>
 
@@ -1540,8 +1542,8 @@ O FAROL DE VANGUARD · Dossiê Especial do Universo Oblívio · Terra Omega · v
 </div>
 </div>
 
-<div class="page-footer" id="footerText">
-UNIVERSO OBLÍVIO · TERRA OMEGA · Dossiê Central · v1.4.0 · Jan 2027
+<div class="page-footer" id="globalFooter">
+<span id="footerText">UNIVERSO OBLÍVIO · TERRA OMEGA · DOSSIÊ CENTRAL · v1.4.0 · JAN 2027</span>
 <div class="changelog">
 <button class="changelog-toggle" onclick="toggleChangelog()">📜 Histórico de Versões</button>
 <div class="changelog-content" id="changelogContent">
