@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION="terra-omega-pwa-v1.4.0-20261114-migration2-icons";
+const VERSION="terra-omega-pwa-v1.4.0-20261114-content-render-fix";
 const CORE_CACHE=VERSION+"-core";
 const IMAGE_CACHE=VERSION+"-images";
 const TRANSLATION_CACHE=VERSION+"-translation";
