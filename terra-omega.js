@@ -170,22 +170,22 @@ function escapeHtml(s){
 function escapeAttr(s){ return String(s).replace(/"/g, '&quot;'); }
 function escapeRegex(s){ return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
-window.TerraZCore = {
+window.TerraOmegaCore = {
   showToast: showToast,
   showConfirm: showConfirm,
   escapeHtml: escapeHtml,
   escapeAttr: escapeAttr,
   escapeRegex: escapeRegex
 };
-window.TerraZApp = window.TerraZApp || {};
-// Namespace novo durante a migração; o legado TerraZ permanece como alias de compatibilidade.
-window.TerraOmegaCore = window.TerraZCore;
-window.TerraOmegaApp = window.TerraZApp;
+// Terra Omega é o namespace canônico; TerraZ fica somente como alias de compatibilidade.
+window.TerraZCore = window.TerraOmegaCore;
+window.TerraOmegaApp = window.TerraOmegaApp || window.TerraZApp || {};
+window.TerraZApp = window.TerraOmegaApp;
 window.showToast = showToast;
 
 /* ===== ATALHOS GLOBAIS ===== */
 document.addEventListener('keydown', function(e){
-  var app = window.TerraZApp || {};
+  var app = window.TerraOmegaApp || {};
 
   if((e.ctrlKey || e.metaKey) && e.key === 's'){
     e.preventDefault();
