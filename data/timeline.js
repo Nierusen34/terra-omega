@@ -341,6 +341,21 @@ window.TerraZData.timeline = [
         "visibility": "public"
       },
       {
+        "id": "27-de-fevereiro-de-2023-tristan-queen-se-muda-para-gotham-uma-semana-apos-seu-aniversario-a-contrago",
+        "category": "history",
+        "sortKey": 20232702,
+        "year": "27 de Fevereiro de 2023",
+        "text": "Tristan Queen se muda para Gotham uma semana após seu aniversário a contragosto de Oliver.",
+        "characters": [
+          "Tristan Queen"
+        ],
+        "locations": [
+          "Gotham City"
+        ],
+        "teams": [],
+        "visibility": "public"
+      },
+      {
         "year": "2024",
         "text": "Jovens Titãs mudam para \"Titãs\".",
         "edit": {
