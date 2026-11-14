@@ -1,14 +1,22 @@
-# Terra Z — PWA
+# Terra Omega — PWA
 
 ## Objetivo
 
-O Terra Z pode ser instalado como aplicativo mantendo o conteúdo público disponível durante quedas de conexão, sem transformar o cache do navegador em armazenamento de conteúdo Mestre.
+Terra Omega pode ser instalado como aplicativo mantendo o conteúdo público disponível durante quedas de conexão, sem transformar o cache do navegador em armazenamento de conteúdo Mestre.
+
+## Identidade visual
+
+O PWA usa o emblema do **Universo Oblívio**: uma insígnia ômega/eclipsada em dourado envelhecido sobre fundo grafite ameixa. O ícone substitui a antiga marca neon VB, que era específica de Vanguard Bay e não representava o universo inteiro.
+
+Arquivos:
+- `images/pwa/icon-192.webp` — ícone raster para instalação e Apple Touch Icon.
+- `images/pwa/icon-512.svg` — ícone vetorial principal.
+- `images/pwa/icon-maskable.svg` — versão adaptável com área segura.
+- `images/brand/oblivio-emblem.svg` — emblema transparente usado no cabeçalho do dossiê.
 
 ## Instalação
 
 O manifesto usa caminhos relativos para funcionar tanto na Vercel, na raiz do domínio, quanto no GitHub Pages em `/terra-z/`.
-
-A identidade visual do app usa o ícone Vanguard Bay aprovado, com monograma VB, pôr do sol neon, skyline e palmeiras.
 
 ## Estratégia offline
 
@@ -31,7 +39,9 @@ O token do editor continua em `sessionStorage`, fora do Service Worker.
 
 ## Atualizações
 
-Uma nova versão não assume o controle silenciosamente durante uma sessão. Quando um Service Worker novo fica aguardando, a interface mostra **Nova versão do Terra Z disponível**. O usuário decide quando clicar em **Atualizar**.
+Uma nova versão não assume o controle silenciosamente durante uma sessão. Quando um Service Worker novo fica aguardando, a interface mostra **Nova versão do Terra Omega disponível**. O usuário decide quando clicar em **Atualizar**.
+
+O identificador do cache deve ser atualizado sempre que o núcleo visual ou os arquivos estáticos centrais mudarem, garantindo que instalações existentes recebam a nova identidade.
 
 ## Offline e administração
 

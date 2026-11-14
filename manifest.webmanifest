@@ -8,8 +8,8 @@
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#170b2d",
-  "theme_color": "#281044",
+  "background_color": "#171419",
+  "theme_color": "#1b171d",
   "categories": [
     "games",
     "entertainment"

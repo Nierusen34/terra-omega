@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION="terra-z-pwa-v1.4.0-20261114-omega";
+const VERSION="terra-z-pwa-v1.4.0-20261114-oblivio";
 const CORE_CACHE=VERSION+"-core";
 const IMAGE_CACHE=VERSION+"-images";
 const TRANSLATION_CACHE=VERSION+"-translation";
@@ -10,6 +10,7 @@ const CORE_ASSETS=[
   "./",
   "./index.html",
   "./manifest.webmanifest",
+  "./images/brand/oblivio-emblem.svg",
   "./terra-z.css",
   "./terra-z.js",
   "./config.js",

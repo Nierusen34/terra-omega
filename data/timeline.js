@@ -384,7 +384,23 @@ window.TerraZData.timeline = [
         "category": "history",
         "sortKey": 20240308,
         "year": "8 de Março de 2024",
-        "text": "Tristan Queen conhece Misty Kilgore, aprendiz de Zatanna Zatara e começam um relacionamento um mês depois.",
+        "text": "Tristan Queen conhece Misty Kilgore, aprendiz de Zatanna Zatara.",
+        "characters": [
+          "Tristan Queen",
+          "Misty Kilgore"
+        ],
+        "locations": [
+          "Gotham City"
+        ],
+        "teams": [],
+        "visibility": "public"
+      },
+      {
+        "id": "11-de-abril-de-2024-tristan-queen-e-misty-kilgore-comecam-relacionamento",
+        "category": "history",
+        "sortKey": 20240411,
+        "year": "11 de Abril de 2024",
+        "text": "Tristan Queen e Misty Kilgore começam um relacionamento, após se conhecerem em 8 de março de 2024.",
         "characters": [
           "Tristan Queen",
           "Misty Kilgore"

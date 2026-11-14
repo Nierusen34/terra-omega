@@ -1,17 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Vanguard Bay">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Universo Oblívio, ícone adaptável">
 <defs>
-  <radialGradient id="bg"><stop stop-color="#ee198c"/><stop offset=".58" stop-color="#711a89"/><stop offset="1" stop-color="#1c0c3a"/></radialGradient>
-  <linearGradient id="v" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c5ffff"/><stop offset=".5" stop-color="#16d5ff"/><stop offset="1" stop-color="#234bd7"/></linearGradient>
-  <linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset=".25" stop-color="#ff65d1"/><stop offset=".72" stop-color="#ff0b8d"/><stop offset="1" stop-color="#9e29e7"/></linearGradient>
-  <filter id="g"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <radialGradient id="bg" cx="50%" cy="38%" r="75%"><stop offset="0" stop-color="#302632"/><stop offset=".7" stop-color="#1b171d"/><stop offset="1" stop-color="#100e13"/></radialGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2c58b"/><stop offset=".48" stop-color="#b28a50"/><stop offset="1" stop-color="#78562f"/></linearGradient>
+  <linearGradient id="wine" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a04a59"/><stop offset="1" stop-color="#59202f"/></linearGradient>
 </defs>
-<rect width="512" height="512" fill="url(#bg)"/>
-<circle cx="256" cy="191" r="91" fill="#ffc858" opacity=".94"/>
-<g fill="#350c48">
-  <rect x="82" y="337" width="48" height="75"/><rect x="139" y="312" width="38" height="100"/><rect x="185" y="348" width="37" height="64"/>
-  <rect x="297" y="342" width="40" height="70"/><rect x="346" y="309" width="44" height="103"/><rect x="399" y="345" width="34" height="67"/>
-</g>
-<path d="M132 159 213 358 294 159h-51l-30 88-30-88Z" fill="url(#v)" stroke="#b8ffff" stroke-width="9" stroke-linejoin="round" filter="url(#g)"/>
-<text x="238" y="330" font-family="Arial Black,Arial,sans-serif" font-size="184" font-style="italic" font-weight="900" fill="url(#b)" stroke="#fff" stroke-width="3" paint-order="stroke" filter="url(#g)">B</text>
-<path d="M0 412c93-18 173-9 256 7 90 17 170 13 256-8v101H0Z" fill="#16092e"/>
+<rect width="512" height="512" rx="0" fill="url(#bg)"/>
+<circle cx="256" cy="256" r="174" fill="none" stroke="url(#gold)" stroke-width="5"/>
+<circle cx="256" cy="256" r="155" fill="none" stroke="#b28a50" stroke-opacity=".42" stroke-width="1.5"/>
+<ellipse cx="256" cy="256" rx="174" ry="66" transform="rotate(-34 256 256)" fill="none" stroke="url(#gold)" stroke-width="4" stroke-opacity=".78"/>
+<path d="M150 337V253c0-79 43-126 106-126s106 47 106 126v84h39v38H111v-38h39Zm40 0h132v-83c0-53-25-84-66-84s-66 31-66 84v83Z" fill="url(#gold)" fill-rule="evenodd"/>
+<circle cx="386" cy="123" r="12" fill="url(#wine)" stroke="#d6b87d" stroke-width="3"/>
+<path d="M256 72v18M256 422v18M72 256h18M422 256h18" stroke="#b28a50" stroke-width="4" stroke-linecap="round" opacity=".7"/>
+<path d="m256 91 7 14-7 14-7-14 7-14Z" fill="#d7b879"/>
 </svg>
