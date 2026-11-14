@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION="terra-omega-pwa-v1.4.0-20261114-content-render-fix";
+const VERSION="terra-omega-pwa-v2.0.0-20261114-map-callout";
 const CORE_CACHE=VERSION+"-core";
 const IMAGE_CACHE=VERSION+"-images";
 const TRANSLATION_CACHE=VERSION+"-translation";
