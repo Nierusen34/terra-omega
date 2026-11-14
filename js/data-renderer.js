@@ -131,7 +131,8 @@ function renderTimelineData(){
     html += '<div class="timeline">';
     group.items.forEach(function(item){
       html += '<div class="timeline-item">';
-      var edit=item && item.edit ? item.edit : {};\n      html += '<div' + editAttrs(edit.year) + ' class="timeline-year">' + escapeHtml(item.year) + '</div>';
+      var edit=item && item.edit ? item.edit : {};
+      html += '<div' + editAttrs(edit.year) + ' class="timeline-year">' + escapeHtml(item.year) + '</div>';
       html += '<div' + editAttrs(edit.text) + ' class="timeline-text">' + escapeHtml(item.text) + '</div>';
       html += '</div>';
     });
@@ -367,13 +368,18 @@ function syncOrganizationEditControls(){
 document.addEventListener('terra-omega:auth-changed',syncOrganizationEditControls);
 document.addEventListener('terra-omega:admin-modules-loaded',syncOrganizationEditControls);
 
+function safeRender(label,fn){
+  try{ fn(); }
+  catch(error){ console.error('Terra Omega: falha ao renderizar '+label+'.',error); }
+}
+
 function renderCanonicalData(){
-  renderDistrictData();
-  renderAnnualEventsData();
-  renderTimelineData();
-  renderExternalCitiesData();
-  renderTeamsData();
-  renderOrganizationsData();
+  safeRender('Distritos',renderDistrictData);
+  safeRender('Eventos anuais',renderAnnualEventsData);
+  safeRender('Linha do Tempo',renderTimelineData);
+  safeRender('Cidades Externas',renderExternalCitiesData);
+  safeRender('Equipes',renderTeamsData);
+  safeRender('Organizações',renderOrganizationsData);
 }
 
 // Scripts são carregados com defer; neste ponto o HTML já foi analisado.
