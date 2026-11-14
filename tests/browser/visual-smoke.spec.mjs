@@ -25,9 +25,9 @@ test("boot público permanece leve e navegável",async({page},testInfo)=>{
   await expect(page.locator("#adminPanelBtn")).toBeVisible();
 
   await expect.poll(async()=>page.evaluate(()=>Boolean(
-    window.TerraZApp &&
-    window.TerraZApp.router &&
-    window.TerraZApp.adminLoader
+    window.TerraOmegaApp &&
+    window.TerraOmegaApp.router &&
+    window.TerraOmegaApp.adminLoader
   ))).toBe(true);
 
   expect(await page.locator("script[data-admin-module]").count()).toBe(0);
@@ -90,7 +90,7 @@ test("todas as rotas principais e deep links essenciais permanecem navegáveis",
   const errors=watchRuntimeErrors(page);
 
   await page.goto("/#/capa",{waitUntil:"domcontentloaded"});
-  await expect.poll(async()=>page.evaluate(()=>Boolean(window.TerraZApp&&window.TerraZApp.router))).toBe(true);
+  await expect.poll(async()=>page.evaluate(()=>Boolean(window.TerraOmegaApp&&window.TerraOmegaApp.router))).toBe(true);
 
   const routes=[
     ["/capa","#tab-home.active"],
@@ -115,9 +115,9 @@ test("todas as rotas principais e deep links essenciais permanecem navegáveis",
   ];
 
   for(const [route,selector] of routes){
-    await page.evaluate(r=>window.TerraZApp.router.go(r),route);
+    await page.evaluate(r=>window.TerraOmegaApp.router.go(r),route);
     await expect(page.locator(selector)).toBeVisible();
-    await expect.poll(()=>page.evaluate(()=>window.TerraZApp.router.current())).toBe(route);
+    await expect.poll(()=>page.evaluate(()=>window.TerraOmegaApp.router.current())).toBe(route);
   }
 
   const deepLinks=[
@@ -130,8 +130,8 @@ test("todas as rotas principais e deep links essenciais permanecem navegáveis",
   ];
 
   for(const route of deepLinks){
-    await page.evaluate(r=>window.TerraZApp.router.go(r),route);
-    await expect.poll(()=>page.evaluate(()=>window.TerraZApp.router.current())).toBe(route);
+    await page.evaluate(r=>window.TerraOmegaApp.router.go(r),route);
+    await expect.poll(()=>page.evaluate(()=>window.TerraOmegaApp.router.current())).toBe(route);
   }
 
   await expect(page.locator("#timelineData [data-timeline-id=\"encontro-em-vanguard-bay\"]")).toBeVisible();
@@ -142,7 +142,7 @@ test("Busca Global 2.0 encontra entidades e navega por Ctrl+K",async({page})=>{
   const errors=watchRuntimeErrors(page);
 
   await page.goto("/#/capa",{waitUntil:"domcontentloaded"});
-  await expect.poll(()=>page.evaluate(()=>Boolean(window.TerraZApp&&window.TerraZApp.commandPalette))).toBe(true);
+  await expect.poll(()=>page.evaluate(()=>Boolean(window.TerraOmegaApp&&window.TerraOmegaApp.commandPalette))).toBe(true);
 
   await page.keyboard.press("Control+K");
   await expect(page.locator("#commandPalette")).toHaveClass(/show/);
@@ -153,7 +153,7 @@ test("Busca Global 2.0 encontra entidades e navega por Ctrl+K",async({page})=>{
   expect(count).toBeGreaterThan(0);
 
   await page.locator("#commandPaletteResults .command-palette-result").first().click();
-  await expect.poll(()=>page.evaluate(()=>window.TerraZApp.router.current())).toContain("/cidades/gotham-city");
+  await expect.poll(()=>page.evaluate(()=>window.TerraOmegaApp.router.current())).toContain("/cidades/gotham-city");
 
   await expectNoPageErrors(errors);
 });
@@ -209,7 +209,7 @@ test("DC Wiki oferece Card, Grafo e Card + Grafo ao editor",async({page})=>{
   await page.goto("/#/capa",{waitUntil:"domcontentloaded"});
 
   await page.evaluate(async()=>{
-    const app=window.TerraZApp;
+    const app=window.TerraOmegaApp;
     app.backend.isConfigured=()=>true;
     app.backend.isAuthenticated=()=>true;
     app.backend.health=async()=>({
@@ -224,7 +224,7 @@ test("DC Wiki oferece Card, Grafo e Card + Grafo ao editor",async({page})=>{
       secure_master_relations:true
     });
     await app.adminLoader.load();
-    document.dispatchEvent(new CustomEvent("terra-z:auth-changed",{detail:{authenticated:true}}));
+    document.dispatchEvent(new CustomEvent("terra-omega:auth-changed",{detail:{authenticated:true}}));
   });
 
   await page.locator("#searchInput").fill("Zatanna");
@@ -251,9 +251,9 @@ test("DC Wiki oferece Card, Grafo e Card + Grafo ao editor",async({page})=>{
   await expect(page.locator('[data-character-editor-jump="characterEditorOrganizationSection"]')).toBeEnabled();
   await page.locator('[data-character-editor-jump="characterEditorOrganizationSection"]').click();
   await expect(page.locator("#characterEditorOrganizationSection")).toBeVisible();
-  await page.evaluate(()=>window.TerraZApp.characterEditor.close());
+  await page.evaluate(()=>window.TerraOmegaApp.characterEditor.close());
 
-  await page.evaluate(()=>window.TerraZApp.search.openImport("Zatanna Zatara (Prime Earth)"));
+  await page.evaluate(()=>window.TerraOmegaApp.search.openImport("Zatanna Zatara (Prime Earth)"));
   await expect(page.locator("#dcImportPanel")).toHaveClass(/show/);
   await page.locator("#dcImportGraphBtn").click();
 
@@ -261,10 +261,10 @@ test("DC Wiki oferece Card, Grafo e Card + Grafo ao editor",async({page})=>{
   await expect(page.locator("#graphEditorModal")).toHaveClass(/graph-editor-layout-mode/);
   await expect(page.locator("#graphLayoutSvg .ge-layout-node-label").filter({hasText:"Zatanna Zatara"})).toHaveCount(1);
 
-  await page.evaluate(()=>window.TerraZApp.graph.closeEditor());
+  await page.evaluate(()=>window.TerraOmegaApp.graph.closeEditor());
 
   await page.evaluate(async()=>{
-    const app=window.TerraZApp;
+    const app=window.TerraOmegaApp;
     window.__dcImportRequests=[];
     app.backend.request=async(path,options)=>{
       window.__dcImportRequests.push({path,body:options&&options.body});
@@ -296,7 +296,7 @@ test("DC Wiki oferece Card, Grafo e Card + Grafo ao editor",async({page})=>{
   expect(mediaRequest.body.provider).toBe("dc-fandom");
   expect(mediaRequest.body.wikiTitle).toBe("Zatanna Zatara (Prime Earth)");
 
-  await page.evaluate(()=>window.TerraZApp.graph.closeEditor());
+  await page.evaluate(()=>window.TerraOmegaApp.graph.closeEditor());
   await expectNoPageErrors(errors);
 });
 
@@ -328,8 +328,8 @@ test("editor conecta duas entidades diretamente pelo mapa",async({page})=>{
   await page.goto("/#/universo/relacoes",{waitUntil:"domcontentloaded"});
 
   const pair=await page.evaluate(async()=>{
-    await window.TerraZApp.adminLoader.load();
-    const app=window.TerraZApp;
+    await window.TerraOmegaApp.adminLoader.load();
+    const app=window.TerraOmegaApp;
     app.backend.isConfigured=()=>true;
     app.backend.isAuthenticated=()=>true;
     app.backend.health=async()=>({
@@ -357,7 +357,7 @@ test("editor conecta duas entidades diretamente pelo mapa",async({page})=>{
     };
     if(app.runtimeData) app.runtimeData.refresh=async()=>({ok:true});
     if(app.privateContent) app.privateContent.reload=async()=>null;
-    document.dispatchEvent(new CustomEvent("terra-z:auth-changed",{detail:{authenticated:true}}));
+    document.dispatchEvent(new CustomEvent("terra-omega:auth-changed",{detail:{authenticated:true}}));
 
     const data=app.graph.getData();
     const nodes=data.nodes.filter(n=>n.visibility==="public").slice(0,40);
@@ -421,7 +421,7 @@ test("grafo oferece foco, tela cheia, ajuste e pan zoom expansível",async({page
   await expect(graph).toBeVisible();
 
   const focusId=await page.evaluate(()=>{
-    const data=window.TerraZApp.graph.getData();
+    const data=window.TerraOmegaApp.graph.getData();
     const visible=data.nodes.filter(n=>n.visibility==="public");
     return visible.find(node=>{
       const connected=new Set([node.id]);
@@ -447,10 +447,10 @@ test("grafo oferece foco, tela cheia, ajuste e pan zoom expansível",async({page
     el.value="180";
     el.dispatchEvent(new Event("input",{bubbles:true}));
   });
-  await expect.poll(()=>page.evaluate(()=>window.TerraZApp.graph.getViewport().scale)).toBe(1.8);
+  await expect.poll(()=>page.evaluate(()=>window.TerraOmegaApp.graph.getViewport().scale)).toBe(1.8);
 
   await page.locator("#graphFitBtn").click();
-  await expect.poll(()=>page.evaluate(()=>window.TerraZApp.graph.getViewport().scale)).toBe(1);
+  await expect.poll(()=>page.evaluate(()=>window.TerraOmegaApp.graph.getViewport().scale)).toBe(1);
 
   if(testInfo.project.name.includes("mobile")){
     await expect(page.locator(".graph-wrap-v2")).not.toHaveClass(/mobile-scroll-region/);
@@ -481,7 +481,7 @@ test("grafo oferece foco, tela cheia, ajuste e pan zoom expansível",async({page
     el.value="150";
     el.dispatchEvent(new Event("input",{bubbles:true}));
   });
-  const centerBefore=await page.evaluate(()=>window.TerraZApp.graph.getViewport().center);
+  const centerBefore=await page.evaluate(()=>window.TerraOmegaApp.graph.getViewport().center);
 
   await page.evaluate(()=>{
     const svg=document.getElementById("graphSvg");
@@ -498,7 +498,7 @@ test("grafo oferece foco, tela cheia, ajuste e pan zoom expansível",async({page
     fire("pointerup",sx+90,sy+55,0);
   });
 
-  const centerAfter=await page.evaluate(()=>window.TerraZApp.graph.getViewport().center);
+  const centerAfter=await page.evaluate(()=>window.TerraOmegaApp.graph.getViewport().center);
   expect(Math.abs(centerAfter.x-centerBefore.x)+Math.abs(centerAfter.y-centerBefore.y)).toBeGreaterThan(5);
 
   await page.locator("#graphFullscreenBtn").click();
@@ -518,10 +518,10 @@ test("visitante pode mover nós localmente e restaurar o layout publicado",async
   await expect(node.locator(".graph-node-drag-hit")).toHaveCSS("touch-action","none");
 
   const canonicalBefore=await page.evaluate(()=>{
-    const n=window.TerraZApp.graph.getData().nodes.find(row=>row.id==="oliver");
+    const n=window.TerraOmegaApp.graph.getData().nodes.find(row=>row.id==="oliver");
     return {x:n.x,y:n.y};
   });
-  expect(await page.evaluate(()=>window.TerraZApp.graph.getViewPositions())).toEqual({});
+  expect(await page.evaluate(()=>window.TerraOmegaApp.graph.getViewPositions())).toEqual({});
 
   await graph.scrollIntoViewIfNeeded();
   await expect(node).toBeVisible();
@@ -556,12 +556,12 @@ test("visitante pode mover nós localmente e restaurar o layout publicado",async
     await page.mouse.up();
   }
 
-  await expect.poll(()=>page.evaluate(()=>Object.keys(window.TerraZApp.graph.getViewPositions()).length)).toBe(1);
-  const moved=await page.evaluate(()=>window.TerraZApp.graph.getViewPositions().oliver);
+  await expect.poll(()=>page.evaluate(()=>Object.keys(window.TerraOmegaApp.graph.getViewPositions()).length)).toBe(1);
+  const moved=await page.evaluate(()=>window.TerraOmegaApp.graph.getViewPositions().oliver);
   expect(Math.abs(moved.x-canonicalBefore.x)+Math.abs(moved.y-canonicalBefore.y)).toBeGreaterThan(20);
 
   const canonicalAfterMove=await page.evaluate(()=>{
-    const n=window.TerraZApp.graph.getData().nodes.find(row=>row.id==="oliver");
+    const n=window.TerraOmegaApp.graph.getData().nodes.find(row=>row.id==="oliver");
     return {x:n.x,y:n.y};
   });
   expect(canonicalAfterMove).toEqual(canonicalBefore);
@@ -569,7 +569,7 @@ test("visitante pode mover nós localmente e restaurar o layout publicado",async
   const reset=page.locator("#graphViewResetBtn");
   await expect(reset).toBeEnabled();
   await reset.click();
-  await expect.poll(()=>page.evaluate(()=>Object.keys(window.TerraZApp.graph.getViewPositions()).length)).toBe(0);
+  await expect.poll(()=>page.evaluate(()=>Object.keys(window.TerraOmegaApp.graph.getViewPositions()).length)).toBe(0);
   await expect(reset).toBeDisabled();
 
   await expectNoPageErrors(errors);
@@ -580,10 +580,10 @@ test("editor visual do grafo auto-organiza e permite arrastar, adicionar e remov
   await page.goto("/#/universo/relacoes",{waitUntil:"domcontentloaded"});
 
   await page.evaluate(async()=>{
-    await window.TerraZApp.adminLoader.load();
-    window.TerraZApp.backend.isConfigured=()=>true;
-    window.TerraZApp.backend.isAuthenticated=()=>true;
-    window.TerraZApp.backend.health=async()=>({
+    await window.TerraOmegaApp.adminLoader.load();
+    window.TerraOmegaApp.backend.isConfigured=()=>true;
+    window.TerraOmegaApp.backend.isAuthenticated=()=>true;
+    window.TerraOmegaApp.backend.health=async()=>({
       ok:true,
       relations_graph_v3:true,
       relations_entity_editor:true,
@@ -592,8 +592,8 @@ test("editor visual do grafo auto-organiza e permite arrastar, adicionar e remov
       visibility_system:"public-spoiler-master",
       secure_master_relations:true
     });
-    document.dispatchEvent(new CustomEvent("terra-z:auth-changed",{detail:{authenticated:true}}));
-    await window.TerraZApp.graph.openLayout();
+    document.dispatchEvent(new CustomEvent("terra-omega:auth-changed",{detail:{authenticated:true}}));
+    await window.TerraOmegaApp.graph.openLayout();
   });
 
   await expect(page.locator("#graphEditorModal")).toHaveClass(/show/);
@@ -663,7 +663,7 @@ test("editor visual do grafo auto-organiza e permite arrastar, adicionar e remov
   await page.locator("#confirmOk").click();
   await expect(layout.locator("[data-layout-node-id]")).toHaveCount(countBefore);
 
-  await page.evaluate(()=>window.TerraZApp.graph.closeEditor());
+  await page.evaluate(()=>window.TerraOmegaApp.graph.closeEditor());
   await expectNoPageErrors(errors);
 });
 
@@ -699,9 +699,9 @@ test("Administração é carregada somente quando solicitada",async({page})=>{
   await expect(page.locator("#adminLoggedOut")).toBeVisible();
 
   const loaded=await page.evaluate(()=>Boolean(
-    window.TerraZApp &&
-    window.TerraZApp.adminLoader &&
-    window.TerraZApp.adminLoader.isLoaded()
+    window.TerraOmegaApp &&
+    window.TerraOmegaApp.adminLoader &&
+    window.TerraOmegaApp.adminLoader.isLoaded()
   ));
   expect(loaded).toBe(true);
 
@@ -715,7 +715,7 @@ test("Administração avançada renderiza Taxonomias, Lote e Sala do Mestre",asy
   await page.goto("/#/capa",{waitUntil:"domcontentloaded"});
 
   await page.evaluate(async()=>{
-    await window.TerraZApp.adminLoader.load();
+    await window.TerraOmegaApp.adminLoader.load();
 
     const sampleMaster={
       version:1,
@@ -727,9 +727,9 @@ test("Administração avançada renderiza Taxonomias, Lote e Sala do Mestre",asy
       timelineEvents:[]
     };
 
-    window.TerraZApp.backend.isConfigured=()=>true;
-    window.TerraZApp.backend.isAuthenticated=()=>true;
-    window.TerraZApp.backend.health=async()=>({
+    window.TerraOmegaApp.backend.isConfigured=()=>true;
+    window.TerraOmegaApp.backend.isAuthenticated=()=>true;
+    window.TerraOmegaApp.backend.health=async()=>({
       ok:true,
       taxonomy_manager_v2:true,
       bulk_editor_v1:true,
@@ -739,7 +739,7 @@ test("Administração avançada renderiza Taxonomias, Lote e Sala do Mestre",asy
       backup_export_v2:true,
       table_mode_v1:true
     });
-    window.TerraZApp.backend.request=async(path)=>{
+    window.TerraOmegaApp.backend.request=async(path)=>{
       if(String(path).startsWith("/api/master")){
         return {content:{characters:{},master:sampleMaster,graph:{nodes:[],edges:[]}}};
       }
@@ -749,27 +749,27 @@ test("Administração avançada renderiza Taxonomias, Lote e Sala do Mestre",asy
       return {ok:true};
     };
 
-    document.dispatchEvent(new CustomEvent("terra-z:auth-changed",{detail:{authenticated:true}}));
+    document.dispatchEvent(new CustomEvent("terra-omega:auth-changed",{detail:{authenticated:true}}));
   });
 
-  await page.evaluate(()=>window.TerraZApp.adminPanel.open());
+  await page.evaluate(()=>window.TerraOmegaApp.adminPanel.open());
   await expect(page.locator("#adminLoggedIn")).toBeVisible();
   await expect(page.locator(".admin-quick-actions button")).toHaveCount(5);
-  await page.evaluate(()=>window.TerraZApp.adminPanel.close());
+  await page.evaluate(()=>window.TerraOmegaApp.adminPanel.close());
 
-  await page.evaluate(()=>window.TerraZApp.taxonomyManager.open());
+  await page.evaluate(()=>window.TerraOmegaApp.taxonomyManager.open());
   await expect(page.locator("#taxonomyManagerPanel")).toHaveClass(/show/);
   await expect(page.locator("#taxonomyManagerTabs .taxonomy-kind-tab")).toHaveCount(4);
   await expect(page.locator("#taxonomyManagerList .taxonomy-manager-row").first()).toBeVisible();
-  await page.evaluate(()=>window.TerraZApp.taxonomyManager.close());
+  await page.evaluate(()=>window.TerraOmegaApp.taxonomyManager.close());
 
-  await page.evaluate(async()=>window.TerraZApp.bulkEditor.open());
+  await page.evaluate(async()=>window.TerraOmegaApp.bulkEditor.open());
   await expect(page.locator("#bulkEditorPanel")).toHaveClass(/show/);
   await expect.poll(()=>page.locator("#bulkEditorCharacters .bulk-character-row").count()).toBeGreaterThan(0);
   await expect(page.locator("#bulkEditorApply")).toBeVisible();
-  await page.evaluate(()=>window.TerraZApp.bulkEditor.close());
+  await page.evaluate(()=>window.TerraOmegaApp.bulkEditor.close());
 
-  await page.evaluate(async()=>window.TerraZApp.masterQuick.open());
+  await page.evaluate(async()=>window.TerraOmegaApp.masterQuick.open());
   await expect(page.locator("#masterQuickPanel")).toHaveClass(/show/);
   await expect(page.locator("#masterQuickStats > div")).toHaveCount(4);
   await expect(page.locator("#masterQuickGoals")).toBeVisible();
@@ -788,7 +788,7 @@ test("Administração avançada renderiza Taxonomias, Lote e Sala do Mestre",asy
   expect(masterFonts.stat).toBeGreaterThanOrEqual(9);
   expect(masterFonts.toolbar).toBeGreaterThanOrEqual(12);
 
-  await page.evaluate(()=>window.TerraZApp.masterQuick.close());
+  await page.evaluate(()=>window.TerraOmegaApp.masterQuick.close());
 
   await expectNoPageErrors(errors);
 });
@@ -800,7 +800,7 @@ test("Fase 14 renderiza Modo Sessão e Backup com rascunho temporário",async({p
   await page.goto("/#/capa",{waitUntil:"domcontentloaded"});
 
   await page.evaluate(async()=>{
-    await window.TerraZApp.adminLoader.load();
+    await window.TerraOmegaApp.adminLoader.load();
 
     const sampleMaster={
       version:1,
@@ -812,9 +812,9 @@ test("Fase 14 renderiza Modo Sessão e Backup com rascunho temporário",async({p
       timelineEvents:[]
     };
 
-    window.TerraZApp.backend.isConfigured=()=>true;
-    window.TerraZApp.backend.isAuthenticated=()=>true;
-    window.TerraZApp.backend.health=async()=>({
+    window.TerraOmegaApp.backend.isConfigured=()=>true;
+    window.TerraOmegaApp.backend.isAuthenticated=()=>true;
+    window.TerraOmegaApp.backend.health=async()=>({
       ok:true,
       visibility_system:"public-spoiler-master",
       taxonomy_manager_v2:true,
@@ -824,7 +824,7 @@ test("Fase 14 renderiza Modo Sessão e Backup com rascunho temporário",async({p
       session_mode_v1:true,
       backup_export_v2:true
     });
-    window.TerraZApp.backend.request=async(path,options)=>{
+    window.TerraOmegaApp.backend.request=async(path,options)=>{
       if(String(path).startsWith("/api/master")){
         return {content:{characters:{},master:sampleMaster,graph:{nodes:[],edges:[]}}};
       }
@@ -843,11 +843,11 @@ test("Fase 14 renderiza Modo Sessão e Backup com rascunho temporário",async({p
       return {ok:true};
     };
 
-    document.dispatchEvent(new CustomEvent("terra-z:auth-changed",{detail:{authenticated:true}}));
-    await window.TerraZApp.privateContent.load();
+    document.dispatchEvent(new CustomEvent("terra-omega:auth-changed",{detail:{authenticated:true}}));
+    await window.TerraOmegaApp.privateContent.load();
   });
 
-  await page.evaluate(()=>window.TerraZApp.sessionMode.open());
+  await page.evaluate(()=>window.TerraOmegaApp.sessionMode.open());
   await expect(page.locator("#sessionModePanel")).toHaveClass(/show/);
   await expect(page.locator("#sessionModeGoals")).toContainText("Investigar Vanguard");
   await expect(page.locator("#sessionModeClues")).toContainText("Pista do Dique");
@@ -861,9 +861,9 @@ test("Fase 14 renderiza Modo Sessão e Backup com rascunho temporário",async({p
   const stored=await page.evaluate(()=>JSON.parse(sessionStorage.getItem("terraZ_session_mode_v1")||"null"));
   expect(stored.title).toBe("Sessão de teste");
   expect(stored.log).toHaveLength(1);
-  await page.evaluate(()=>window.TerraZApp.sessionMode.close());
+  await page.evaluate(()=>window.TerraOmegaApp.sessionMode.close());
 
-  await page.evaluate(()=>window.TerraZApp.tableMode.open());
+  await page.evaluate(()=>window.TerraOmegaApp.tableMode.open());
   await expect(page.locator("#tableModePanel")).toHaveClass(/show/);
   await expect(page.locator("#tableModeSessionView")).toHaveClass(/active/);
   await page.locator('[data-table-tab="clues"]').click();
@@ -882,17 +882,17 @@ test("Fase 14 renderiza Modo Sessão e Backup com rascunho temporário",async({p
   expect(tableStored.clues).toContain("c1");
   expect(tableStored.npcs).toContain("npc1");
   expect(tableStored.table.tab).toBe("maps");
-  await page.evaluate(()=>window.TerraZApp.tableMode.close());
+  await page.evaluate(()=>window.TerraOmegaApp.tableMode.close());
 
-  await page.evaluate(()=>window.TerraZApp.backupExport.open());
+  await page.evaluate(()=>window.TerraOmegaApp.backupExport.open());
   await expect(page.locator("#backupExportPanel")).toHaveClass(/show/);
   await expect(page.locator("#backupExportComplete")).toBeEnabled();
   await expect(page.locator("#backupExportHtmlPublic")).toBeVisible();
   await expect(page.locator("#backupExportHtmlMaster")).toBeVisible();
 
-  const hasDraftApi=await page.evaluate(()=>typeof window.TerraZApp.sessionEditor.openDraft==="function");
+  const hasDraftApi=await page.evaluate(()=>typeof window.TerraOmegaApp.sessionEditor.openDraft==="function");
   expect(hasDraftApi).toBe(true);
 
-  await page.evaluate(()=>window.TerraZApp.backupExport.close());
+  await page.evaluate(()=>window.TerraOmegaApp.backupExport.close());
   await expectNoPageErrors(errors);
 });
