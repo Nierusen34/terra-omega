@@ -13,7 +13,7 @@ var paperConfig = {
     title:'Dossiê <span class="city">Central</span>',
     subtitle:'Terra Omega · Arquivo central do Universo Oblívio',
     section:'Arquivo de Continuidade · Terra Omega',
-    footer:'UNIVERSO OBLÍVIO · TERRA OMEGA · DOSSIÊ CENTRAL · v1.4.0 · JAN 2027',
+    footer:'UNIVERSO OBLÍVIO · TERRA OMEGA · DOSSIÊ CENTRAL · v2.0 · JAN 2027',
     edition:'✦ Arquivo Central ✦',
     context:'Terra Omega · Universo Oblívio',
     issue:'Continuidade Narrativa'
@@ -22,7 +22,7 @@ var paperConfig = {
     title:'O Farol de <span class="city">Vanguard</span>',
     subtitle:'"A verdade ilumina a Cidade Dourada"',
     section:'Dossiê Completo Universo',
-    footer:'O FAROL DE VANGUARD · Dossiê Especial · v1.4.0 · Jan 2027',
+    footer:'O FAROL DE VANGUARD · Dossiê Especial · v2.0 · Jan 2027',
     edition:'✦ Edição Especial ✦',
     context:'Fundação 1882 · Cidade Dourada',
     issue:'Nº 145 · Jan/2027'
@@ -40,7 +40,7 @@ var paperConfig = {
     title:'O Diário do <span class="city">Cais</span>',
     subtitle:'"O jornal do povo trabalhador"',
     section:'Caderno Cotidiano · Transporte & Serviço',
-    footer:'O DIÁRIO DO CAIS · Caderno de Serviço · v1.4.0 · Jan 2027',
+    footer:'O DIÁRIO DO CAIS · Caderno de Serviço · v2.0 · Jan 2027',
     edition:'Caderno Cotidiano',
     context:'O jornal do povo trabalhador',
     issue:'Transporte & Serviço'
@@ -173,7 +173,7 @@ function buildGlobalSidebar(){
     }
     html += '</div>';
   });
-  html += '<div class="gs-footer">Universo Oblívio · Terra Omega · v1.4.0<br>Jan 2027</div>';
+  html += '<div class="gs-footer">Universo Oblívio · Terra Omega · v2.0<br>Jan 2027</div>';
   sidebar.innerHTML = html;
   sidebar.querySelectorAll('.gs-group-btn').forEach(function(btn){
     btn.addEventListener('click', function(){
