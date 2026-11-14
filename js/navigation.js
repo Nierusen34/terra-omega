@@ -118,7 +118,7 @@ function buildGlobalSidebar(){
     }
     html += '</div>';
   });
-  html += '<div class="gs-footer">Universo Terra Z · v1.4.0<br>Jan 2027</div>';
+  html += '<div class="gs-footer">Universo Oblívio · Terra Omega · v1.4.0<br>Jan 2027</div>';
   sidebar.innerHTML = html;
   sidebar.querySelectorAll('.gs-group-btn').forEach(function(btn){
     btn.addEventListener('click', function(){

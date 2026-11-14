@@ -3,7 +3,7 @@
 
 window.TerraZApp = window.TerraZApp || {};
 var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/presentation.js');
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/presentation.js');
 
 var showToast = core.showToast;
 var escapeHtml = core.escapeHtml;
@@ -67,7 +67,7 @@ function addIntro(scope){
   var body = '';
 
   if(scope.id === 'tab-home'){
-    title = plainText(scope.querySelector('.home-hero h2')) || 'Terra Z';
+    title = plainText(scope.querySelector('.home-hero h2')) || 'Terra Omega';
     var lead = scope.querySelector('.home-hero .lead');
     var dateline = scope.querySelector('.home-hero .dateline');
     body = (lead ? '<p>' + escapeHtml(plainText(lead)) + '</p>' : '') +
@@ -81,7 +81,7 @@ function addIntro(scope){
   if(title){
     presSlides.push({
       type:'intro',
-      kicker:'Dossiê Terra Z',
+      kicker:'Dossiê do Universo Oblívio',
       title:title,
       html:body
     });

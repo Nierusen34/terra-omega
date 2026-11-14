@@ -1,4 +1,4 @@
-# Camada de dados — Terra Z
+# Camada de dados — Universo Oblívio / Terra Omega
 
 A pasta `data/` contém o estado canônico e os overrides estruturados do universo. A lógica de interface permanece em `js/`.
 

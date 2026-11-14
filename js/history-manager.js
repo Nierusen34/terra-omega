@@ -3,7 +3,7 @@
 
 window.TerraZApp=window.TerraZApp || {};
 var core=window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/history-manager.js');
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/history-manager.js');
 
 var escapeHtml=core.escapeHtml;
 var escapeAttr=core.escapeAttr;
@@ -112,7 +112,7 @@ function renderOverview(){
   if(policy){
     if(overview.auto_deploy_paused === true){
       policy.className='history-deploy-policy paused';
-      policy.textContent='🛡️ Deploy automático pausado · publique pelo Terra Z. O fluxo usa GitHub Actions + Deploy Hook e não depende da conexão Vercel do ChatGPT.';
+      policy.textContent='🛡️ Deploy automático pausado · publique pelo editor do Universo Oblívio. O fluxo usa GitHub Actions + Deploy Hook e não depende da conexão Vercel do ChatGPT.';
     }else if(overview.auto_deploy_paused === false){
       policy.className='history-deploy-policy warning';
       policy.textContent='⚠️ Deploy automático está habilitado no repositório.';
@@ -225,7 +225,7 @@ async function load(){
     render();
     return overview;
   }catch(error){
-    console.error('Terra Z history:',error);
+    console.error('Terra Omega history:',error);
     if(error.status === 405 || error.status === 400){
       setOperation('A Central está em staging. O backend de histórico será ativado no próximo checkpoint consolidado da Vercel.','staging');
     }else{
@@ -296,7 +296,7 @@ async function performRestore(targetSha){
     );
     await load();
   }catch(error){
-    console.error('Terra Z restore:',error);
+    console.error('Terra Omega restore:',error);
     var message=error.message || 'Falha ao restaurar conteúdo.';
     if(error.payload && Array.isArray(error.payload.missing_paths)){
       message+=' O checkpoint não possui todos os arquivos seguros exigidos.';
@@ -365,7 +365,7 @@ async function performDeploy(){
     showToast('Checkpoint publicado e validado na Vercel.','success',6000);
     await load();
   }catch(error){
-    console.error('Terra Z deploy checkpoint:',error);
+    console.error('Terra Omega deploy checkpoint:',error);
     setOperation(error.message || 'Falha ao publicar checkpoint.','error');
     showToast(error.message || 'Falha ao publicar checkpoint.','error',7000);
   }finally{

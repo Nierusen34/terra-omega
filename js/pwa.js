@@ -26,7 +26,7 @@ function installButton(){
   button.className="pwa-install-btn";
   button.hidden=true;
   button.textContent="⬇ App";
-  button.title="Instalar Terra Z neste dispositivo";
+  button.title="Instalar Terra Omega neste dispositivo";
   var separator=host.querySelector(".topbar-separator");
   host.insertBefore(button,separator||null);
   button.addEventListener("click",install);
@@ -51,7 +51,7 @@ function updateBanner(){
   node.id="pwaUpdateBanner";
   node.className="pwa-update-banner";
   node.hidden=true;
-  node.innerHTML='<span><strong>Nova versão do Terra Z disponível</strong><small>Atualize quando for conveniente.</small></span><button id="pwaUpdateApply" type="button">Atualizar</button><button id="pwaUpdateLater" type="button" aria-label="Fechar">Depois</button>';
+  node.innerHTML='<span><strong>Nova versão do Terra Omega disponível</strong><small>Atualize quando for conveniente.</small></span><button id="pwaUpdateApply" type="button">Atualizar</button><button id="pwaUpdateLater" type="button" aria-label="Fechar">Depois</button>';
   document.body.appendChild(node);
   node.querySelector("#pwaUpdateApply").addEventListener("click",applyUpdate);
   node.querySelector("#pwaUpdateLater").addEventListener("click",function(){node.hidden=true;});
@@ -74,7 +74,7 @@ async function install(){
   if(deferredPrompt){
     deferredPrompt.prompt();
     var choice=await deferredPrompt.userChoice.catch(function(){return null;});
-    if(choice&&choice.outcome==="accepted") showToast("Instalação do Terra Z iniciada.","success",3500);
+    if(choice&&choice.outcome==="accepted") showToast("Instalação do Terra Omega iniciada.","success",3500);
     deferredPrompt=null;
     syncInstall();
     return;
@@ -125,7 +125,7 @@ async function register(){
 
     if(navigator.onLine)registration.update().catch(function(){});
   }catch(error){
-    console.warn("Terra Z PWA:",error);
+    console.warn("Terra Omega PWA:",error);
   }
 }
 function setup(){
@@ -141,7 +141,7 @@ function setup(){
   window.addEventListener("appinstalled",function(){
     deferredPrompt=null;
     syncInstall();
-    showToast("Terra Z instalado neste dispositivo.","success",4000);
+    showToast("Terra Omega instalado neste dispositivo.","success",4000);
   });
   document.addEventListener("visibilitychange",function(){
     if(document.visibilityState==="visible"&&navigator.onLine&&registration){

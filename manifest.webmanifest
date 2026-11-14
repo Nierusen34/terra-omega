@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Terra Z · Vanguard Bay",
-  "short_name": "Terra Z",
-  "description": "Dossiê do Universo Terra Z, Vanguard Bay e sua campanha.",
+  "name": "Universo Oblívio · Terra Omega",
+  "short_name": "Terra Omega",
+  "description": "Dossiê de Terra Omega, mundo central do Universo Oblívio, Vanguard Bay e sua campanha.",
   "lang": "pt-BR",
   "start_url": "./#/capa",
   "scope": "./",

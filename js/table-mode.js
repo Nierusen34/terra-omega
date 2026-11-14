@@ -338,7 +338,7 @@ function renderCharacters(){
 var maps={
   city:{label:"Vanguard Bay",src:"images/maps/vanguard-bay-visao-geral.webp",alt:"Mapa geral de Vanguard Bay"},
   transport:{label:"Transporte",src:"images/maps/vanguard-bay-transporte.webp",alt:"Mapa de transporte de Vanguard Bay"},
-  national:{label:"Mapa Nacional",src:"images/maps/estados-unidos-cidades-externas.webp",alt:"Mapa nacional do universo Terra Z"},
+  national:{label:"Mapa Nacional",src:"images/maps/estados-unidos-cidades-externas.svg",alt:"Mapa nacional do Universo Oblívio — Terra Omega"},
   crime:{label:"Criminalidade",src:"images/editorial/vanguard-bay-criminalidade.webp",alt:"Mapa e dossiê de criminalidade de Vanguard Bay"}
 };
 function renderMaps(){

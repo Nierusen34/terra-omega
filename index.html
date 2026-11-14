@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Universo Terra Z – Vanguard Bay e Universo DC alternativo">
+<meta name="description" content="Universo Oblívio — Terra Omega, Vanguard Bay e uma realidade alternativa do multiverso DC">
 <meta name="theme-color" content="#281044">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Terra Z">
+<meta name="apple-mobile-web-app-title" content="Terra Omega">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/webp" sizes="192x192" href="./images/pwa/icon-192.webp">
 <link rel="apple-touch-icon" href="./images/pwa/icon-192.webp">
@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,700;1,400&family=Share+Tech+Mono&family=Cormorant+Garamond:wght@600;700&family=Anton&family=Oswald:wght@500;700&family=Bebas+Neue&family=Inter:wght@400;600&display=swap">
 <link rel="stylesheet" href="terra-z.css">
-<title>Universo Terra Z – Dossiê de Jornais v1.4.0</title>
+<title>Universo Oblívio — Terra Omega · Dossiê de Jornais v1.4.0</title>
 </head>
 <body>
 
@@ -90,7 +90,7 @@
   <div class="command-palette-card">
     <div class="command-palette-head">
       <div>
-        <div class="command-palette-eyebrow">TERRA Z · NAVEGAÇÃO RÁPIDA</div>
+        <div class="command-palette-eyebrow">UNIVERSO OBLÍVIO · NAVEGAÇÃO RÁPIDA</div>
         <h3 id="commandPaletteTitle">⌘ Central de Comandos</h3>
       </div>
       <button id="commandPaletteClose" type="button" aria-label="Fechar">✕</button>
@@ -114,7 +114,7 @@
   <div class="admin-card">
     <div class="admin-head">
       <div>
-        <div class="admin-eyebrow">TERRA Z · CONTROLE DO MESTRE</div>
+        <div class="admin-eyebrow">TERRA OMEGA · CONTROLE DO MESTRE</div>
         <h3 id="adminPanelTitle">⚙️ Administração</h3>
       </div>
       <button id="adminCloseBtn" type="button">✕</button>
@@ -311,7 +311,7 @@
         <div class="admin-section-title">Backup e manutenção</div>
         <div class="admin-grid compact">
           <button class="admin-action integrity-action" data-admin-action="integrity">
-            🩺 <strong>Verificar Terra Z</strong>
+            🩺 <strong>Verificar Terra Omega</strong>
             <small>Diagnosticar personagens, mídia, sessões, relações e estrutura.</small>
           </button>
           <button class="admin-action history-action" data-admin-action="history">
@@ -362,7 +362,7 @@
     </div>
 
     <div class="history-manager-copy">
-      <strong>Fluxo oficial:</strong> desenvolvimento no GitHub → Quality Gate → checkpoint pelo Terra Z → GitHub Actions → Deploy Hook → Vercel.
+      <strong>Fluxo oficial:</strong> desenvolvimento no GitHub → Quality Gate → checkpoint pelo editor do Universo Oblívio → GitHub Actions → Deploy Hook → Vercel.
       A conexão Vercel do ChatGPT é opcional e serve apenas para diagnósticos avançados; não é necessária para publicar.
     </div>
 
@@ -461,7 +461,7 @@
     <div class="integrity-head">
       <div>
         <div class="integrity-eyebrow">MANUTENÇÃO · DIAGNÓSTICO</div>
-        <h3 id="integrityTitle">🩺 Verificar Terra Z</h3>
+        <h3 id="integrityTitle">🩺 Verificar Terra Omega</h3>
       </div>
       <button id="integrityClose" type="button" aria-label="Fechar">✕</button>
     </div>
@@ -746,7 +746,7 @@
   <div class="table-mode-shell">
     <header class="table-mode-head">
       <div class="table-mode-brand">
-        <div class="table-mode-eyebrow">TERRA Z v1.4.0 · ETAPA 15</div>
+        <div class="table-mode-eyebrow">TERRA OMEGA v1.4.0 · ETAPA 15</div>
         <h3 id="tableModeTitle">🎲 Modo Mesa</h3>
         <div>
           <strong id="tableModeSessionTitle">Sessão em andamento</strong>
@@ -808,7 +808,7 @@
       </button>
       <button id="backupExportHtmlPublic" type="button" class="backup-export-option">
         <span>📖</span><strong>Dossiê público HTML</strong>
-        <small>Arquivo único para leitura fora do Terra Z.</small>
+        <small>Arquivo único para leitura fora do site.</small>
       </button>
       <button id="backupExportHtmlMaster" type="button" class="backup-export-option private-option">
         <span>🗝️</span><strong>Dossiê Mestre HTML</strong>
@@ -866,12 +866,12 @@
   <div class="publish-card">
     <div class="publish-head">
       <div>
-        <div class="publish-eyebrow">EDITOR TERRA Z</div>
+        <div class="publish-eyebrow">EDITOR DO UNIVERSO OBLÍVIO</div>
         <h3 id="publishTitle">🚀 Publicar alterações</h3>
       </div>
       <button id="publishClose" class="publish-close" title="Fechar">✕</button>
     </div>
-    <p class="publish-copy">O rascunho continua salvo somente neste navegador até ser publicado. A publicação cria um commit no GitHub e o Terra Z aplica o conteúdo salvo imediatamente; a cópia estática sincroniza em segundo plano.</p>
+    <p class="publish-copy">O rascunho continua salvo somente neste navegador até ser publicado. A publicação cria um commit no GitHub e o site aplica o conteúdo salvo imediatamente; a cópia estática sincroniza em segundo plano.</p>
     <div class="publish-summary"><strong id="publishCount">0</strong><span>alterações pendentes</span></div>
     <div class="publish-auth">
       <div id="publishLoggedOut">
@@ -920,13 +920,13 @@
 <div class="tab-content active" id="tab-home">
 <div class="home-hero">
 <div class="home-badge">✦ Caderno Especial ✦</div>
-<h2 data-edit-id="tz-0003" data-legacy-edit-id="e_2">Bem-vindo à <span class="accent">Terra Z</span></h2>
-<p data-edit-id="tz-0004" data-legacy-edit-id="e_3" class="lead">Onde os heróis vão para desaparecer — e os monstros vão para se esconder. Uma realidade alternativa do multiverso DC, onde a nova geração enfrenta os fantasmas de seus pais.</p>
+<h2 data-edit-id="tz-0003" data-legacy-edit-id="e_2">Bem-vindo à <span class="accent">Terra Omega</span></h2>
+<p data-edit-id="tz-0004" data-legacy-edit-id="e_3" class="lead">Onde os heróis vão para desaparecer — e os monstros vão para se esconder. Terra Omega é o mundo central do Universo Oblívio: uma realidade alternativa do multiverso DC onde a nova geração enfrenta os fantasmas de seus pais.</p>
 <div class="dateline">Vanguard Bay · Flórida · Janeiro de 2027</div>
 </div>
 <figure class="photo home-dossier-visual">
-<img data-src="images/editorial/dossie-terra-z.webp" alt="Painel investigativo do universo Terra Z com mapas, arquivos, fotografias, ameaças ocultas e referências ao legado heroico" loading="eager" decoding="async" fetchpriority="high" onerror="this.parentElement.classList.add('missing')">
-<figcaption>Dossiê Terra Z — um universo de legado, crise, mistério e vigilância.</figcaption>
+<img data-src="images/editorial/dossie-terra-z.webp" alt="Painel investigativo de Terra Omega e do Universo Oblívio com mapas, arquivos, fotografias, ameaças ocultas e referências ao legado heroico" loading="eager" decoding="async" fetchpriority="high" onerror="this.parentElement.classList.add('missing')">
+<figcaption>Dossiê de Terra Omega — cenário central do Universo Oblívio, marcado por legado, crise, mistério e vigilância.</figcaption>
 </figure>
 
 <section class="home-protagonists" id="homeProtagonists" aria-labelledby="homeProtagonistsTitle" hidden>
@@ -934,7 +934,7 @@
     <div>
       <div class="home-protagonists-kicker">✦ Elenco central</div>
       <h3 id="homeProtagonistsTitle">Protagonistas</h3>
-      <p>Os personagens no centro da história de Terra Z. Selecione um card para abrir sua ficha completa.</p>
+      <p>Os personagens no centro da história de Terra Omega. Selecione um card para abrir sua ficha completa.</p>
     </div>
     <button class="home-protagonists-all" id="homeAllCharactersBtn" type="button">Conheça todos os personagens →</button>
   </div>
@@ -971,7 +971,7 @@
 <div class="main-col">
 <p data-edit-id="tz-0023" data-legacy-edit-id="e_22"><strong>Vanguard Bay</strong> é a cidade dourada da costa sul da Flórida — uma metrópole dividida entre o brilho dos arranha-céus corporativos e a escuridão do seu porto operário. Fundada em 1882 por Silas Vanguard, a cidade cresceu sobre um pântano drenado, um símbolo de ambição que sempre cobrou seu preço em sangue.</p>
 <p data-edit-id="tz-0024" data-legacy-edit-id="e_23">Aqui, os super-heróis não têm uma família como em Gotham ou Metrópolis. Não há um Batman vigiando os telhados, nem um Superman voando sobre os céus. Há apenas um <strong>vácuo heroico</strong> — e é nesse vácuo que uma nova geração de renegados, fugitivos e filhos esquecidos está tentando sobreviver.</p>
-<p data-edit-id="tz-0025" data-legacy-edit-id="e_24">Este documento reúne toda a informação conhecida sobre a cidade: seus <strong>distritos</strong>, seus <strong>mapas</strong>, seu <strong>sistema de transporte</strong> e o <strong>dossiê completo dos personagens</strong> que estão moldando o destino do Universo Terra Z.</p>
+<p data-edit-id="tz-0025" data-legacy-edit-id="e_24">Este documento reúne toda a informação conhecida sobre a cidade: seus <strong>distritos</strong>, seus <strong>mapas</strong>, seu <strong>sistema de transporte</strong> e o <strong>dossiê completo dos personagens</strong> que estão moldando o destino do Universo Oblívio · Terra Omega.</p>
 <div data-edit-id="tz-0026" data-legacy-edit-id="e_25" class="pull-quote">"A cidade não perdoa. A cidade não esquece. A cidade apenas espera — até você cometer o erro de confiar nela."</div>
 <p data-edit-id="tz-0027" data-legacy-edit-id="e_26">Do brilho de <strong>A Muralha</strong> à decadência do <strong>Emaranhado</strong>, da elegância do <strong>Distrito Solar</strong> ao perigo da <strong>Fenda</strong>, Vanguard Bay é um organismo vivo que respira tanto esperança quanto medo. E, em janeiro de 2027, três jovens fugitivos acabam de se encontrar em suas ruas.</p>
 </div>
@@ -984,7 +984,7 @@
 </div>
 </div>
 <div class="page-footer">
-O FAROL DE VANGUARD · Dossiê Especial Universo Terra Z · v1.4.0
+O FAROL DE VANGUARD · Dossiê Especial do Universo Oblívio · Terra Omega · v1.4.0
 <div class="seal">Confidencial</div>
 </div>
 </div>
@@ -1138,9 +1138,9 @@ O FAROL DE VANGUARD · Dossiê Especial Universo Terra Z · v1.4.0
 
 <div class="sub-content" id="sub-mapa-nacional">
 <div class="section-title">🌎 Estados Unidos · Cidades Externas</div>
-<p class="map-intro">Referência nacional do universo Terra Z. Vanguard Bay aparece no sul da Flórida, enquanto as quinze cidades externas estão posicionadas conforme as equivalências geográficas definidas para o cenário.</p>
+<p class="map-intro">Referência nacional de Terra Omega, mundo central do Universo Oblívio. Vanguard Bay aparece no sul da Flórida, enquanto as quinze cidades externas estão posicionadas conforme as equivalências geográficas definidas para o cenário.</p>
 <figure class="photo map-showcase map-showcase-national">
-<img data-src="images/maps/estados-unidos-cidades-externas.webp" alt="Mapa dos Estados Unidos no universo Terra Z com Vanguard Bay e as quinze cidades externas de Gotham City a Jump City" loading="lazy" decoding="async" fetchpriority="low" onerror="this.parentElement.classList.add('missing')">
+<img data-src="images/maps/estados-unidos-cidades-externas.svg" alt="Mapa dos Estados Unidos de Terra Omega, no Universo Oblívio, com Vanguard Bay e as quinze cidades externas de Gotham City a Jump City" loading="lazy" decoding="async" fetchpriority="low" onerror="this.parentElement.classList.add('missing')">
 <figcaption>Estados Unidos · Vanguard Bay e Cidades Externas · Referência geográfica do cenário</figcaption>
 </figure>
 <div class="map-note"><strong>Cidades representadas:</strong> Gotham City, Metrópolis, Blüdhaven, Opal City, Midvale, Ivy Town, Midway City, Fawcett City, Central City, Keystone City, Smallville, Star City, Coast City, Gateway City e Jump City.</div>
@@ -1235,12 +1235,12 @@ O FAROL DE VANGUARD · Dossiê Especial Universo Terra Z · v1.4.0
 <div class="content-area">
 
 <div class="sub-content active" id="sub-universo-visao">
-<div class="section-title">🌌 Universo Terra Z</div>
+<div class="section-title">🌌 Universo Oblívio · Terra Omega</div>
 <figure class="photo editorial-visual universe-visual">
 <img data-src="images/editorial/liga-da-justica.webp" alt="Liga da Justiça reunida em arte promocional de quadrinhos, com Superman, Mulher-Maravilha, Batman e outros membros" loading="lazy" decoding="async" fetchpriority="low" onerror="this.parentElement.classList.add('missing')">
-<figcaption>Liga da Justiça — a principal referência heroica do mundo que antecede a nova geração da Terra Z.</figcaption>
+<figcaption>Liga da Justiça — a principal referência heroica do mundo que antecede a nova geração de Terra Omega.</figcaption>
 </figure>
-<div data-edit-id="tz-0367" data-legacy-edit-id="e_366" class="info-box gold"><div class="label">📌 O que é a Terra Z</div>Uma realidade alternativa do multiverso DC, coexistindo com as fases <strong>DC All In</strong> (2024–2026), <strong>DC KO</strong> (2025–2026) e <strong>DC Next Level</strong> (2026+). Compartilha eventos-chave com a Terra Principal, mas com variações cruciais.</div>
+<div data-edit-id="tz-0367" data-legacy-edit-id="e_366" class="info-box gold"><div class="label">📌 O que é Terra Omega</div>Terra Omega é o mundo central do Universo Oblívio: uma realidade alternativa do multiverso DC que acompanha as fases <strong>DC All In</strong> (2024–2026), <strong>DC KO</strong> (2025–2026) e <strong>DC Next Level</strong> (2026+). Compartilha eventos-chave com a Terra Principal, mas apresenta variações cruciais.</div>
 
 <div class="card-grid">
 <div class="card"><h4 data-edit-id="tz-0368" data-legacy-edit-id="e_367">🎭 Tom Geral</h4><p data-edit-id="tz-0369" data-legacy-edit-id="e_368">Traumas familiares, rebeldia juvenil e o confronto entre heranças heroicas e escolhas próprias.</p></div>
@@ -1340,7 +1340,7 @@ O FAROL DE VANGUARD · Dossiê Especial Universo Terra Z · v1.4.0
 <div class="section-title">📅 Linha do Tempo</div>
 <div class="timeline-overview">
   <div>
-    <div class="timeline-kicker">CRONOLOGIA CENTRAL · TERRA Z</div>
+    <div class="timeline-kicker">CRONOLOGIA CENTRAL · UNIVERSO OBLÍVIO</div>
     <h3>História do universo e campanha em uma única sequência</h3>
     <p>Eventos de lore permanecem canônicos e editáveis. Sessões registradas no Diário entram automaticamente aqui, conectadas às fichas, lugares e equipes já existentes.</p>
   </div>
@@ -1414,9 +1414,9 @@ O FAROL DE VANGUARD · Dossiê Especial Universo Terra Z · v1.4.0
 
 <div class="relations-hero">
   <div>
-    <div class="relations-kicker">REDE NARRATIVA · TERRA Z</div>
+    <div class="relations-kicker">REDE NARRATIVA · TERRA OMEGA</div>
     <h3>Personagens, equipes, lugares e acontecimentos conectados</h3>
-    <p>O grafo mostra vínculos narrativos e permite navegar pelas entidades do Terra Z. Selecione um nó ou uma relação para ver contexto, conexões diretas e atalhos.</p>
+    <p>O grafo mostra vínculos narrativos e permite navegar pelas entidades de Terra Omega, parte do Universo Oblívio. Selecione um nó ou uma relação para ver contexto, conexões diretas e atalhos.</p>
   </div>
   <div class="relations-stats" aria-label="Resumo do grafo">
     <div><strong id="graphEntityCount">0</strong><span>Entidades</span></div>
@@ -1496,7 +1496,7 @@ O FAROL DE VANGUARD · Dossiê Especial Universo Terra Z · v1.4.0
     </div>
     <div class="graph-wrap graph-wrap-v2">
       <div id="graphNucleusBadge" class="graph-nucleus-badge" hidden></div>
-      <svg id="graphSvg" viewBox="0 0 1000 720" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rede narrativa de relações do Terra Z"></svg>
+      <svg id="graphSvg" viewBox="0 0 1000 720" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rede narrativa de relações de Terra Omega, no Universo Oblívio"></svg>
     </div>
     <div id="graphLegend" class="graph-legend-v2" aria-label="Legenda das relações"></div>
   </div>
@@ -1526,7 +1526,7 @@ O FAROL DE VANGUARD · Dossiê Especial Universo Terra Z · v1.4.0
 </div>
 
 <div class="page-footer" id="footerText">
-O FAROL DE VANGUARD · Dossiê Especial Universo Terra Z · v1.4.0 · Jan 2027
+O FAROL DE VANGUARD · Dossiê Especial do Universo Oblívio · Terra Omega · v1.4.0 · Jan 2027
 <div class="changelog">
 <button class="changelog-toggle" onclick="toggleChangelog()">📜 Histórico de Versões</button>
 <div class="changelog-content" id="changelogContent">
@@ -1553,7 +1553,7 @@ O FAROL DE VANGUARD · Dossiê Especial Universo Terra Z · v1.4.0 · Jan 2027
 <div class="mh-actions">
 <button id="modalBackBtn" style="display:none">← Voltar</button>
 <button id="modalTranslateBtn" type="button" disabled>🌐 Traduzir PT-BR</button>
-<button id="modalImportBtn" type="button" hidden>＋ Terra Z</button>
+<button id="modalImportBtn" type="button" hidden>＋ Terra Omega</button>
 <a id="modalExternal" href="#" target="_blank" rel="noopener" class="primary">🔗 Wiki Original</a>
 <button id="modalCloseBtn">✕ Fechar</button>
 </div>
@@ -1566,8 +1566,8 @@ O FAROL DE VANGUARD · Dossiê Especial Universo Terra Z · v1.4.0 · Jan 2027
   <div class="dc-import-card">
     <div class="dc-import-head">
       <div>
-        <div class="dc-import-eyebrow">DC DATABASE → TERRA Z</div>
-        <h3 id="dcImportTitle">Adicionar ao Terra Z</h3>
+        <div class="dc-import-eyebrow">DC DATABASE → TERRA OMEGA</div>
+        <h3 id="dcImportTitle">Adicionar a Terra Omega</h3>
       </div>
       <button id="dcImportClose" type="button" aria-label="Fechar">✕</button>
     </div>
@@ -1579,7 +1579,7 @@ O FAROL DE VANGUARD · Dossiê Especial Universo Terra Z · v1.4.0 · Jan 2027
         <strong id="dcImportName">Personagem</strong>
         <span id="dcImportSource">dc.fandom.com</span>
         <div id="dcImportExisting" class="dc-import-existing"></div>
-        <p>O Terra Z usa apenas o título e a referência visual como ponto de partida. Biografia, status e demais informações da DC Wiki não são importados automaticamente para o cânone.</p>
+        <p>Terra Omega usa apenas o título e a referência visual como ponto de partida. Biografia, status e demais informações da DC Wiki não são importados automaticamente para o cânone.</p>
       </div>
     </div>
     <div id="dcImportStatus" class="dc-import-status" aria-live="polite"></div>

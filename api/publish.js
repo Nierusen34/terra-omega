@@ -762,8 +762,8 @@ export default async function handler(req,res){
       merged[id] = await sanitizeValue(changes[id]);
     }
 
-    const messageRaw = String(body.message || "content: atualizar conteúdo pelo editor do Terra Z").trim();
-    const message = messageRaw.slice(0,120) || "content: atualizar conteúdo pelo editor do Terra Z";
+    const messageRaw = String(body.message || "content: atualizar conteúdo pelo editor do Universo Oblívio").trim();
+    const message = messageRaw.slice(0,120) || "content: atualizar conteúdo pelo editor do Universo Oblívio";
 
     const commit = await commitFiles([
       {path:"data/content-overrides.js",content:renderContentOverrides(merged),encoding:"utf-8"}

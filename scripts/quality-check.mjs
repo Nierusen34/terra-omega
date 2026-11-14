@@ -734,7 +734,7 @@ function checkGraph(data){
      !searchRuntime.includes("openDcImport") ||
      !searchRuntime.includes("runDcImport") ||
      !searchRuntime.includes("fetchDcImportImage")){
-    fail("Integração DC Database → Terra Z não está conectada à busca.");
+    fail("Integração DC Database → Terra Omega não está conectada à busca.");
   }
   if(!characterEditor.includes("importFromDc") ||
      !characterEditor.includes("action:'configure-source'") ||
@@ -885,7 +885,7 @@ function checkAdvancedAdmin(data){
     }
   }
 
-  if(!taxonomy.nuclei.some(item=>item&&item.id==="other")) fail("Núcleo fallback 'other' ausente.");
+  if(taxonomy.nuclei.some(item=>item&&["other","citizen"].includes(item.id))) fail("Núcleos legados 'other' e 'citizen' não devem estar ativos.");
   if(!taxonomy.types.some(item=>item&&item.id==="other")) fail("Tipo fallback 'other' ausente.");
   if(!taxonomy.statuses.some(item=>item&&item.id==="unknown")) fail("Status fallback 'unknown' ausente.");
 
@@ -1142,11 +1142,11 @@ function checkPhase15(){
   }
 
   if(!health.includes("table_mode_v1:true")) fail("Etapa 15 · backend não anuncia table_mode_v1.");
-  if(pkg.version!=="1.4.0") fail("Terra Z não foi promovido para package version 1.4.0.");
-  if(!html.includes("v1.4.0") || !nav.includes("v1.4.0") || !bootstrap.includes("Universo Terra Z · v1.4.0")) fail("Identidade visual ainda não anuncia v1.4.0 em todos os pontos de entrada.");
+  if(pkg.version!=="1.4.0") fail("Terra Omega não foi promovido para package version 1.4.0.");
+  if(!html.includes("v1.4.0") || !nav.includes("v1.4.0") || !bootstrap.includes("Universo Oblívio · Terra Omega · v1.4.0")) fail("Identidade visual ainda não anuncia v1.4.0 em todos os pontos de entrada.");
   if(!exists("docs/PHASE_15.md")) fail("docs/PHASE_15.md ausente.");
 
-  pass("Etapa 15 · Modo Mesa e Terra Z v1.4.0 validados");
+  pass("Etapa 15 · Modo Mesa e Universo Oblívio / Terra Omega v1.4.0 validados");
 }
 
 function checkEncryptedFiles(){
@@ -1230,7 +1230,7 @@ function checkSensitivePublicPatterns(){
   pass("Arquivos públicos não contêm padrões óbvios de credenciais");
 }
 
-console.log("\nTerra Z · Quality Gate\n");
+console.log("\nUniverso Oblívio · Terra Omega · Quality Gate\n");
 checkSyntax();
 checkIndexAssets();
 checkPerformanceBudget();

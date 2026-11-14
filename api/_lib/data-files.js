@@ -79,7 +79,7 @@ export function renderCharacterMedia(data){
 window.TerraZData = window.TerraZData || {};
 
 // Metadados visuais de personagens.
-// src vazio = usar placeholder do Terra Z.
+// src vazio = usar placeholder de Terra Omega.
 window.TerraZData.characterMedia = ${JSON.stringify(data,null,2)};
 
 })();
@@ -162,7 +162,7 @@ export function renderTimeline(data){
 
 window.TerraZData = window.TerraZData || {};
 
-// Linha do tempo canônica do universo Terra Z.
+// Linha do tempo canônica do Universo Oblívio, centrado em Terra Omega.
 // Sessões continuam no Diário da Campanha e são agregadas dinamicamente.
 window.TerraZData.timeline = ${JSON.stringify(groups,null,2)};
 
@@ -194,7 +194,7 @@ export function renderMediaLibrary(data){
 
 window.TerraZData = window.TerraZData || {};
 
-// Biblioteca de mídia reutilizável do Terra Z.
+// Biblioteca de mídia reutilizável de Terra Omega.
 window.TerraZData.mediaLibrary = ${JSON.stringify(library,null,2)};
 
 })();

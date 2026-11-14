@@ -4,7 +4,7 @@
 window.TerraZApp = window.TerraZApp || {};
 
 var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/portrait-browser.js');
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/portrait-browser.js');
 
 var escapeHtml = core.escapeHtml;
 var escapeAttr = core.escapeAttr;
@@ -307,7 +307,7 @@ async function runSearch(){
       versions.length ? 'ready' : 'warning'
     );
   }catch(error){
-    console.error('Terra Z portrait browser:',error);
+    console.error('Terra Omega portrait browser:',error);
 
     if(serial !== requestSerial) return;
 
@@ -388,7 +388,7 @@ async function loadGallery(page){
       files.length ? 'ready' : 'warning'
     );
   }catch(error){
-    console.error('Terra Z portrait gallery:',error);
+    console.error('Terra Omega portrait gallery:',error);
     setStatus('Não foi possível carregar a galeria desta versão.','error');
 
     var loading = body.querySelector('.portrait-browser-loading');
@@ -486,7 +486,7 @@ function withLocalPortraitRemoved(next){
 
   showConfirm(
     'Substituir imagem própria',
-    'Este personagem usa uma imagem própria, que sempre tem prioridade. Para aplicar a escolha da DC Database, essa imagem própria será removida do Terra Z. Continuar?',
+    'Este personagem usa uma imagem própria, que sempre tem prioridade. Para aplicar a escolha da DC Database, essa imagem própria será removida de Terra Omega. Continuar?',
     function(){
       var manager = window.TerraZApp && window.TerraZApp.mediaManager;
 
@@ -600,7 +600,7 @@ async function saveSource(source){
 
     close();
   }catch(error){
-    console.error('Terra Z portrait selection:',error);
+    console.error('Terra Omega portrait selection:',error);
     setStatus(error.message || 'Não foi possível aplicar o retrato.','error');
     showToast(error.message || 'Não foi possível aplicar o retrato.','error',6000);
   }

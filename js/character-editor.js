@@ -3,7 +3,7 @@
 
 window.TerraZApp = window.TerraZApp || {};
 var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/character-editor.js');
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/character-editor.js');
 
 var showToast = core.showToast;
 var showConfirm = core.showConfirm;
@@ -485,7 +485,7 @@ async function saveMediaFraming(){
       publishing.trackDeployment(result.status_url);
     }
   }catch(error){
-    console.error('Terra Z portrait framing:',error);
+    console.error('Terra Omega portrait framing:',error);
     showToast(error.message || 'Falha ao salvar o enquadramento.','error',6000);
   }finally{
     if(button){
@@ -591,7 +591,7 @@ async function saveMediaSource(){
       publishing.trackDeployment(result.status_url);
     }
   }catch(error){
-    console.error('Terra Z media source:',error);
+    console.error('Terra Omega media source:',error);
     showToast(error.message || 'Falha ao salvar a fonte do retrato.','error',6000);
   }finally{
     if(button){
@@ -903,7 +903,7 @@ async function save(){
   var importContext = wasCreating && createImportContext ? {...createImportContext} : null;
   button.disabled = true;
   button.textContent = wasCreating ? 'Criando…' : 'Salvando…';
-  setStatus(wasCreating ? 'Criando personagem no Terra Z…' : 'Salvando personagem…','working');
+  setStatus(wasCreating ? 'Criando personagem no Terra Omega…' : 'Salvando personagem…','working');
 
   try {
     var payload = {
@@ -948,7 +948,7 @@ async function save(){
         latestSha=mediaResult.sha || latestSha;
         portraitConfigured=true;
       }catch(mediaError){
-        console.warn('Terra Z DC import portrait:',mediaError);
+        console.warn('Terra Omega DC import portrait:',mediaError);
         showToast('O card foi criado, mas a fonte automática do retrato não pôde ser vinculada. Você pode escolhê-la depois no editor.','warning',6500);
       }
     }
@@ -1004,7 +1004,7 @@ async function save(){
 
     showToast(
       wasCreating
-        ? (name + (importContext && importContext.addToGraph ? ' foi criado; revise a nova bolinha e salve o grafo.' : ' foi adicionado ao Terra Z.'))
+        ? (name + (importContext && importContext.addToGraph ? ' foi criado; revise a nova bolinha e salve o grafo.' : ' foi adicionado ao Terra Omega.'))
         : ('Ficha de ' + name + ' atualizada.'),
       'success',
       5200
@@ -1015,7 +1015,7 @@ async function save(){
       publishing.trackDeployment(result.status_url);
     }
   } catch(error){
-    console.error('Terra Z character editor:',error);
+    console.error('Terra Omega character editor:',error);
     setStatus(error.message || (wasCreating ? 'Falha ao criar personagem.' : 'Falha ao atualizar personagem.'),'error');
     showToast(error.message || 'Falha ao salvar personagem.','error',6000);
   } finally {
@@ -1054,7 +1054,7 @@ async function performDelete(name){
   if(saveBtn) saveBtn.disabled = true;
 
   document.body.style.overflow = 'hidden';
-  setStatus('Apagando personagem do Terra Z…','working');
+  setStatus('Apagando personagem do Terra Omega…','working');
 
   try {
     var result = await b.request('/api/character',{
@@ -1094,7 +1094,7 @@ async function performDelete(name){
     if(filters && filters.refreshTaxonomy) filters.refreshTaxonomy();
     if(characters && characters.refresh) characters.refresh();
 
-    showToast(deletedName + ' foi apagado do Terra Z.','success',5000);
+    showToast(deletedName + ' foi apagado do Terra Omega.','success',5000);
 
     var runtime = window.TerraZApp && window.TerraZApp.runtimeData;
     if(runtime && runtime.refresh) runtime.refresh({force:true,bust:result.sha,silent:true});
@@ -1104,7 +1104,7 @@ async function performDelete(name){
       publishing.trackDeployment(result.status_url);
     }
   } catch(error){
-    console.error('Terra Z character delete:',error);
+    console.error('Terra Omega character delete:',error);
     setStatus(error.message || 'Falha ao apagar personagem.','error');
     showToast(error.message || 'Falha ao apagar personagem.','error',6000);
     document.body.style.overflow = 'hidden';

@@ -3,7 +3,7 @@
 
 window.TerraZData = window.TerraZData || {};
 
-// Linha do tempo canônica do universo Terra Z.
+// Linha do tempo canônica do Universo Oblívio, centrada em Terra Omega.
 // Sessões continuam no Diário da Campanha e são agregadas dinamicamente.
 window.TerraZData.timeline = [
   {

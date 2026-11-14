@@ -3,7 +3,7 @@
 
 window.TerraZApp=window.TerraZApp || {};
 var core=window.TerraZCore;
-if(!core) throw new Error("Terra Z: núcleo não carregado antes de js/graph.js");
+if(!core) throw new Error("Terra Omega: núcleo não carregado antes de js/graph.js");
 
 var showToast=core.showToast;
 var showConfirm=core.showConfirm;
@@ -669,7 +669,7 @@ async function saveQuickRelation(){
     var publishing=window.TerraZApp && window.TerraZApp.publishing;
     if(publishing && publishing.trackDeployment && result.status_url) publishing.trackDeployment(result.status_url);
   }catch(error){
-    console.error("Terra Z quick relation:",error);
+    console.error("Terra Omega quick relation:",error);
     setQuickRelationStatus(error.message || "Não foi possível criar a conexão.","error");
   }finally{
     if(save){save.disabled=false;save.textContent="＋ Criar conexão";}
@@ -2850,7 +2850,7 @@ function renderEditorDetail(){
         '<label>Tamanho<input data-ge-field="r" data-ge-number type="number" min="18" max="120" value="'+item.r+'"></label>'+
         '<label>Posição X<input data-ge-field="x" data-ge-number type="number" step="1" value="'+item.x+'"></label>'+
         '<label>Posição Y<input data-ge-field="y" data-ge-number type="number" step="1" value="'+item.y+'"></label>'+
-        '<div class="ge-wide ge-help">O ID permanente é <code>'+escapeHtml(item.id)+'</code>. Para personagem/equipe/local/evento, a referência interna permite abrir diretamente a área correspondente do Terra Z.</div>'+
+        '<div class="ge-wide ge-help">O ID permanente é <code>'+escapeHtml(item.id)+'</code>. Para personagem/equipe/local/evento, a referência interna permite abrir diretamente a área correspondente do Terra Omega.</div>'+
       '</div>';
   }else if(editorMode==="nuclei"){
     var count=(editorDraft.nodes||[]).filter(function(node){
@@ -3325,7 +3325,7 @@ async function saveGraphEditor(){
       publishing.trackDeployment(result.status_url);
     }
   }catch(error){
-    console.error("Terra Z graph save:",error);
+    console.error("Terra Omega graph save:",error);
     showToast(error.message || "Falha ao salvar o grafo.","error",6500);
   }finally{
     if(save){ save.disabled=false;save.textContent="💾 Salvar alterações"; }
@@ -3336,7 +3336,7 @@ function resetDraft(){
   if(!editorDraft) return;
   showConfirm(
     "Restaurar grafo padrão",
-    "Substituir o rascunho atual pelo grafo padrão do Terra Z? Nada será publicado até você clicar em Salvar alterações.",
+    "Substituir o rascunho atual pelo grafo padrão do Terra Omega? Nada será publicado até você clicar em Salvar alterações.",
     function(){
       pushEditorUndo();
       editorDraft=normalizeGraph(defaultGraph);
@@ -3430,7 +3430,7 @@ try{
   renderGraph();
   renderInspector();
 }catch(error){
-  console.error("Terra Z Graph 2.0:",error);
+  console.error("Terra Omega Graph 2.0:",error);
 }
 
 function revealNodeNucleus(node,options){

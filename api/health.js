@@ -67,7 +67,7 @@ export default async function handler(req,res){
       console.error(error);
       return res.status(error.status || 500).json({
         error:error.code || "runtime_data_failed",
-        message:"Falha ao carregar os dados atuais do Terra Z."
+        message:"Falha ao carregar os dados atuais de Terra Omega."
       });
     }
   }

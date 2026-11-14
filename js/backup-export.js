@@ -3,7 +3,7 @@
 
 window.TerraZApp=window.TerraZApp||{};
 var core=window.TerraZCore;
-if(!core) throw new Error("Terra Z: núcleo não carregado antes de js/backup-export.js");
+if(!core) throw new Error("Terra Omega: núcleo não carregado antes de js/backup-export.js");
 
 var showToast=core.showToast;
 var escapeHtml=core.escapeHtml;
@@ -45,11 +45,11 @@ async function completeBackup(){
   setStatus("Montando snapshot criptografado da campanha…","working");
   try{
     var result=await backend().request("/api/publish",{method:"POST",body:{action:"export-backup"}});
-    download("terra-z-backup-"+stamp()+".json",JSON.stringify(result.backup,null,2),"application/json;charset=utf-8");
+    download("terra-omega-backup-"+stamp()+".json",JSON.stringify(result.backup,null,2),"application/json;charset=utf-8");
     setStatus("Backup completo gerado. Conteúdo Mestre permanece criptografado dentro do arquivo.","success");
-    showToast("Backup completo do Terra Z exportado.","success",4500);
+    showToast("Backup completo do Universo Oblívio exportado.","success",4500);
   }catch(error){
-    console.error("Terra Z backup export:",error);
+    console.error("Terra Omega backup export:",error);
     setStatus(error.message||"Falha ao exportar backup.","error");
     showToast(error.message||"Falha ao exportar backup.","error",6000);
   }finally{if(button)button.disabled=false;}
@@ -79,10 +79,10 @@ async function exportPublicJson(){
       files:files,
       media_manifest:source.media_manifest||[]
     };
-    download("terra-z-publico-"+stamp()+".json",JSON.stringify(exported,null,2),"application/json;charset=utf-8");
+    download("terra-omega-publico-"+stamp()+".json",JSON.stringify(exported,null,2),"application/json;charset=utf-8");
     showToast("Snapshot público exportado sem conteúdo Mestre.","success",4000);
   }catch(error){
-    console.error("Terra Z public export:",error);
+    console.error("Terra Omega public export:",error);
     showToast(error.message||"Falha ao exportar snapshot público.","error",6000);
   }finally{if(button)button.disabled=false;}
 }
@@ -121,11 +121,11 @@ async function readingHtml(includeMaster){
     appendix='<section class="master-export"><h2>Conteúdo Mestre</h2><pre>'+htmlEscape(JSON.stringify(master,null,2))+"</pre></section>";
   }
 
-  return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Terra Z · Exportação</title><style>body{max-width:1100px;margin:40px auto;padding:0 24px;font:16px/1.65 system-ui,sans-serif;color:#161616;background:#faf8f2}h1,h2,h3,h4{font-family:Georgia,serif}h2{border-bottom:1px solid #bbb;padding-bottom:8px;margin-top:40px}img{max-width:100%;height:auto}article,.card,.box{break-inside:avoid}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#fff;border:1px solid #ddd;padding:14px}.tab-content,.sub-content{display:block!important}.master-export{margin-top:60px;border-top:3px solid #222}</style></head><body><h1>Terra Z</h1><p>Exportado em '+htmlEscape(new Date().toLocaleString("pt-BR"))+"</p>"+readingBody(includeMaster)+appendix+"</body></html>";
+  return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Universo Oblívio · Terra Omega · Exportação</title><style>body{max-width:1100px;margin:40px auto;padding:0 24px;font:16px/1.65 system-ui,sans-serif;color:#161616;background:#faf8f2}h1,h2,h3,h4{font-family:Georgia,serif}h2{border-bottom:1px solid #bbb;padding-bottom:8px;margin-top:40px}img{max-width:100%;height:auto}article,.card,.box{break-inside:avoid}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#fff;border:1px solid #ddd;padding:14px}.tab-content,.sub-content{display:block!important}.master-export{margin-top:60px;border-top:3px solid #222}</style></head><body><h1>Universo Oblívio · Terra Omega</h1><p>Exportado em '+htmlEscape(new Date().toLocaleString("pt-BR"))+"</p>"+readingBody(includeMaster)+appendix+"</body></html>";
 }
 async function exportReading(includeMaster){
   var html=await readingHtml(includeMaster);
-  download("terra-z-dossie-"+(includeMaster?"mestre-":"")+stamp()+".html",html,"text/html;charset=utf-8");
+  download("universo-oblivio-terra-omega-dossie-"+(includeMaster?"mestre-":"")+stamp()+".html",html,"text/html;charset=utf-8");
   showToast(includeMaster?"Dossiê Mestre exportado.":"Dossiê público exportado.","success",4000);
 }
 async function open(){

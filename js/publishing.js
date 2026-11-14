@@ -3,7 +3,7 @@
 
 window.TerraZApp = window.TerraZApp || {};
 var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/publishing.js');
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/publishing.js');
 
 var showToast = core.showToast;
 
@@ -93,7 +93,7 @@ function buildPayload(){
   return {
     schema:'terra-z-publish-v1',
     type:'content-overrides',
-    message:message || 'content: atualizar conteúdo pelo editor do Terra Z',
+    message:message || 'content: atualizar conteúdo pelo editor do Universo Oblívio',
     changes:changes,
     base:e && e.getPublishedBaseline ? e.getPublishedBaseline(ids) : {},
     client:{url:location.href,timestamp:new Date().toISOString()}
@@ -120,7 +120,7 @@ function trackDeployment(statusUrl){
       if(ok) document.dispatchEvent(new CustomEvent('terra-z:static-deploy-synced'));
     })
     .catch(function(error){
-      console.warn('Terra Z static deploy:',error);
+      console.warn('Terra Omega static deploy:',error);
     });
 }
 
@@ -165,7 +165,7 @@ async function publish(){
     showToast(
       remaining
         ? 'Alterações salvas. Novas edições locais foram preservadas.'
-        : 'Alterações salvas no Terra Z.',
+        : 'Alterações salvas no Universo Oblívio.',
       'success',
       4500
     );
@@ -176,7 +176,7 @@ async function publish(){
     trackDeployment(result.status_url);
     refresh();
   } catch(err){
-    console.error('Terra Z publish:',err);
+    console.error('Terra Omega publish:',err);
     setStatus(err.message || 'Falha ao publicar','error');
     showToast('Erro ao publicar: ' + (err.message || 'falha desconhecida'),'error',6000);
   } finally {

@@ -3,7 +3,7 @@
 
 window.TerraZApp = window.TerraZApp || {};
 var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/search.js');
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/search.js');
 
 var showToast = core.showToast;
 var escapeHtml = core.escapeHtml;
@@ -295,7 +295,7 @@ function renderFandomResults(data, query){
     html += '<div class="search-result-item"><div class="r-info"><a class="r-title" href="#" data-title="' + escapeAttr(title) + '">' + escapeHtml(title) + '</a>';
     if(desc) html += '<div class="r-snippet">' + escapeHtml(desc) + '</div>';
     html += '<div class="r-source">📚 dc.fandom.com</div></div><div class="r-actions"><button class="primary" data-title="' + escapeAttr(title) + '">📖 Ler aqui</button>';
-    if(canDcImport()) html += '<button class="dc-import-result-btn" data-dc-import-title="' + escapeAttr(title) + '">＋ Terra Z</button>';
+    if(canDcImport()) html += '<button class="dc-import-result-btn" data-dc-import-title="' + escapeAttr(title) + '">＋ Terra Omega</button>';
     html += '</div></div>';
   }
   document.getElementById('searchResults').innerHTML = html;
@@ -335,7 +335,7 @@ async function ensureDcImportAdmin(){
   if(app.adminLoader && app.adminLoader.load) await app.adminLoader.load();
   var b=app.backend;
   if(!b || !b.isAuthenticated || !b.isAuthenticated()){
-    showToast('Entre como editor para adicionar referências da DC ao Terra Z.','warning',5000);
+    showToast('Entre como editor para adicionar referências da DC ao Terra Omega.','warning',5000);
     if(app.publishing && app.publishing.open) app.publishing.open();
     return false;
   }
@@ -419,7 +419,7 @@ async function fetchDcImportImage(title){
     fandomImageCache[title]=result;
     return result;
   }catch(error){
-    console.warn('Terra Z DC import image:',error);
+    console.warn('Terra Omega DC import image:',error);
     return {imageUrl:'',fullImageUrl:''};
   }
 }
@@ -474,7 +474,7 @@ async function openDcImport(title){
       : '<div class="dc-import-preview-placeholder">DC</div>';
   }
   if(status) status.textContent=dcImportCurrent.imageUrl
-    ? 'Referência visual encontrada. Revise tudo antes de salvar no Terra Z.'
+    ? 'Referência visual encontrada. Revise tudo antes de salvar no Terra Omega.'
     : 'Sem imagem automática; ainda é possível criar o card ou a bolinha.';
 }
 
@@ -718,7 +718,7 @@ async function getFandomTranslator(){
           translate:function(text){ return nativeTranslator.translate(text); }
         };
       }catch(error){
-        console.warn('Terra Z: Translator nativo indisponível; usando Bergamot local.', error);
+        console.warn('Terra Omega: Translator nativo indisponível; usando Bergamot local.', error);
       }
     }
 
@@ -884,7 +884,7 @@ async function translateFandomArticle(){
     updateFandomTranslateButton('translated');
     showToast('Artigo traduzido para português.','success',3500);
   } catch(error){
-    console.error('Terra Z wiki translation:', error);
+    console.error('Terra Omega wiki translation:', error);
     fandomTranslationMode = 'original';
     updateFandomTranslateButton('original');
     showToast(error.message || 'Não foi possível traduzir o artigo.','error',6000);

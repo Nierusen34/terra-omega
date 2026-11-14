@@ -3,7 +3,7 @@
 
 window.TerraZApp = window.TerraZApp || {};
 var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/router.js');
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/router.js');
 
 var showToast = core.showToast;
 var BASE_TITLE = document.title;
@@ -254,7 +254,7 @@ function parseRoute(route){
     };
   }
 
-  return {kind:'unknown',route:route,title:'Terra Z'};
+  return {kind:'unknown',route:route,title:'Terra Omega'};
 }
 
 function remember(route){
@@ -286,7 +286,7 @@ function writeRoute(route,options){
 }
 
 function updateTitle(label){
-  document.title=label ? label + ' · Terra Z' : BASE_TITLE;
+  document.title=label ? label + ' · Terra Omega' : BASE_TITLE;
 }
 
 function navigateSection(tab,sub){
@@ -366,7 +366,7 @@ function applyRoute(route,options){
         if(manager && manager.open) manager.open(character,{fromRouter:true});
         updateTitle(character);
       }else{
-        updateTitle('Personagem · Terra Z');
+        updateTitle('Personagem · Terra Omega');
         warnOnce('character:'+parsed.slug,'Personagem não disponível neste modo ou link inválido.');
       }
       remember(parsed.route);
@@ -383,7 +383,7 @@ function applyRoute(route,options){
         updateTitle(session.title || 'Sessão');
         remember(canonical);
       }else{
-        updateTitle('Sessões · Terra Z');
+        updateTitle('Sessões · Terra Omega');
         warnOnce('session:'+parsed.id,'Sessão não encontrada ou disponível apenas após autenticação.');
         remember(parsed.route);
       }
@@ -400,7 +400,7 @@ function applyRoute(route,options){
         updateTitle(team.name);
         remember(teamRoute);
       }else{
-        updateTitle('Equipes · Terra Z');
+        updateTitle('Equipes · Terra Omega');
         warnOnce('team:'+parsed.slug,'Equipe não encontrada neste link.');
         remember(parsed.route);
       }
@@ -417,7 +417,7 @@ function applyRoute(route,options){
         updateTitle(organization.name);
         remember(organizationRoute);
       }else{
-        updateTitle('Organizações · Terra Z');
+        updateTitle('Organizações · Terra Omega');
         warnOnce('organization:'+parsed.slug,'Organização não encontrada neste link.');
         remember(parsed.route);
       }
@@ -434,7 +434,7 @@ function applyRoute(route,options){
         updateTitle(city.city);
         remember(cityRoute);
       }else{
-        updateTitle('Cidades · Terra Z');
+        updateTitle('Cidades · Terra Omega');
         warnOnce('city:'+parsed.slug,'Cidade não encontrada neste link.');
         remember(parsed.route);
       }
@@ -451,7 +451,7 @@ function applyRoute(route,options){
         updateTitle(district.name || 'Distrito');
         remember(districtRoute);
       }else{
-        updateTitle('Distritos · Terra Z');
+        updateTitle('Distritos · Terra Omega');
         warnOnce('district:'+parsed.slug,'Distrito não encontrado neste link.');
         remember(parsed.route);
       }
@@ -486,7 +486,7 @@ function applyRoute(route,options){
       return parsed;
     }
 
-    warnOnce('route:'+parsed.route,'Este link não corresponde a uma área atual do Terra Z.');
+    warnOnce('route:'+parsed.route,'Este link não corresponde a uma área atual do Terra Omega.');
     writeRoute('/capa',{replace:true,force:true});
     navigateSection('tab-home',null);
     updateTitle('Capa');

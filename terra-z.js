@@ -113,7 +113,7 @@ document.addEventListener('keydown', function(e){
 
 /* ===== BOOTSTRAP ===== */
 document.addEventListener('DOMContentLoaded', function(){
-  showToast('Universo Terra Z · v1.4.0', 'info', 3500);
+  showToast('Universo Oblívio · Terra Omega · v1.4.0', 'info', 3500);
 });
 
 })();

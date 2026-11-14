@@ -3,7 +3,7 @@
 
 window.TerraZApp = window.TerraZApp || {};
 var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/admin-panel.js');
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/admin-panel.js');
 
 var showToast = core.showToast;
 var showConfirm = core.showConfirm;
@@ -120,7 +120,7 @@ function renderDashboard(){
     if(health.github_write !== true) alerts.push({level:'critical',text:'Backend sem permissão de escrita no GitHub.'});
     if(health.master_content !== 'ready') alerts.push({level:'critical',text:'Conteúdo Mestre não está marcado como pronto.'});
     if(health.private_character_encryption !== 'aes-256-gcm') alerts.push({level:'critical',text:'Criptografia privada não está em AES-256-GCM.'});
-    if(health.production_update_from_site !== true) alerts.push({level:'warning',text:'Publicação de produção pelo próprio Terra Z não foi confirmada.'});
+    if(health.production_update_from_site !== true) alerts.push({level:'warning',text:'Publicação de produção pelo editor do Universo Oblívio não foi confirmada.'});
   }else{
     setDashboardCard('adminContinuityCard','warning','Indisponível','Não foi possível consultar /api/health.');
     setDashboardCard('adminPrivacyCard','warning','Indeterminado','Privacidade não pôde ser validada agora.');
@@ -239,8 +239,8 @@ async function loadDashboard(){
     dashboardHealth = results[0].value || null;
     dashboardOverview = results[1].value || null;
 
-    if(results[0].error) console.warn('Terra Z dashboard health:',results[0].error);
-    if(results[1].error) console.warn('Terra Z dashboard history:',results[1].error);
+    if(results[0].error) console.warn('Terra Omega dashboard health:',results[0].error);
+    if(results[1].error) console.warn('Terra Omega dashboard history:',results[1].error);
   } finally {
     dashboardBusy = false;
     if(refreshButton) refreshButton.disabled = false;
@@ -347,7 +347,7 @@ async function login(){
     loadDashboard();
     showToast('Editor autenticado.','success',3500);
   } catch(error){
-    console.error('Terra Z admin login:',error);
+    console.error('Terra Omega admin login:',error);
     setLoginStatus(error.message || 'Falha ao entrar.','error');
   } finally {
     if(button) button.disabled = false;
@@ -586,14 +586,14 @@ function handleAction(action){
               );
               refresh();
             }catch(error){
-              console.error('Terra Z privacy migration:',error);
+              console.error('Terra Omega privacy migration:',error);
               showToast(error.message || 'Não foi possível migrar as fichas privadas.','error',6500);
             }
           },
           'Migrar agora'
         );
       }catch(error){
-        console.error('Terra Z privacy capability:',error);
+        console.error('Terra Omega privacy capability:',error);
         showToast('Não foi possível verificar a capacidade de privacidade do backend.','warning',5500);
       }
     });

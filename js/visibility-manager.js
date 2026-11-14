@@ -3,7 +3,7 @@
 
 window.TerraZApp=window.TerraZApp || {};
 var core=window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/visibility-manager.js');
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/visibility-manager.js');
 
 var escapeHtml=core.escapeHtml;
 var escapeAttr=core.escapeAttr;
@@ -261,7 +261,7 @@ async function refreshBackendNote(){
     }
   }catch(error){
     note.className='visibility-manager-backend warning';
-    note.textContent='⚠️ Não foi possível confirmar a capacidade do backend. O Terra Z mantém o salvamento avançado bloqueado por segurança.';
+    note.textContent='⚠️ Não foi possível confirmar a capacidade do backend. O Universo Oblívio mantém o salvamento avançado bloqueado por segurança.';
   }
 }
 
