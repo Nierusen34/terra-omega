@@ -4,8 +4,7 @@
 window.TerraZData = window.TerraZData || {};
 
 // Linha do tempo canônica do universo Terra Z.
-// As sessões da campanha NÃO são duplicadas aqui: js/timeline-manager.js
-// lê o Diário da Campanha e as incorpora dinamicamente à cronologia.
+// Sessões continuam no Diário da Campanha e são agregadas dinamicamente.
 window.TerraZData.timeline = [
   {
     "title": "Séculos Atrás – Marte",
@@ -185,6 +184,22 @@ window.TerraZData.timeline = [
         ],
         "locations": [
           "Terra"
+        ],
+        "teams": [],
+        "visibility": "public"
+      },
+      {
+        "id": "20-de-fevereiro-de-2007-tristan-queen-nasce",
+        "category": "current",
+        "sortKey": 20072002,
+        "year": "20 de Fevereiro de 2007",
+        "title": "Tristan Queen Nasce",
+        "text": "",
+        "characters": [
+          "Tristan Queen"
+        ],
+        "locations": [
+          "Star City"
         ],
         "teams": [],
         "visibility": "public"
@@ -445,12 +460,13 @@ window.TerraZData.timelineSchema = {
   category:"history | pre-campaign | campaign | current | future",
   sortKey:"número cronológico YYYYMMDD; períodos imprecisos usam valor aproximado estável",
   year:"rótulo exibido",
+  title:"título opcional",
   text:"descrição canônica",
   characters:["Nome exato da ficha"],
   locations:["Distrito, cidade ou local"],
   teams:["Nome exato da equipe"],
-  visibility:"public | spoiler | master",
-  edit:{year:{id:"tz-...",legacyId:"e_..."},text:{id:"tz-...",legacyId:"e_..."}}
+  visibility:"public | spoiler",
+  edit:{year:{id:"tz-...",legacyId:"e-..."},text:{id:"tz-...",legacyId:"e-..."}}
 };
 
 })();
