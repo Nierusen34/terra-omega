@@ -460,6 +460,23 @@ window.TerraZData.timeline = [
         "visibility": "public"
       },
       {
+        "id": "19-de-novembro-de-2026-tristan-queen-e-roselie-sterling-deixam-gotham-city-para-atuar-na-cidade-de-v",
+        "category": "history",
+        "sortKey": 20261911,
+        "year": "19 de Novembro de 2026",
+        "text": "Tristan Queen e Roselie Sterling deixam Gotham City para atuar na cidade de Vanguard Bay, passando os primeiros meses preparando tudo para instalar sua base de vigilante no local.",
+        "characters": [
+          "Tristan Queen",
+          "Roselie Sterling"
+        ],
+        "locations": [
+          "Gotham City",
+          "Vanguard Bay"
+        ],
+        "teams": [],
+        "visibility": "public"
+      },
+      {
         "year": "Jan 2027",
         "text": "Encontro em Vanguard Bay: Tristan, Riot e M'ark.",
         "edit": {
