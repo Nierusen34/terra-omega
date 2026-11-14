@@ -7,7 +7,7 @@ window.TerraZConfig = window.TerraOmegaConfig;
 window.TerraOmegaConfig.publishing = {
   enabled: true,
   apiBase: "https://terra-omega-rpg.vercel.app",
-  repository: "Nierusen34/terra-z",
+  repository: "Nierusen34/terra-omega",
   branch: "main"
 };
 })();
