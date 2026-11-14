@@ -49,3 +49,15 @@ Durante a migração, nomes técnicos antigos só serão removidos depois de exi
 Novo endereço gratuito reservado: `https://terra-omega-rpg.vercel.app`.
 
 O endereço anterior continua ativo temporariamente. Chaves de armazenamento e eventos são espelhados entre os prefixos antigos e novos para permitir migração sem perda de estado local.
+
+
+## Checkpoint — namespaces e formatos
+
+- `TerraOmegaData`, `TerraOmegaApp`, `TerraOmegaCore` e `TerraOmegaConfig` são os nomes canônicos;
+- eventos ativos usam `terra-omega:*`;
+- chaves locais ativas usam `terraOmega_*`, com espelhamento temporário para as chaves antigas;
+- novos backups/exports usam schemas `terra-omega-*`;
+- importadores e API continuam aceitando formatos `terra-z-*` compatíveis;
+- os identificadores criptográficos legados são preservados para descriptografar envelopes Mestre existentes;
+- o smoke test do GitHub Pages deriva automaticamente o nome real do repositório, portanto funciona antes e depois do rename;
+- o smoke test de produção usa `https://terra-omega-rpg.vercel.app`.

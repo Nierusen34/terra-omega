@@ -30,7 +30,7 @@ function walk(dir,filter){
 function checkSyntax(){
   const files=[
     path.join(root,"config.js"),
-    path.join(root,"terra-z.js"),
+    path.join(root,"terra-omega.js"),
     ...walk("js",file=>file.endsWith(".js")),
     ...walk("data",file=>file.endsWith(".js")),
     ...walk("api",file=>file.endsWith(".js"))
@@ -621,7 +621,7 @@ function checkGraph(data){
   const graphApi=read("api/graph.js");
   const graphHealthApi=read("api/health.js");
   const html=read("index.html");
-  const css=read("terra-z.css");
+  const css=read("terra-omega.css");
   const mobilePolish=read("js/mobile-polish.js");
 
   if(!graphRuntime.includes("Relações 2.0") && !graphRuntime.includes("supportsGraphV3")){
@@ -832,7 +832,7 @@ function checkGraph(data){
     fail("Escopo de restauração não foi encontrado na API de publicação.");
   }else{
     const restoreScope=restoreScopeMatch[1]+"\n"+restoreScopeMatch[2];
-    if(/["'](?:api\/|js\/|index\.html|terra-z\.css)/.test(restoreScope)){
+    if(/["'](?:api\/|js\/|index\.html|terra-omega\.css)/.test(restoreScope)){
       fail("Escopo de restauração de conteúdo não pode incluir código da aplicação.");
     }
   }
@@ -1040,7 +1040,7 @@ function checkPhase14(){
   }
 
   if(!publishApi.includes('body.action === "export-backup"') ||
-     !publishApi.includes('schema:"terra-z-backup-v2"') ||
+     !publishApi.includes('schema:"terra-omega-backup-v2"') ||
      !publishApi.includes('private_content:"encrypted-aes-256-gcm"')){
     fail("Backup completo criptografado não está implementado em /api/publish.");
   }
@@ -1103,7 +1103,7 @@ function checkPwa(){
     'path.includes("/data/private-")',
     'path.endsWith(".enc.json")',
     'type==="SKIP_WAITING"',
-    'CACHE_PREFIX="terra-z-pwa-"'
+    'CACHE_PREFIX="terra-omega-pwa-"'
   ]){
     if(!sw.includes(token)) fail("PWA · proteção/atualização ausente no Service Worker: "+token);
   }
@@ -1114,7 +1114,7 @@ function checkPwa(){
     '"beforeinstallprompt"',
     '"controllerchange"',
     'navigator.onLine',
-    '"terra-z:network-changed"'
+    '"terra-omega:network-changed"'
   ]){
     if(!pwa.includes(token)) fail("PWA · runtime incompleto: "+token);
   }
@@ -1148,7 +1148,7 @@ function checkPhase15(){
   const session=read("js/session-mode.js");
   const health=read("api/health.js");
   const nav=read("js/navigation.js");
-  const bootstrap=read("terra-z.js");
+  const bootstrap=read("terra-omega.js");
   const pkg=JSON.parse(read("package.json"));
 
   for(const id of [
@@ -1162,7 +1162,7 @@ function checkPhase15(){
   if(!session.includes("finish:finish")) fail("Etapa 15 · Modo Sessão não expõe encerramento integrado.");
 
   for(const token of [
-    'KEY="terraZ_session_mode_v1"',
+    'KEY="terraOmega_session_mode_v1"',
     'data-table-tab',
     'sessionStorage.setItem(KEY',
     'getPrivateGraph',

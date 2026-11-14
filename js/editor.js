@@ -13,9 +13,11 @@ var editMode = false;
 var publishedBaseline = {};
 var EDITS_KEY = 'terraOmega_v1_edits';
 var EDITS_LEGACY_BACKUP_KEY = 'terraOmega_v1_edits_legacy_backup';
-var EDITS_DRAFT_FORMAT = 'terra-z-edit-draft';
+var EDITS_DRAFT_FORMAT = 'terra-omega-edit-draft';
+var EDITS_LEGACY_DRAFT_FORMAT = 'terra-z-edit-draft';
 var EDITS_DRAFT_VERSION = 2;
-var EDITS_BACKUP_FORMAT = 'terra-z-edits';
+var EDITS_BACKUP_FORMAT = 'terra-omega-edits';
+var EDITS_LEGACY_BACKUP_FORMAT = 'terra-z-edits';
 var EDITS_BACKUP_VERSION = 2;
 var SEL = 'h1,h2,h3,h4,h5,h6,p,td,th,li,.timeline-year,.timeline-text,.card p,.info-box,.stat-num,.stat-label,.mast-subtitle,.home-hero .lead,.pull-quote,.event-item .title,.event-item .desc,.photo figcaption,.fc-value,.fc-desc';
 
@@ -163,7 +165,7 @@ function loadEdits(){
     var stored = JSON.parse(raw);
     initEditables();
 
-    if(stored && stored.format===EDITS_DRAFT_FORMAT && stored.version===EDITS_DRAFT_VERSION){
+    if(stored && (stored.format===EDITS_DRAFT_FORMAT || stored.format===EDITS_LEGACY_DRAFT_FORMAT) && stored.version===EDITS_DRAFT_VERSION){
       var changes = stored.changes && typeof stored.changes==='object' ? stored.changes : {};
       var base = stored.base && typeof stored.base==='object' ? stored.base : {};
       var applied=0,conflicts=0;
@@ -349,7 +351,7 @@ function parseEditsBackup(raw){
 
   // Formato atual, versionado.
   if(parsed && typeof parsed === 'object' && !Array.isArray(parsed) && parsed.format !== undefined){
-    if(parsed.format !== EDITS_BACKUP_FORMAT) throw new Error('Formato de backup não reconhecido.');
+    if(parsed.format !== EDITS_BACKUP_FORMAT && parsed.format !== EDITS_LEGACY_BACKUP_FORMAT) throw new Error('Formato de backup não reconhecido.');
     if(parsed.version !== EDITS_BACKUP_VERSION) throw new Error('Versão de backup não suportada.');
     if(!isValidEditsMap(parsed.edits)) throw new Error('Conteúdo de edições inválido.');
     return parsed.edits;

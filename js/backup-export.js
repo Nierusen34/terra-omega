@@ -73,7 +73,7 @@ async function exportPublicJson(){
       files[path]=source.files[path];
     });
     var exported={
-      schema:"terra-z-public-export-v2",
+      schema:"terra-omega-public-export-v2",
       generated_at:new Date().toISOString(),
       head_sha:source.head_sha||"",
       files:files,

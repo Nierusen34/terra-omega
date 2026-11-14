@@ -482,9 +482,9 @@ export default async function handler(req,res){
       return res.status(200).json({
         ok:true,
         backup:{
-          schema:"terra-z-backup-v2",
+          schema:"terra-omega-backup-v2",
           generated_at:new Date().toISOString(),
-          repository:"Nierusen34/terra-z",
+          repository:process.env.GITHUB_REPOSITORY || "Nierusen34/terra-z",
           branch:"main",
           head_sha:head,
           private_content:"encrypted-aes-256-gcm",
@@ -719,7 +719,7 @@ export default async function handler(req,res){
       });
     }
 
-    if(body.schema !== "terra-z-publish-v1" || body.type !== "content-overrides"){
+    if(!["terra-omega-publish-v1","terra-z-publish-v1"].includes(body.schema) || body.type !== "content-overrides"){
       return res.status(400).json({error:"invalid_payload",message:"Formato de publicação não reconhecido."});
     }
 

@@ -26,7 +26,7 @@ jobs:
         run: npm run test:quality
 
       # Official production path: GitHub Actions -> Vercel Deploy Hook.
-      # ChatGPT's Vercel connector is intentionally not required.
+      # The Vercel connector may also publish authorized checkpoints; this hook remains a supported production path.
       - name: Trigger latest main deployment
         env:
           VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
@@ -35,4 +35,4 @@ jobs:
           curl --fail-with-body --silent --show-error -X POST "$VERCEL_DEPLOY_HOOK_URL"
 
       - name: Verify production after deploy
-        run: npm run test:smoke -- --url https://terra-z.vercel.app/ --api --expected-sha "$GITHUB_SHA" --wait 900
+        run: npm run test:smoke -- --url https://terra-omega-rpg.vercel.app/ --api --expected-sha "$GITHUB_SHA" --wait 900

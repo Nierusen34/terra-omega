@@ -1,4 +1,4 @@
-name: Terra Z quality gate
+name: Terra Omega quality gate
 
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: terra-z-quality-${{ github.ref }}
+  group: terra-omega-quality-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

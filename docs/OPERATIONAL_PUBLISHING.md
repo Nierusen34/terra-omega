@@ -1,4 +1,4 @@
-# Publicação operacional — Terra Z
+# Publicação operacional — Terra Omega
 
 Este documento descreve como ativar a publicação direta pelo site.
 
@@ -38,7 +38,7 @@ Há duas opções.
 
 Restrinja o token a:
 
-- Repository access: **Only select repositories → Nierusen34/terra-z**
+- Repository access: **Only select repositories → Nierusen34/terra-omega**
 - Permissions:
   - Contents: **Read and write**
 
@@ -50,7 +50,7 @@ GITHUB_TOKEN
 
 #### Opção recomendada — GitHub App
 
-Instale a app somente no repo Terra Z.
+Instale a app somente no repo Terra Omega.
 
 Permissões mínimas:
 
@@ -93,10 +93,10 @@ https://<projeto>.vercel.app
 Atualize então `config.js`:
 
 ```js
-window.TerraZConfig.publishing = {
+window.TerraOmegaConfig.publishing = {
   enabled: true,
   apiBase: "https://<projeto>.vercel.app",
-  repository: "Nierusen34/terra-z",
+  repository: "Nierusen34/terra-omega",
   branch: "main"
 };
 ```

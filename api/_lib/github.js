@@ -36,7 +36,7 @@ async function appInstallationToken(){
       "Accept":"application/vnd.github+json",
       "Authorization":"Bearer " + jwt,
       "X-GitHub-Api-Version":"2022-11-28",
-      "User-Agent":"terra-z-publishing-api"
+      "User-Agent":"terra-omega-publishing-api"
     }
   });
 
@@ -64,7 +64,7 @@ async function request(path, options={}){
       "Accept":"application/vnd.github+json",
       "Authorization":"Bearer " + token,
       "X-GitHub-Api-Version":"2022-11-28",
-      "User-Agent":"terra-z-publishing-api",
+      "User-Agent":"terra-omega-publishing-api",
       ...(options.headers || {})
     }
   });
@@ -161,7 +161,7 @@ export async function createCheckpointCommit(message,expectedHeadSha){
   const current=await getCommit(head);
   const commit=await createTreeCommit(
     current.tree.sha,
-    String(message || "[vercel-hook] deploy: checkpoint Terra Z").slice(0,180),
+    String(message || "[vercel-hook] deploy: checkpoint Terra Omega").slice(0,180),
     head
   );
   await moveHead(commit.sha);
@@ -415,7 +415,7 @@ export async function pagesRunStatus(sha){
       "Accept":"application/vnd.github+json",
       ...(token ? {"Authorization":"Bearer " + token} : {}),
       "X-GitHub-Api-Version":"2022-11-28",
-      "User-Agent":"terra-z-publishing-api"
+      "User-Agent":"terra-omega-publishing-api"
     }
   });
 

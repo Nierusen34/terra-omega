@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: terra-z-pages-smoke
+  group: terra-omega-pages-smoke
   cancel-in-progress: true
 
 jobs:
@@ -25,4 +25,7 @@ jobs:
           node-version: 24
 
       - name: Wait for GitHub Pages and run smoke test
-        run: npm run test:smoke -- --url https://nierusen34.github.io/terra-z/ --wait 180
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          OWNER="$(printf '%s' "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
+          npm run test:smoke -- --url "https://${OWNER}.github.io/${REPO_NAME}/" --wait 180

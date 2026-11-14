@@ -1,8 +1,8 @@
-# Terra Z — Política Operacional
+# Terra Omega — Política Operacional
 
 ## Objetivo
 
-O caminho oficial de desenvolvimento e publicação do Terra Z não depende da conexão Vercel do ChatGPT e evita deploys repetitivos durante implementação.
+O caminho oficial de desenvolvimento e publicação do Terra Omega não depende da conexão Vercel do ChatGPT e evita deploys repetitivos durante implementação.
 
 ## Branches oficiais
 
@@ -11,13 +11,13 @@ O caminho oficial de desenvolvimento e publicação do Terra Z não depende da c
 - representa o estado integrado do projeto;
 - alimenta o GitHub Pages;
 - é a origem dos checkpoints de produção para a Vercel;
-- também recebe commits de conteúdo gerados pelo próprio editor do Terra Z.
+- também recebe commits de conteúdo gerados pelo próprio editor do Terra Omega.
 
 ### `dev`
 
 - é o branch oficial para desenvolvimento de código;
 - recebe as alterações técnicas feitas durante uma etapa;
-- executa **Terra Z quality gate** e **Terra Z dev smoke**;
+- executa **Terra Omega quality gate** e **Terra Omega dev smoke**;
 - não deve publicar GitHub Pages nem acionar a produção Vercel;
 - só é integrado ao `main` quando a etapa está validada.
 
@@ -28,8 +28,8 @@ O caminho oficial de desenvolvimento e publicação do Terra Z não depende da c
 3. Implementar código no `dev`.
 4. Fazer quantos commits forem necessários no `dev`; execuções anteriores do Quality Gate/smoke podem ser canceladas automaticamente quando substituídas por commits mais novos.
 5. Exigir:
-   - **Terra Z quality gate** ✅
-   - **Terra Z dev smoke** ✅
+   - **Terra Omega quality gate** ✅
+   - **Terra Omega dev smoke** ✅
 6. Integrar `dev` → `main` em um único ciclo de integração.
 7. O GitHub Pages é atualizado somente depois da integração no `main`.
 8. Confirmar Quality Gate + Pages + smoke do `main`.
@@ -38,7 +38,7 @@ O caminho oficial de desenvolvimento e publicação do Terra Z não depende da c
 
 ## Conteúdo editado pelo site
 
-O editor do Terra Z continua escrevendo conteúdo em `main`, pois `main` é a linha canônica da campanha.
+O editor do Terra Omega continua escrevendo conteúdo em `main`, pois `main` é a linha canônica da campanha.
 
 Isso inclui personagens, sessões, relações, Linha do Tempo, mídia, taxonomias e demais conteúdos administráveis.
 
@@ -81,7 +81,7 @@ O workflow **Optimize heavy images** pode ser executado manualmente quando novas
 
 ## Produção
 
-- URL principal: `https://terra-z.vercel.app`
+- URL principal: `https://terra-omega-rpg.vercel.app`
 - GitHub Pages funciona como preview integrado do `main`.
 - `/api/health` informa SHA e capacidades da produção.
 - O painel **Histórico e Produção** compara `main` com o SHA de produção.

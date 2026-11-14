@@ -91,7 +91,7 @@ function buildPayload(){
   var message = messageInput ? messageInput.value.trim() : '';
 
   return {
-    schema:'terra-z-publish-v1',
+    schema:'terra-omega-publish-v1',
     type:'content-overrides',
     message:message || 'content: atualizar conteúdo pelo editor do Universo Oblívio',
     changes:changes,
