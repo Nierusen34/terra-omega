@@ -55,3 +55,15 @@ Em modo offline, leitura e navegação pelo conteúdo público em cache continua
 - GitHub Pages: escopo `/terra-z/`.
 - Android/Chromium: instalação via prompt nativo.
 - iPhone/iPad: instrução via Compartilhar → Adicionar à Tela de Início.
+
+
+## Migração Terra Omega — etapa 1
+
+A partir do checkpoint de migração técnica:
+
+- a página principal passa a carregar `terra-omega.css` e `terra-omega.js`;
+- `terra-z.css` e `terra-z.js` são mantidos temporariamente no repositório para compatibilidade e rollback;
+- o cache principal do PWA passa a usar o prefixo `terra-omega-pwa-`;
+- o service worker reconhece e remove caches antigos `terra-z-pwa-` durante a ativação;
+- o `id` do manifest permanece estável nesta etapa para que instalações existentes possam receber a atualização em vez de criar um segundo aplicativo;
+- o namespace `TerraOmegaApp` começa a existir como alias do runtime legado enquanto os módulos são migrados gradualmente.

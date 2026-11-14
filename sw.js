@@ -1,18 +1,19 @@
 "use strict";
 
-const VERSION="terra-z-pwa-v1.4.0-20261114-oblivio-ui6-final-polish";
+const VERSION="terra-omega-pwa-v1.4.0-20261114-migration1";
 const CORE_CACHE=VERSION+"-core";
 const IMAGE_CACHE=VERSION+"-images";
 const TRANSLATION_CACHE=VERSION+"-translation";
-const CACHE_PREFIX="terra-z-pwa-";
+const CACHE_PREFIX="terra-omega-pwa-";
+const LEGACY_CACHE_PREFIX="terra-z-pwa-";
 
 const CORE_ASSETS=[
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./images/brand/oblivio-emblem.svg",
-  "./terra-z.css",
-  "./terra-z.js",
+  "./terra-omega.css",
+  "./terra-omega.js",
   "./config.js",
   "./images/pwa/icon-192.webp",
   "./images/pwa/icon-512.svg",
@@ -144,7 +145,7 @@ self.addEventListener("activate",event=>{
   event.waitUntil((async()=>{
     const names=await caches.keys();
     await Promise.all(
-      names.filter(name=>name.startsWith(CACHE_PREFIX)&&name!==CORE_CACHE&&name!==IMAGE_CACHE&&name!==TRANSLATION_CACHE)
+      names.filter(name=>(name.startsWith(CACHE_PREFIX)||name.startsWith(LEGACY_CACHE_PREFIX))&&name!==CORE_CACHE&&name!==IMAGE_CACHE&&name!==TRANSLATION_CACHE)
         .map(name=>caches.delete(name))
     );
     await self.clients.claim();

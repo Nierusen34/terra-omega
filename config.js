@@ -3,6 +3,8 @@
 
 window.TerraZConfig = window.TerraZConfig || {};
 
+window.TerraOmegaConfig = window.TerraZConfig;
+
 window.TerraZConfig.publishing = {
   enabled: true,
   apiBase: "https://terra-z.vercel.app",
