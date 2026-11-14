@@ -7,7 +7,7 @@ window.TerraOmegaData = window.TerraOmegaData || {};
 window.TerraOmegaData.contentOverrides = {
   "tz-0036": "Vista aérea de Vanguard Bay ao anoitecer — o continente e a Ilha Solara ligados por duas pontes.",
   "tz-0394": "Kendra, Lobo <strong>e Riot</strong>",
-  "tz-0018": "Documento revisado e publicado. Versão 1.4.0.",
+  "tz-0018": "Documento revisado e publicado. Versão 2.0.",
   "tz-0369": "Traumas familiares, rebeldia juvenil e o confronto entre heranças heroicas e escolhas próprias. Um universo de \"segundas chances\" que nem sempre são aproveitadas.",
   "tz-0371": "Superman derrotou Darkseid em 2026 e ascendeu como <strong>Rei Ômega</strong>. A energia liberada criou \"ecos\" pelo multiverso, afetando diretamente a Fenda de Vanguard Bay.",
   "tz-0373": "Em 2024, a Liga expandiu o recrutamento. Membros históricos e novos heróis coexistem — gerando atritos e alianças improváveis.",
