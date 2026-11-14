@@ -1,8 +1,8 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var LEGACY_STORAGE_KEY='terraZ_spoiler_mode';
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var LEGACY_STORAGE_KEY='terraOmega_spoiler_mode';
 
 // Segurança por padrão: toda nova abertura/recarregamento começa em Modo Jogador.
 // A escolha de exibir spoilers vale apenas para a página atualmente aberta.
@@ -12,14 +12,14 @@ try {
   localStorage.removeItem(LEGACY_STORAGE_KEY);
 } catch(e){}
 
-function backend(){ return window.TerraZApp && window.TerraZApp.backend; }
+function backend(){ return window.TerraOmegaApp && window.TerraOmegaApp.backend; }
 function authenticated(){
   var b=backend();
   return !!(b && b.isAuthenticated && b.isAuthenticated());
 }
 function normalizeLevel(level){
   var raw=String(level || 'public').toLowerCase();
-  var aliases=(window.TerraZData && window.TerraZData.visibilityAliases) || {};
+  var aliases=(window.TerraOmegaData && window.TerraOmegaData.visibilityAliases) || {};
   raw=aliases[raw] || raw;
   return raw === 'spoiler' || raw === 'master' ? raw : 'public';
 }
@@ -37,7 +37,7 @@ function isLevelAllowed(level){
 function isAllowed(el){ return isLevelAllowed(levelOf(el)); }
 
 function closeSensitiveUi(){
-  var app=window.TerraZApp || {};
+  var app=window.TerraOmegaApp || {};
   if(app.search && app.search.closePanel) app.search.closePanel();
   if(mode !== 'safe') return;
   if(app.masterWorkspace && app.masterWorkspace.close) app.masterWorkspace.close();
@@ -70,7 +70,7 @@ function apply(options){
 
   if(options.closeSensitive !== false) closeSensitiveUi();
 
-  document.dispatchEvent(new CustomEvent('terra-z:visibility-changed',{
+  document.dispatchEvent(new CustomEvent('terra-omega:visibility-changed',{
     detail:{mode:mode,hiddenCount:hiddenCount,authenticated:authenticated()}
   }));
   return hiddenCount;
@@ -78,7 +78,7 @@ function apply(options){
 function toggle(){
   mode=mode === 'safe' ? 'full' : 'safe';
   var hiddenCount=apply({closeSensitive:true});
-  var core=window.TerraZCore;
+  var core=window.TerraOmegaCore;
   if(core && core.showToast){
     if(mode === 'safe'){
       core.showToast('Modo Jogador ativado — apenas conteúdo Público permanece visível.','success',4200);
@@ -96,10 +96,10 @@ function toggle(){
 
 var btn=document.getElementById('spoilerToggle');
 if(btn) btn.addEventListener('click',toggle);
-document.addEventListener('terra-z:auth-changed',function(){ apply({closeSensitive:false}); });
+document.addEventListener('terra-omega:auth-changed',function(){ apply({closeSensitive:false}); });
 apply({closeSensitive:false});
 
-window.TerraZApp.visibility={
+window.TerraOmegaApp.visibility={
   apply:apply,
   toggle:toggle,
   getMode:function(){ return mode; },

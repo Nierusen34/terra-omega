@@ -1,22 +1,22 @@
 (function(){
 "use strict";
 
-window.TerraZApp=window.TerraZApp||{};
-var core=window.TerraZCore;
-if(!core) throw new Error("Terra Z: núcleo não carregado antes de js/table-mode.js");
+window.TerraOmegaApp=window.TerraOmegaApp||{};
+var core=window.TerraOmegaCore;
+if(!core) throw new Error("Terra Omega: núcleo não carregado antes de js/table-mode.js");
 
 var escapeHtml=core.escapeHtml;
 var escapeAttr=core.escapeAttr;
 var showToast=core.showToast;
 var showConfirm=core.showConfirm;
-var KEY="terraZ_session_mode_v1";
+var KEY="terraOmega_session_mode_v1";
 var state=null;
 var activeTab="session";
 var mapKey="city";
 var timer=null;
 
 function el(id){return document.getElementById(id);}
-function app(){return window.TerraZApp||{};}
+function app(){return window.TerraOmegaApp||{};}
 function backend(){return app().backend;}
 function privateApi(){return app().privateContent;}
 function authenticated(){
@@ -54,7 +54,7 @@ function save(){
   state=ensure(state);
   state.table.tab=activeTab;
   state.table.map=mapKey;
-  try{sessionStorage.setItem(KEY,JSON.stringify(state));}catch(error){console.warn("Terra Z table mode:",error);}
+  try{sessionStorage.setItem(KEY,JSON.stringify(state));}catch(error){console.warn("Terra Omega table mode:",error);}
   updateHeader();
 }
 function master(){
@@ -297,8 +297,8 @@ function characterNames(){
   return c&&c.names?c.names():[];
 }
 function characterInfo(name){
-  var overrides=window.TerraZData&&window.TerraZData.characterOverrides||{};
-  var taxonomy=window.TerraZData&&window.TerraZData.characterTaxonomy||{};
+  var overrides=window.TerraOmegaData&&window.TerraOmegaData.characterOverrides||{};
+  var taxonomy=window.TerraOmegaData&&window.TerraOmegaData.characterTaxonomy||{};
   var meta=taxonomy.characters&&taxonomy.characters[name]||{};
   var ficha=overrides[name]||{};
   var secrets=privateApi()&&privateApi().getCharacterSecrets?privateApi().getCharacterSecrets(name):[];
@@ -418,7 +418,7 @@ function setup(){
 }
 setup();
 
-window.TerraZApp.tableMode={
+window.TerraOmegaApp.tableMode={
   open:open,
   close:close,
   render:render,

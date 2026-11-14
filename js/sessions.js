@@ -1,16 +1,16 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/sessions.js');
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/sessions.js');
 
 var escapeHtml = core.escapeHtml;
 var escapeAttr = core.escapeAttr;
-var publicSessions = (window.TerraZData && window.TerraZData.sessions) || [];
+var publicSessions = (window.TerraOmegaData && window.TerraOmegaData.sessions) || [];
 var privateSessions = [];
 
-function backend(){ return window.TerraZApp && window.TerraZApp.backend; }
+function backend(){ return window.TerraOmegaApp && window.TerraOmegaApp.backend; }
 
 function allSessions(){
   var byId = {};
@@ -24,20 +24,20 @@ function allSessions(){
 }
 
 function characterLink(name){
-  var manager = window.TerraZApp && window.TerraZApp.characters;
+  var manager = window.TerraOmegaApp && window.TerraOmegaApp.characters;
   var hasFicha = !!(manager && manager.get && manager.get(name));
 
   if(!hasFicha){
     return '<span class="session-chip session-character-unavailable" title="Sem ficha ativa">' + escapeHtml(name) + '</span>';
   }
 
-  var router = window.TerraZApp.router;
+  var router = window.TerraOmegaApp.router;
   var slug = router && router.slugify ? router.slugify(name) : '';
   return '<button class="session-chip session-character" data-character="' + escapeAttr(name) + '" data-character-slug="' + escapeAttr(slug) + '">' + escapeHtml(name) + '</button>';
 }
 
 function locationLink(name){
-  var router = window.TerraZApp && window.TerraZApp.router;
+  var router = window.TerraOmegaApp && window.TerraOmegaApp.router;
   var route = router && router.routeForLocation ? router.routeForLocation(name) : '';
 
   if(!route){
@@ -118,27 +118,27 @@ function render(){
   root.querySelectorAll('[data-session-edit]').forEach(function(btn){
     btn.addEventListener('click', function(){
       var id = btn.getAttribute('data-session-edit');
-      if(window.TerraZApp.sessionEditor) window.TerraZApp.sessionEditor.open(id);
+      if(window.TerraOmegaApp.sessionEditor) window.TerraOmegaApp.sessionEditor.open(id);
     });
   });
 
   root.querySelectorAll('[data-character]').forEach(function(btn){
     btn.addEventListener('click', function(){
       var name = btn.getAttribute('data-character');
-      if(window.TerraZApp.characters) window.TerraZApp.characters.open(name);
+      if(window.TerraOmegaApp.characters) window.TerraOmegaApp.characters.open(name);
     });
   });
 
   root.querySelectorAll('[data-location-route]').forEach(function(btn){
     btn.addEventListener('click', function(){
       var route = btn.getAttribute('data-location-route');
-      var router = window.TerraZApp && window.TerraZApp.router;
+      var router = window.TerraOmegaApp && window.TerraOmegaApp.router;
       if(router && router.go) router.go(route);
     });
   });
 
-  if(window.TerraZApp.visibility) window.TerraZApp.visibility.apply();
-  document.dispatchEvent(new CustomEvent('terra-z:sessions-rendered'));
+  if(window.TerraOmegaApp.visibility) window.TerraOmegaApp.visibility.apply();
+  document.dispatchEvent(new CustomEvent('terra-omega:sessions-rendered'));
 }
 
 async function loadPrivateSessions(){
@@ -155,7 +155,7 @@ async function loadPrivateSessions(){
     privateSessions = Array.isArray(result.sessions) ? result.sessions : [];
   } catch(error){
     privateSessions = [];
-    console.error('Terra Z private sessions:',error);
+    console.error('Terra Omega private sessions:',error);
   }
 
   render();
@@ -189,16 +189,16 @@ function upsertSession(item){
   render();
 }
 
-document.addEventListener('terra-z:auth-changed', loadPrivateSessions);
-document.addEventListener('terra-z:runtime-data-loaded',function(){
-  publicSessions = (window.TerraZData && window.TerraZData.sessions) || [];
+document.addEventListener('terra-omega:auth-changed', loadPrivateSessions);
+document.addEventListener('terra-omega:runtime-data-loaded',function(){
+  publicSessions = (window.TerraOmegaData && window.TerraOmegaData.sessions) || [];
   render();
 });
 
 render();
 if(backend() && backend().isAuthenticated()) loadPrivateSessions();
 
-window.TerraZApp.sessions = {
+window.TerraOmegaApp.sessions = {
   render:render,
   reloadPrivate:loadPrivateSessions,
   upsert:upsertSession,

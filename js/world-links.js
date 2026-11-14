@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
+window.TerraOmegaApp = window.TerraOmegaApp || {};
 
 function openDistrict(slug){
   var tabBtn = document.querySelector('.tab-btn[data-tab="tab-city"]');
@@ -31,7 +31,7 @@ document.querySelectorAll('[data-map-district]').forEach(function(el){
 
   function activate(){
     var slug = el.getAttribute('data-map-district');
-    var router = window.TerraZApp && window.TerraZApp.router;
+    var router = window.TerraOmegaApp && window.TerraOmegaApp.router;
     if(router && router.openDistrict) router.openDistrict(slug);
     else openDistrict(slug);
   }
@@ -45,7 +45,7 @@ document.querySelectorAll('[data-map-district]').forEach(function(el){
   });
 });
 
-window.TerraZApp.worldLinks = {
+window.TerraOmegaApp.worldLinks = {
   openDistrict: openDistrict
 };
 

@@ -1,9 +1,9 @@
 (function(){
 "use strict";
 
-window.TerraZApp=window.TerraZApp||{};
-var core=window.TerraZCore;
-if(!core) throw new Error("Terra Z: núcleo não carregado antes de js/command-palette.js");
+window.TerraOmegaApp=window.TerraOmegaApp||{};
+var core=window.TerraOmegaCore;
+if(!core) throw new Error("Terra Omega: núcleo não carregado antes de js/command-palette.js");
 
 var escapeHtml=core.escapeHtml;
 var escapeAttr=core.escapeAttr;
@@ -13,8 +13,8 @@ var lastQuery="";
 var masterLoaded=false;
 
 function el(id){return document.getElementById(id);}
-function app(){return window.TerraZApp||{};}
-function data(){return window.TerraZData||{};}
+function app(){return window.TerraOmegaApp||{};}
+function data(){return window.TerraOmegaData||{};}
 function backend(){return app().backend;}
 function normalize(value){
   return String(value==null?"":value)
@@ -219,7 +219,7 @@ async function loadAdmin(){
 }
 async function ensurePrivate(){
   if(!authenticated()||masterLoaded)return;
-  try{await loadAdmin();}catch(error){console.warn("Terra Z command palette private index:",error);}
+  try{await loadAdmin();}catch(error){console.warn("Terra Omega command palette private index:",error);}
 }
 function rank(row,query){
   if(!query)return row.type==="Comando"?120:20;
@@ -316,10 +316,10 @@ function setup(){
       if(shown)close();else open("");
     }
   });
-  ["terra-z:runtime-data-loaded","terra-z:characters-rendered","terra-z:sessions-rendered","terra-z:private-content-loaded","terra-z:auth-changed"].forEach(function(name){
+  ["terra-omega:runtime-data-loaded","terra-omega:characters-rendered","terra-omega:sessions-rendered","terra-omega:private-content-loaded","terra-omega:auth-changed"].forEach(function(name){
     document.addEventListener(name,function(){masterLoaded=false;if(panel&&panel.classList.contains("show"))render();});
   });
 }
 setup();
-window.TerraZApp.commandPalette={open:open,close:close,refresh:render,results:function(q){return results(q);}};
+window.TerraOmegaApp.commandPalette={open:open,close:close,refresh:render,results:function(q){return results(q);}};
 })();

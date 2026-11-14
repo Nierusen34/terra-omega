@@ -1,8 +1,8 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
 if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/presentation.js');
 
 var showToast = core.showToast;
@@ -26,7 +26,7 @@ function activeScope(){
 
 function isPresentable(el){
   if(!el || el.hidden) return false;
-  var visibility = window.TerraZApp && window.TerraZApp.visibility;
+  var visibility = window.TerraOmegaApp && window.TerraOmegaApp.visibility;
   if(visibility && visibility.isAllowed && !visibility.isAllowed(el)) return false;
   return true;
 }
@@ -282,7 +282,7 @@ function closePresentation(){
   document.body.style.overflow = '';
 }
 
-document.addEventListener('terra-z:visibility-changed',function(){
+document.addEventListener('terra-omega:visibility-changed',function(){
   var modal = document.getElementById('presentationModal');
   if(modal && modal.classList.contains('show')){
     var scope = activeScope();
@@ -296,7 +296,7 @@ document.addEventListener('terra-z:visibility-changed',function(){
 
 window.togglePresentation = togglePresentation;
 
-window.TerraZApp.presentation = {
+window.TerraOmegaApp.presentation = {
   toggle:togglePresentation,
   open:openPresentation,
   close:closePresentation,

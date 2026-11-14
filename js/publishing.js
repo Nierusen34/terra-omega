@@ -1,15 +1,15 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
 if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/publishing.js');
 
 var showToast = core.showToast;
 
 function el(id){ return document.getElementById(id); }
-function backend(){ return window.TerraZApp && window.TerraZApp.backend; }
-function editor(){ return window.TerraZApp && window.TerraZApp.editor; }
+function backend(){ return window.TerraOmegaApp && window.TerraOmegaApp.backend; }
+function editor(){ return window.TerraOmegaApp && window.TerraOmegaApp.editor; }
 
 function setStatus(text,state){
   var node = el('publishStatus');
@@ -117,7 +117,7 @@ function trackDeployment(statusUrl){
   if(!statusUrl) return;
   waitForDeployment(statusUrl)
     .then(function(ok){
-      if(ok) document.dispatchEvent(new CustomEvent('terra-z:static-deploy-synced'));
+      if(ok) document.dispatchEvent(new CustomEvent('terra-omega:static-deploy-synced'));
     })
     .catch(function(error){
       console.warn('Terra Omega static deploy:',error);
@@ -148,10 +148,10 @@ async function publish(){
   try {
     var result = await b.request('/api/publish',{method:'POST',body:buildPayload()});
 
-    window.TerraZData = window.TerraZData || {};
-    window.TerraZData.contentOverrides = Object.assign(
+    window.TerraOmegaData = window.TerraOmegaData || {};
+    window.TerraOmegaData.contentOverrides = Object.assign(
       {},
-      window.TerraZData.contentOverrides || {},
+      window.TerraOmegaData.contentOverrides || {},
       changes
     );
 
@@ -170,7 +170,7 @@ async function publish(){
       4500
     );
 
-    var runtime = window.TerraZApp && window.TerraZApp.runtimeData;
+    var runtime = window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
     if(runtime && runtime.refresh) runtime.refresh({force:true,bust:result.sha,silent:true});
 
     trackDeployment(result.status_url);
@@ -204,14 +204,14 @@ function setup(){
   var panel = el('publishPanel');
   if(panel) panel.addEventListener('click',function(e){ if(e.target === panel) closePanel(); });
 
-  document.addEventListener('terra-z:edits-changed',refresh);
-  document.addEventListener('terra-z:auth-changed',refresh);
+  document.addEventListener('terra-omega:edits-changed',refresh);
+  document.addEventListener('terra-omega:auth-changed',refresh);
   refresh();
 }
 
 setup();
 
-window.TerraZApp.publishing = {
+window.TerraOmegaApp.publishing = {
   open:openPanel,
   close:closePanel,
   refresh:refresh,

@@ -1,19 +1,19 @@
 (function(){
 "use strict";
 
-window.TerraZApp=window.TerraZApp||{};
-var core=window.TerraZCore;
-if(!core) throw new Error("Terra Z: núcleo não carregado antes de js/session-mode.js");
+window.TerraOmegaApp=window.TerraOmegaApp||{};
+var core=window.TerraOmegaCore;
+if(!core) throw new Error("Terra Omega: núcleo não carregado antes de js/session-mode.js");
 
 var escapeHtml=core.escapeHtml;
 var escapeAttr=core.escapeAttr;
 var showToast=core.showToast;
 var showConfirm=core.showConfirm;
-var KEY="terraZ_session_mode_v1";
+var KEY="terraOmega_session_mode_v1";
 var state=null;
 
 function el(id){return document.getElementById(id);}
-function app(){return window.TerraZApp||{};}
+function app(){return window.TerraOmegaApp||{};}
 function backend(){return app().backend;}
 function authenticated(){var b=backend();return !!(b&&b.isAuthenticated&&b.isAuthenticated());}
 function empty(){
@@ -28,7 +28,7 @@ function loadDraft(){
 }
 function saveDraft(){
   if(!state)return;
-  try{sessionStorage.setItem(KEY,JSON.stringify(state));}catch(error){console.warn("Terra Z session draft:",error);}
+  try{sessionStorage.setItem(KEY,JSON.stringify(state));}catch(error){console.warn("Terra Omega session draft:",error);}
   renderStatus();
 }
 function clearDraft(){
@@ -182,5 +182,5 @@ function setup(){
   var panel=el("sessionModePanel");if(panel)panel.addEventListener("click",function(e){if(e.target===panel)close();});
 }
 setup();
-window.TerraZApp.sessionMode={open:open,close:close,render:render,clear:clearDraft,finish:finish,draft:function(){return state?JSON.parse(JSON.stringify(state)):loadDraft();}};
+window.TerraOmegaApp.sessionMode={open:open,close:close,render:render,clear:clearDraft,finish:finish,draft:function(){return state?JSON.parse(JSON.stringify(state)):loadDraft();}};
 })();

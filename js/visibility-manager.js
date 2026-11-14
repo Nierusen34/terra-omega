@@ -1,8 +1,8 @@
 (function(){
 "use strict";
 
-window.TerraZApp=window.TerraZApp || {};
-var core=window.TerraZCore;
+window.TerraOmegaApp=window.TerraOmegaApp || {};
+var core=window.TerraOmegaCore;
 if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/visibility-manager.js');
 
 var escapeHtml=core.escapeHtml;
@@ -10,7 +10,7 @@ var escapeAttr=core.escapeAttr;
 var levelFilter='all';
 
 function el(id){ return document.getElementById(id); }
-function app(){ return window.TerraZApp || {}; }
+function app(){ return window.TerraOmegaApp || {}; }
 
 function normalizeLevel(value){
   var visibility=app().visibility;
@@ -56,7 +56,7 @@ function typeLabel(type){
 
 function collect(){
   var rows=[];
-  var data=window.TerraZData || {};
+  var data=window.TerraOmegaData || {};
   var characters=app().characters;
   var taxonomy=data.characterTaxonomy || {characters:{}};
   var meta=taxonomy.characters || {};
@@ -303,7 +303,7 @@ function setup(){
     if(event.key === 'Escape' && panel && panel.classList.contains('show')) close();
   });
 
-  ['terra-z:runtime-data-loaded','terra-z:private-content-loaded','terra-z:private-content-cleared','terra-z:visibility-changed'].forEach(function(eventName){
+  ['terra-omega:runtime-data-loaded','terra-omega:private-content-loaded','terra-omega:private-content-cleared','terra-omega:visibility-changed'].forEach(function(eventName){
     document.addEventListener(eventName,function(){
       if(panel && panel.classList.contains('show')) render();
     });
@@ -312,6 +312,6 @@ function setup(){
 
 setup();
 
-window.TerraZApp.visibilityManager={open:open,close:close,render:render};
+window.TerraOmegaApp.visibilityManager={open:open,close:close,render:render};
 
 })();

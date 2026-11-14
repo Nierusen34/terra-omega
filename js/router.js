@@ -1,13 +1,13 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
 if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/router.js');
 
 var showToast = core.showToast;
 var BASE_TITLE = document.title;
-var STORAGE_KEY = 'terraZ_last_route_v2';
+var STORAGE_KEY = 'terraOmega_last_route_v2';
 var applying = false;
 var scheduled = null;
 var lastTabNavigation = null;
@@ -95,16 +95,16 @@ function sectionForRoute(route){
 }
 
 function findCharacterBySlug(slug){
-  var manager=window.TerraZApp && window.TerraZApp.characters;
+  var manager=window.TerraOmegaApp && window.TerraOmegaApp.characters;
   var names=manager && manager.names
     ? manager.names()
-    : Object.keys((window.TerraZData && window.TerraZData.characters) || {});
+    : Object.keys((window.TerraOmegaData && window.TerraOmegaData.characters) || {});
   return names.find(function(name){ return slugify(name) === slugify(slug); }) || null;
 }
 
 function findSession(value){
-  var manager=window.TerraZApp && window.TerraZApp.sessions;
-  var sessions=manager && manager.getAll ? manager.getAll() : ((window.TerraZData && window.TerraZData.sessions) || []);
+  var manager=window.TerraOmegaApp && window.TerraOmegaApp.sessions;
+  var sessions=manager && manager.getAll ? manager.getAll() : ((window.TerraOmegaData && window.TerraOmegaData.sessions) || []);
   var wanted=slugify(value);
   return sessions.find(function(item){
     return item && (
@@ -116,13 +116,13 @@ function findSession(value){
 }
 
 function findTeamBySlug(slug){
-  var teams=window.TerraZData && window.TerraZData.teams && window.TerraZData.teams.teams;
+  var teams=window.TerraOmegaData && window.TerraOmegaData.teams && window.TerraOmegaData.teams.teams;
   if(!Array.isArray(teams)) return null;
   return teams.find(function(item){ return item && slugify(item.name) === slugify(slug); }) || null;
 }
 
 function findOrganizationBySlug(slug){
-  var organizations=window.TerraZData && window.TerraZData.organizations;
+  var organizations=window.TerraOmegaData && window.TerraOmegaData.organizations;
   if(!Array.isArray(organizations)) return null;
   var wanted=slugify(slug);
   return organizations.find(function(item){
@@ -133,7 +133,7 @@ function findOrganizationBySlug(slug){
 }
 
 function findCityBySlug(slug){
-  var cities=window.TerraZData && window.TerraZData.externalCities;
+  var cities=window.TerraOmegaData && window.TerraOmegaData.externalCities;
   if(!Array.isArray(cities)) return null;
   return cities.find(function(item){ return item && slugify(item.city) === slugify(slug); }) || null;
 }
@@ -143,7 +143,7 @@ function looseSlug(value){
 }
 
 function findDistrictBySlug(slug){
-  var districts=window.TerraZData && window.TerraZData.districts;
+  var districts=window.TerraOmegaData && window.TerraOmegaData.districts;
   if(!Array.isArray(districts)) return null;
   var wanted=slugify(slug);
   var looseWanted=looseSlug(slug);
@@ -337,7 +337,7 @@ function warnOnce(key,message){
 function closeCharacterFromRoute(){
   var modal=document.getElementById('fichaModal');
   if(modal && modal.classList.contains('show')){
-    var manager=window.TerraZApp && window.TerraZApp.characters;
+    var manager=window.TerraOmegaApp && window.TerraOmegaApp.characters;
     if(manager && manager.close) manager.close({fromRouter:true});
   }
 }
@@ -362,7 +362,7 @@ function applyRoute(route,options){
       navigateSection('tab-terraz','sub-tz-personagens');
       var character=findCharacterBySlug(parsed.slug);
       if(character){
-        var manager=window.TerraZApp && window.TerraZApp.characters;
+        var manager=window.TerraOmegaApp && window.TerraOmegaApp.characters;
         if(manager && manager.open) manager.open(character,{fromRouter:true});
         updateTitle(character);
       }else{
@@ -464,7 +464,7 @@ function applyRoute(route,options){
       if(eventRoute !== parsed.route && options.canonicalize !== false) writeRoute(eventRoute,{replace:true});
 
       var tryFocus=function(attempt){
-        var timeline=window.TerraZApp && window.TerraZApp.timeline;
+        var timeline=window.TerraOmegaApp && window.TerraOmegaApp.timeline;
         var found=timeline && timeline.focus
           ? timeline.focus(parsed.id)
           : focusTarget(eventRoute);
@@ -589,8 +589,8 @@ function routeForLocation(name){
   var district=findDistrictBySlug(name);
   if(district) return districtRoute(district.id || district.name);
 
-  var districts=window.TerraZData && Array.isArray(window.TerraZData.districts)
-    ? window.TerraZData.districts
+  var districts=window.TerraOmegaData && Array.isArray(window.TerraOmegaData.districts)
+    ? window.TerraOmegaData.districts
     : [];
   for(var i=0;i<districts.length;i++){
     var row=districts[i] || {};
@@ -604,8 +604,8 @@ function routeForLocation(name){
     }
   }
 
-  var strategic=window.TerraZData && Array.isArray(window.TerraZData.strategicSites)
-    ? window.TerraZData.strategicSites
+  var strategic=window.TerraOmegaData && Array.isArray(window.TerraOmegaData.strategicSites)
+    ? window.TerraOmegaData.strategicSites
     : [];
   if(strategic.some(function(site){
     return site && (looseSlug(site.name) === normalized || looseSlug(site.id) === normalized);
@@ -707,7 +707,7 @@ function bindOpenTarget(node,route){
 }
 
 function decorateDistricts(){
-  var districts=window.TerraZData && window.TerraZData.districts;
+  var districts=window.TerraOmegaData && window.TerraOmegaData.districts;
   if(!Array.isArray(districts)) return;
 
   districts.forEach(function(district){
@@ -772,7 +772,7 @@ function decorateSessions(){
 }
 
 function decorateOrganizations(){
-  var organizations=window.TerraZData && window.TerraZData.organizations;
+  var organizations=window.TerraOmegaData && window.TerraOmegaData.organizations;
   if(!Array.isArray(organizations)) return;
 
   organizations.forEach(function(item){
@@ -791,10 +791,10 @@ function decorateTargets(){
   decorateDistricts();
   decorateOrganizations();
 
-  var cities=window.TerraZData && window.TerraZData.externalCities;
+  var cities=window.TerraOmegaData && window.TerraOmegaData.externalCities;
   decorateTable('externalCitiesBody',cities,'city',cityRoute);
 
-  var teams=window.TerraZData && window.TerraZData.teams && window.TerraZData.teams.teams;
+  var teams=window.TerraOmegaData && window.TerraOmegaData.teams && window.TerraOmegaData.teams.teams;
   decorateTable('teamsBody',teams,'name',teamRoute);
 
   decorateSessions();
@@ -837,15 +837,15 @@ window.addEventListener('popstate',scheduleApply);
 window.addEventListener('hashchange',scheduleApply);
 
 [
-  'terra-z:runtime-data-loaded',
-  'terra-z:characters-rendered',
-  'terra-z:sessions-rendered',
-  'terra-z:auth-changed'
+  'terra-omega:runtime-data-loaded',
+  'terra-omega:characters-rendered',
+  'terra-omega:sessions-rendered',
+  'terra-omega:auth-changed'
 ].forEach(function(name){
   document.addEventListener(name,scheduleApply);
 });
 
-window.TerraZApp.router = {
+window.TerraOmegaApp.router = {
   slugify:slugify,
   applyHash:applyLocation,
   applyRoute:applyRoute,

@@ -1,9 +1,9 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core=window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/timeline-editor.js');
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core=window.TerraOmegaCore;
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/timeline-editor.js');
 
 var showToast=core.showToast;
 var showConfirm=core.showConfirm;
@@ -11,8 +11,8 @@ var currentId="";
 var capability=null;
 
 function el(id){ return document.getElementById(id); }
-function backend(){ return window.TerraZApp && window.TerraZApp.backend; }
-function timeline(){ return window.TerraZApp && window.TerraZApp.timeline; }
+function backend(){ return window.TerraOmegaApp && window.TerraOmegaApp.backend; }
+function timeline(){ return window.TerraOmegaApp && window.TerraOmegaApp.timeline; }
 
 function splitComma(value){
   return String(value || "").split(",").map(function(item){ return item.trim(); }).filter(Boolean);
@@ -116,7 +116,7 @@ async function open(id){
   var b=backend();
   if(!b || !b.isAuthenticated || !b.isAuthenticated()){
     showToast("Entre como editor para administrar a Linha do Tempo.","warning",5000);
-    if(window.TerraZApp.publishing) window.TerraZApp.publishing.open();
+    if(window.TerraOmegaApp.publishing) window.TerraOmegaApp.publishing.open();
     return;
   }
 
@@ -128,7 +128,7 @@ async function open(id){
   var manager=timeline();
   var event=id && manager && manager.getEvent ? manager.getEvent(id) : null;
   if(event && event.source==="session"){
-    if(window.TerraZApp.sessionEditor) window.TerraZApp.sessionEditor.open(event.sessionId);
+    if(window.TerraOmegaApp.sessionEditor) window.TerraOmegaApp.sessionEditor.open(event.sessionId);
     return;
   }
 
@@ -158,7 +158,7 @@ function clearLocalDrafts(event){
   if(!ids.length) return;
 
   try{
-    var raw=localStorage.getItem("terraZ_v1_edits");
+    var raw=localStorage.getItem("terraOmega_v1_edits");
     if(!raw) return;
     var data=JSON.parse(raw);
     var changed=false;
@@ -168,7 +168,7 @@ function clearLocalDrafts(event){
         changed=true;
       }
     });
-    if(changed) localStorage.setItem("terraZ_v1_edits",JSON.stringify(data));
+    if(changed) localStorage.setItem("terraOmega_v1_edits",JSON.stringify(data));
   }catch(error){}
 }
 
@@ -230,20 +230,20 @@ async function save(){
     close();
     showToast(wasEditing ? "Evento atualizado com sucesso." : "Evento criado com sucesso.","success",4500);
 
-    var runtime=window.TerraZApp && window.TerraZApp.runtimeData;
+    var runtime=window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
     if(runtime && runtime.refresh && result.event && result.event.visibility!=="master"){
       runtime.refresh({force:true,bust:result.sha,silent:true});
     }
 
-    var publishing=window.TerraZApp && window.TerraZApp.publishing;
+    var publishing=window.TerraOmegaApp && window.TerraOmegaApp.publishing;
     if(publishing && publishing.trackDeployment && result.status_url){
       publishing.trackDeployment(result.status_url);
     }
 
-    var r=window.TerraZApp && window.TerraZApp.router;
+    var r=window.TerraOmegaApp && window.TerraOmegaApp.router;
     if(r && r.openTimelineEvent && result.event) r.openTimelineEvent(result.event.id,{replace:true});
   }catch(error){
-    console.error("Terra Z timeline save:",error);
+    console.error("Terra Omega timeline save:",error);
     setStatus("Erro ao salvar","error");
     showToast(error.message || "Falha ao salvar o evento.","error",6500);
   }finally{
@@ -291,18 +291,18 @@ async function performDelete(event){
     close();
     showToast("Evento excluído com sucesso.","success",4500);
 
-    var runtime=window.TerraZApp && window.TerraZApp.runtimeData;
+    var runtime=window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
     if(runtime && runtime.refresh) runtime.refresh({force:true,bust:result.sha,silent:true});
 
-    var publishing=window.TerraZApp && window.TerraZApp.publishing;
+    var publishing=window.TerraOmegaApp && window.TerraOmegaApp.publishing;
     if(publishing && publishing.trackDeployment && result.status_url){
       publishing.trackDeployment(result.status_url);
     }
 
-    var r=window.TerraZApp && window.TerraZApp.router;
+    var r=window.TerraOmegaApp && window.TerraOmegaApp.router;
     if(r && r.go) r.go("/universo/linha-do-tempo",{replace:true});
   }catch(error){
-    console.error("Terra Z timeline delete:",error);
+    console.error("Terra Omega timeline delete:",error);
     setStatus("Erro ao excluir","error");
     showToast(error.message || "Falha ao excluir o evento.","error",6500);
   }finally{
@@ -329,14 +329,14 @@ function setup(){
     if(event.key==="Escape" && panel && panel.classList.contains("show")) close();
   });
 
-  document.addEventListener("terra-z:auth-changed",function(){
+  document.addEventListener("terra-omega:auth-changed",function(){
     capability=null;
     refresh();
   });
   refresh();
 }
 
-window.TerraZApp.timelineEditor={
+window.TerraOmegaApp.timelineEditor={
   open:open,
   close:close,
   refresh:refresh,
