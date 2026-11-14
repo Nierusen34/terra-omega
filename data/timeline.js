@@ -378,6 +378,22 @@ window.TerraZData.timeline = [
           "Titãs"
         ],
         "visibility": "public"
+      },
+      {
+        "id": "8-de-marco-de-2024-tristan-queen-conhece-misty-kilgore-aprendiz-de-zatanna-zatara-e-comecam-um-relac",
+        "category": "history",
+        "sortKey": 20240101,
+        "year": "8 de Março de 2024",
+        "text": "Tristan Queen conhece Misty Kilgore, aprendiz de Zatanna Zatara e começam um relacionamento.",
+        "characters": [
+          "Tristan Queen",
+          "Misty Kilgore"
+        ],
+        "locations": [
+          "Gotham City"
+        ],
+        "teams": [],
+        "visibility": "public"
       }
     ]
   },
