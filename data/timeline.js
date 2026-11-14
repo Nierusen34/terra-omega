@@ -190,10 +190,10 @@ window.TerraZData.timeline = [
       },
       {
         "id": "20-de-fevereiro-de-2007-tristan-queen-nasce",
-        "category": "current",
+        "category": "history",
         "sortKey": 20072002,
         "year": "20 de Fevereiro de 2007",
-        "title": "Tristan Queen Nasce",
+        "title": "Nascimento de Tristan Queen",
         "text": "",
         "characters": [
           "Tristan Queen"
