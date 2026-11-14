@@ -3,7 +3,7 @@
 
 window.TerraZData = window.TerraZData || {};
 
-// Biblioteca de mídia reutilizável do Terra Z.
+// Biblioteca de mídia reutilizável de Terra Omega.
 window.TerraZData.mediaLibrary = {
   "version": 1,
   "assets": [
@@ -90,11 +90,11 @@ window.TerraZData.mediaLibrary = {
     },
     {
       "id": "editorial-dossie-terra-z",
-      "label": "Dossiê Terra Z",
+      "label": "Dossiê Terra Omega",
       "category": "editorial",
-      "src": "images/editorial/dossie-terra-z.webp",
+      "src": "images/editorial/dossie-terra-omega.webp",
       "source": "project",
-      "alt": "Dossiê Terra Z",
+      "alt": "Dossiê Terra Omega — Universo Oblívio",
       "credit": "",
       "framing": {
         "fit": "cover",

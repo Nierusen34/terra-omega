@@ -3,7 +3,7 @@
 
 window.TerraZApp = window.TerraZApp || {};
 var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/navigation.js');
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/navigation.js');
 
 var showToast = core.showToast;
 

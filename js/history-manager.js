@@ -112,7 +112,7 @@ function renderOverview(){
   if(policy){
     if(overview.auto_deploy_paused === true){
       policy.className='history-deploy-policy paused';
-      policy.textContent='🛡️ Deploy automático pausado · publique pelo editor do Universo Oblívio. O fluxo usa GitHub Actions + Deploy Hook e não depende da conexão Vercel do ChatGPT.';
+      policy.textContent='🛡️ Deploy automático pausado · publique pelo editor do Universo Oblívio ou pela integração Vercel autorizada. O checkpoint continua validando o SHA de produção.';
     }else if(overview.auto_deploy_paused === false){
       policy.className='history-deploy-policy warning';
       policy.textContent='⚠️ Deploy automático está habilitado no repositório.';

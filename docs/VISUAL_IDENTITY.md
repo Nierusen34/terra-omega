@@ -96,3 +96,20 @@ Implementado no checkpoint visual seguinte:
 - O viewport normal ganha presença e área útil maiores em desktop sem comprometer o enquadramento mobile/PWA.
 - Legenda e controles recebem melhor separação visual; no mobile, a legenda pode ser percorrida horizontalmente sem reduzir a área do mapa.
 - Nenhum dado de relações, posição publicada, núcleo ou imagem é alterado por este passo.
+
+
+## Passo 4 — Polimento final e consistência
+
+Fechamento da identidade visual e operacional:
+
+- revisão final das nomenclaturas visíveis de **Terra Omega** e **Universo Oblívio**;
+- manutenção deliberada de IDs, nomes de arquivo históricos, eventos JavaScript e namespaces `TerraZ*` quando necessários para compatibilidade;
+- Biblioteca de Mídia atualizada para exibir o **Dossiê Terra Omega** e usar a arte editorial atual;
+- estados ativos e hovers genéricos passam a herdar a cor da publicação atual, eliminando resquícios fixos da antiga paleta vermelha;
+- foco de teclado ampliado para navegação, filtros, grafo e controles administrativos;
+- suporte global aprimorado a `prefers-reduced-motion`;
+- ajustes finais de espaçamento e tipografia em telas estreitas/PWA;
+- remoção de regras CSS obsoletas do antigo tratamento de “arquivo” da aba Universo, preservando a **Sentinela Dourada**;
+- texto operacional atualizado para reconhecer tanto o checkpoint pelo editor quanto a publicação direta via integração Vercel autorizada.
+
+Este passo não renomeia o repositório, a URL de produção, schemas, chaves de armazenamento, eventos ou namespaces técnicos legados.

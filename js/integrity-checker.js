@@ -3,7 +3,7 @@
 
 window.TerraZApp = window.TerraZApp || {};
 var core = window.TerraZCore;
-if(!core) throw new Error("Terra Z: núcleo não carregado antes de js/integrity-checker.js");
+if(!core) throw new Error("Terra Omega: núcleo não carregado antes de js/integrity-checker.js");
 
 var escapeHtml = core.escapeHtml;
 var escapeAttr = core.escapeAttr;
@@ -105,7 +105,7 @@ function check(report,area,title,fn){
   var before = report.issues.length;
   try { fn(); }
   catch(error){
-    console.error("Terra Z integrity:",area,title,error);
+    console.error("Terra Omega integrity:",area,title,error);
     issue(report,"critical",area,"Falha na verificação",title + ": " + (error.message || error));
   }
   if(report.issues.length === before) report.passes.push({area:area,title:title});
@@ -115,7 +115,7 @@ async function checkAsync(report,area,title,fn){
   var before = report.issues.length;
   try { await fn(); }
   catch(error){
-    console.error("Terra Z integrity:",area,title,error);
+    console.error("Terra Omega integrity:",area,title,error);
     issue(report,"critical",area,"Falha na verificação",title + ": " + (error.message || error));
   }
   if(report.issues.length === before) report.passes.push({area:area,title:title});
