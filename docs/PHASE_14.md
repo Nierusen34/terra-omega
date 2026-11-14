@@ -1,4 +1,4 @@
-# Terra Z — Fase 14A, 14B e 14C
+# Terra Omega — Fase 14A, 14B e 14C
 
 ## Visão geral
 
@@ -90,7 +90,7 @@ Tipos de registro rápido:
 
 O estado usa:
 
-`sessionStorage["terraZ_session_mode_v1"]`
+`sessionStorage["terraOmega_session_mode_v1"]`
 
 Isso significa:
 
@@ -140,7 +140,7 @@ com:
 
 Formato:
 
-`terra-z-backup-v2`
+`terra-omega-backup-v2`
 
 Inclui:
 
@@ -235,7 +235,7 @@ Depois do checkpoint, `/api/health` anuncia:
 - `api/publish.js`
 - `api/health.js`
 - `index.html`
-- `terra-z.css`
+- `terra-omega.css`
 
 ## Segurança
 

@@ -29,7 +29,7 @@ Os IDs de edição existentes foram preservados para continuar compatíveis com 
 
 ## Sessões
 
-As sessões são lidas de `TerraZApp.sessions.getAll()`.
+As sessões são lidas de `TerraOmegaApp.sessions.getAll()`.
 
 O gerenciador usa preferencialmente `inWorldDate` para posicioná-las cronologicamente. Datas em português como **4 de Janeiro de 2027** são reconhecidas. Na ausência de uma data no universo, `realDate` funciona como fallback.
 
@@ -62,7 +62,7 @@ A cronologia pode mencionar personagens cujas fichas ainda serão criadas. Isso 
 
 A linha do tempo respeita o mesmo modelo Público / Spoiler / Mestre.
 
-Sessões Mestre só entram em memória depois da autenticação. Eventos e chips com `data-visibility` continuam submetidos a `TerraZApp.visibility`.
+Sessões Mestre só entram em memória depois da autenticação. Eventos e chips com `data-visibility` continuam submetidos a `TerraOmegaApp.visibility`.
 
 ## Regra de arquitetura
 

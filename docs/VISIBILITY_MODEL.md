@@ -9,7 +9,7 @@ A Fase 8 introduz classificação editorial de conteúdo:
 
 ## Importante: não é segurança
 
-Enquanto o Terra Z for servido integralmente por GitHub Pages, qualquer conteúdo incluído em HTML/JavaScript pode ser encontrado por alguém que inspecione os arquivos públicos.
+Enquanto o Terra Omega for servido integralmente por GitHub Pages, qualquer conteúdo incluído em HTML/JavaScript pode ser encontrado por alguém que inspecione os arquivos públicos.
 
 O modo sem spoilers é uma **camada de experiência**, útil para não revelar informações casualmente durante a navegação. Ele não substitui autenticação nem controle de acesso.
 

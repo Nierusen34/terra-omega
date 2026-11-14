@@ -10,7 +10,7 @@ A URL, o repositório e os identificadores técnicos antigos permanecem estávei
 
 ## Direção criativa
 
-A identidade parte do conceito C anteriormente aprovado: **Dossiê Terra Z**. A linguagem visual é a de um arquivo investigativo premium, com atmosfera de graphic novel sofisticada, mistério e documentação editorial.
+A identidade parte do conceito C anteriormente aprovado: **Dossiê Terra Omega**. A linguagem visual é a de um arquivo investigativo premium, com atmosfera de graphic novel sofisticada, mistério e documentação editorial.
 
 A capa usa a montagem investigativa já aprovada, agora referenciada como `images/editorial/dossie-terra-omega.webp`. A imagem é deliberadamente livre de logotipos e textos embutidos para que possa continuar sendo reutilizada sem conflito de nomenclatura.
 
@@ -81,7 +81,7 @@ Implementado no checkpoint visual seguinte:
 - Diário da Campanha recebe toolbar, entradas e indicadores visualmente integrados ao arquivo.
 - Sala do Mestre e Conteúdo Mestre usam identidade própria do Universo Oblívio mesmo quando abertos a partir de outra seção do site.
 - Editores de personagem, organização e sessão recebem as variáveis visuais do arquivo central sem alterar sua lógica.
-- O cache PWA é atualizado para `terra-z-pwa-v1.4.0-20261114-oblivio-ui2`.
+- O cache PWA é atualizado para `terra-omega-pwa-*`.
 
 
 ## Passo 3 — Grafo e Mapas
@@ -103,7 +103,7 @@ Implementado no checkpoint visual seguinte:
 Fechamento da identidade visual e operacional:
 
 - revisão final das nomenclaturas visíveis de **Terra Omega** e **Universo Oblívio**;
-- manutenção deliberada de IDs, nomes de arquivo históricos, eventos JavaScript e namespaces `TerraZ*` quando necessários para compatibilidade;
+- manutenção temporária apenas dos aliases legados `TerraZ*`, eventos e chaves antigas estritamente necessários para compatibilidade de instalações existentes;
 - Biblioteca de Mídia atualizada para exibir o **Dossiê Terra Omega** e usar a arte editorial atual;
 - estados ativos e hovers genéricos passam a herdar a cor da publicação atual, eliminando resquícios fixos da antiga paleta vermelha;
 - foco de teclado ampliado para navegação, filtros, grafo e controles administrativos;

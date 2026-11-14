@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Esta revisão melhora a descoberta e a velocidade de uso sem alterar a arquitetura, o modelo de dados, o esquema de privacidade ou o fluxo de publicação do Terra Z.
+Esta revisão melhora a descoberta e a velocidade de uso sem alterar a arquitetura, o modelo de dados, o esquema de privacidade ou o fluxo de publicação do Terra Omega.
 
 A regra desta etapa é: **manter as ferramentas avançadas existentes, mas tornar as ações comuns mais diretas**.
 
@@ -38,7 +38,7 @@ O editor de personagem ganhou navegação interna:
 
 Nada foi ocultado ou removido. Os atalhos apenas percorrem o mesmo formulário longo.
 
-O botão antigo **Relações / Grafo** passa a abrir o grafo no contexto do personagem. Se a bolinha já existir, ela é selecionada. Se ainda não existir, o Terra Z prepara uma nova entidade para posicionamento e revisão.
+O botão antigo **Relações / Grafo** passa a abrir o grafo no contexto do personagem. Se a bolinha já existir, ela é selecionada. Se ainda não existir, o Terra Omega prepara uma nova entidade para posicionamento e revisão.
 
 A ficha pública também oferece um atalho visual para localizar o personagem no grafo quando houver entidade correspondente.
 

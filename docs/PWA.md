@@ -43,7 +43,7 @@ O token do editor continua em `sessionStorage`, fora do Service Worker.
 
 Uma nova versão não assume o controle silenciosamente durante uma sessão. Quando um Service Worker novo fica aguardando, a interface mostra **Nova versão do Terra Omega disponível**. O usuário decide quando clicar em **Atualizar**.
 
-O identificador do cache deve ser atualizado sempre que o núcleo visual ou os arquivos estáticos centrais mudarem, garantindo que instalações existentes recebam a nova identidade. O checkpoint visual global de 14/11/2026 usa o identificador `terra-z-pwa-v1.4.0-20261114-oblivio-ui1`.
+O identificador do cache deve ser atualizado sempre que o núcleo visual ou os arquivos estáticos centrais mudarem, garantindo que instalações existentes recebam a nova identidade. O checkpoint técnico atual usa o prefixo `terra-omega-pwa-`.
 
 ## Offline e administração
 
@@ -62,7 +62,7 @@ Em modo offline, leitura e navegação pelo conteúdo público em cache continua
 A partir do checkpoint de migração técnica:
 
 - a página principal passa a carregar `terra-omega.css` e `terra-omega.js`;
-- `terra-z.css` e `terra-z.js` são mantidos temporariamente no repositório para compatibilidade e rollback;
+- `terra-z.css` e `terra-z.js` foram mantidos apenas durante a primeira janela de migração e removidos após a validação dos equivalentes `terra-omega.css` e `terra-omega.js`;
 - o cache principal do PWA passa a usar o prefixo `terra-omega-pwa-`;
 - o service worker reconhece e remove caches antigos `terra-z-pwa-` durante a ativação;
 - o `id` do manifest permanece estável nesta etapa para que instalações existentes possam receber a atualização em vez de criar um segundo aplicativo;
@@ -73,6 +73,6 @@ A partir do checkpoint de migração técnica:
 
 - o ícone raster 192px passa a usar o emblema atual do Universo Oblívio;
 - os assets ativos do manifest passam a se chamar `terra-omega-192.webp`, `terra-omega-512.svg` e `terra-omega-maskable.svg`;
-- `terra-omega-compat.js` migra e espelha chaves locais antigas `terraZ_*` para `terraOmega_*`;
+- a ponte integrada em `terra-omega.js` migra e espelha chaves locais antigas `terraZ_*` para `terraOmega_*`;
 - eventos `terra-z:*` e `terra-omega:*` são espelhados durante a janela de compatibilidade;
 - o backend público passa a usar `https://terra-omega-rpg.vercel.app`.

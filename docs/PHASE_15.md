@@ -1,8 +1,8 @@
-# Etapa 15 — Modo Mesa · Terra Z v1.4.0
+# Etapa 15 — Modo Mesa · Terra Omega v1.4.0
 
 ## Objetivo
 
-Criar uma interface operacional para uso ao vivo durante as sessões, especialmente quando o Terra Z estiver instalado como PWA em celular ou tablet.
+Criar uma interface operacional para uso ao vivo durante as sessões, especialmente quando o Terra Omega estiver instalado como PWA em celular ou tablet.
 
 O **Modo Mesa** não substitui o **Modo Sessão**. O Modo Sessão continua sendo o rascunho estruturado e o fluxo de encerramento; o Modo Mesa é a camada rápida usada durante a partida.
 
@@ -53,4 +53,4 @@ O Modo Mesa pode continuar operando com o rascunho e os dados que já estiverem 
 
 ## Versão
 
-A Etapa 15 marca a atualização do Terra Z para **v1.4.0**.
+A Etapa 15 marca a atualização do Terra Omega para **v1.4.0**.

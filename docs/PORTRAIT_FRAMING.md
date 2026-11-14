@@ -1,8 +1,8 @@
-# Terra Z — Enquadramento de Retratos
+# Terra Omega — Enquadramento de Retratos
 
 ## Objetivo
 
-O Terra Z usa uma única imagem canônica por personagem, mas permite definir **como essa imagem aparece em cada contexto**.
+O Terra Omega usa uma única imagem canônica por personagem, mas permite definir **como essa imagem aparece em cada contexto**.
 
 Isso evita duplicar retratos apenas para corrigir cortes diferentes entre cards, fichas e nós circulares do grafo.
 

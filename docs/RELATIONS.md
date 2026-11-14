@@ -1,4 +1,4 @@
-# Terra Z — Relações e Grafo 2.0
+# Terra Omega — Relações e Grafo 2.0
 
 ## Objetivo
 
@@ -250,6 +250,6 @@ O comportamento Público / Spoiler / Mestre continua valendo.
 
 ## Compatibilidade
 
-`js/graph.js` migra em memória o schema antigo e também lê o antigo `terraZ_graph_v2` do localStorage quando não existe estado v3 publicado. Grafos antigos sem `nuclei` recebem uma migração inicial baseada apenas nos quadrantes existentes; depois de salvos, o pertencimento passa a ser explícito.
+`js/graph.js` migra em memória o schema antigo e também lê o antigo `terraZ_graph_v2` (legado, migrado pela ponte de compatibilidade) do localStorage quando não existe estado v3 publicado. Grafos antigos sem `nuclei` recebem uma migração inicial baseada apenas nos quadrantes existentes; depois de salvos, o pertencimento passa a ser explícito.
 
 A API continua usando `/api/graph`; nenhuma nova função serverless foi criada. O backend anuncia a capacidade `graph_nuclei_v1` antes de permitir alterações pelo editor, evitando que um backend antigo remova associações de núcleo ao salvar.
