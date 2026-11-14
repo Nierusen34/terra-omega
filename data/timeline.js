@@ -384,7 +384,7 @@ window.TerraZData.timeline = [
         "category": "history",
         "sortKey": 20240101,
         "year": "8 de Março de 2024",
-        "text": "Tristan Queen conhece Misty Kilgore, aprendiz de Zatanna Zatara e começam um relacionamento.",
+        "text": "Tristan Queen conhece Misty Kilgore, aprendiz de Zatanna Zatara e começam um relacionamento um mês depois.",
         "characters": [
           "Tristan Queen",
           "Misty Kilgore"
