@@ -1070,7 +1070,7 @@ function checkPwa(){
   const swPath="sw.js";
   const pwaPath="js/pwa.js";
 
-  for(const file of [manifestPath,swPath,pwaPath,"images/pwa/icon-192.webp","images/pwa/icon-512.svg","images/pwa/icon-maskable.svg","docs/PWA.md"]){
+  for(const file of [manifestPath,swPath,pwaPath,"images/pwa/terra-omega-192.webp","images/pwa/terra-omega-512.svg","images/pwa/terra-omega-maskable.svg","docs/PWA.md"]){
     if(!exists(file)) fail("PWA · arquivo ausente: "+file);
   }
 
@@ -1091,8 +1091,8 @@ function checkPwa(){
     fail("PWA · manifest inválido: "+error.message);
   }
 
-  if(exists("images/pwa/icon-192.webp")){
-    const bytes=fs.statSync(path.join(root,"images/pwa/icon-192.webp")).size;
+  if(exists("images/pwa/terra-omega-192.webp")){
+    const bytes=fs.statSync(path.join(root,"images/pwa/terra-omega-192.webp")).size;
     if(bytes<4000) fail("PWA · ícone aprovado parece inválido ou pequeno demais.");
   }
 
