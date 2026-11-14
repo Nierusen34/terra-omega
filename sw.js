@@ -34,7 +34,6 @@ const CORE_ASSETS=[
   "./data/sessions.js",
   "./data/visibility.js",
   "./data/content-overrides.js",
-  "./js/terra-omega-compat.js",
   "./js/backend-client.js",
   "./js/admin-loader.js",
   "./js/runtime-data.js",
