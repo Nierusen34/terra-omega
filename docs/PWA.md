@@ -67,3 +67,12 @@ A partir do checkpoint de migração técnica:
 - o service worker reconhece e remove caches antigos `terra-z-pwa-` durante a ativação;
 - o `id` do manifest permanece estável nesta etapa para que instalações existentes possam receber a atualização em vez de criar um segundo aplicativo;
 - o namespace `TerraOmegaApp` começa a existir como alias do runtime legado enquanto os módulos são migrados gradualmente.
+
+
+## Migração Terra Omega — etapa 2
+
+- o ícone raster 192px passa a usar o emblema atual do Universo Oblívio;
+- os assets ativos do manifest passam a se chamar `terra-omega-192.webp`, `terra-omega-512.svg` e `terra-omega-maskable.svg`;
+- `terra-omega-compat.js` migra e espelha chaves locais antigas `terraZ_*` para `terraOmega_*`;
+- eventos `terra-z:*` e `terra-omega:*` são espelhados durante a janela de compatibilidade;
+- o backend público passa a usar `https://terra-omega-rpg.vercel.app`.

@@ -42,3 +42,10 @@ O alias exato `terra-omega.vercel.app` já está ocupado globalmente na Vercel. 
 ## Política de compatibilidade
 
 Durante a migração, nomes técnicos antigos só serão removidos depois de existir substituto validado. Isso inclui namespaces JavaScript, chaves de armazenamento local, eventos e endpoints.
+
+
+## Checkpoint — PWA e compatibilidade
+
+Novo endereço gratuito reservado: `https://terra-omega-rpg.vercel.app`.
+
+O endereço anterior continua ativo temporariamente. Chaves de armazenamento e eventos são espelhados entre os prefixos antigos e novos para permitir migração sem perda de estado local.

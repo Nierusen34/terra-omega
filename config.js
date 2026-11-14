@@ -1,15 +1,13 @@
 (function(){
 "use strict";
 
-window.TerraZConfig = window.TerraZConfig || {};
+window.TerraOmegaConfig = window.TerraOmegaConfig || window.TerraZConfig || {};
+window.TerraZConfig = window.TerraOmegaConfig;
 
-window.TerraOmegaConfig = window.TerraZConfig;
-
-window.TerraZConfig.publishing = {
+window.TerraOmegaConfig.publishing = {
   enabled: true,
-  apiBase: "https://terra-z.vercel.app",
+  apiBase: "https://terra-omega-rpg.vercel.app",
   repository: "Nierusen34/terra-z",
   branch: "main"
 };
-
 })();

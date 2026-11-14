@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION="terra-omega-pwa-v1.4.0-20261114-migration1";
+const VERSION="terra-omega-pwa-v1.4.0-20261114-migration2-icons";
 const CORE_CACHE=VERSION+"-core";
 const IMAGE_CACHE=VERSION+"-images";
 const TRANSLATION_CACHE=VERSION+"-translation";
@@ -15,9 +15,9 @@ const CORE_ASSETS=[
   "./terra-omega.css",
   "./terra-omega.js",
   "./config.js",
-  "./images/pwa/icon-192.webp",
-  "./images/pwa/icon-512.svg",
-  "./images/pwa/icon-maskable.svg",
+  "./images/pwa/terra-omega-192.webp",
+  "./images/pwa/terra-omega-512.svg",
+  "./images/pwa/terra-omega-maskable.svg",
   "./data/characters.js",
   "./data/character-overrides.js",
   "./data/character-meta.js",
@@ -34,6 +34,7 @@ const CORE_ASSETS=[
   "./data/sessions.js",
   "./data/visibility.js",
   "./data/content-overrides.js",
+  "./js/terra-omega-compat.js",
   "./js/backend-client.js",
   "./js/admin-loader.js",
   "./js/runtime-data.js",
