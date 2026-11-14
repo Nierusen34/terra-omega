@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
+window.TerraOmegaApp = window.TerraOmegaApp || {};
 
 function hydrate(root){
   root = root || document;
@@ -24,7 +24,7 @@ function hydrateActive(){
   hydrate(activeTab.querySelector('.sub-content.active') || activeTab);
 }
 
-window.TerraZApp.media = {
+window.TerraOmegaApp.media = {
   hydrate: hydrate,
   hydrateActive: hydrateActive
 };

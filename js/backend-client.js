@@ -1,12 +1,12 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
+window.TerraOmegaApp = window.TerraOmegaApp || {};
 
-var SESSION_KEY = 'terraZ_editor_session';
+var SESSION_KEY = 'terraOmega_editor_session';
 
 function config(){
-  return (window.TerraZConfig && window.TerraZConfig.publishing) || {};
+  return (window.TerraOmegaConfig && window.TerraOmegaConfig.publishing) || {};
 }
 
 function baseUrl(){
@@ -31,7 +31,7 @@ function setToken(token){
     if(token) sessionStorage.setItem(SESSION_KEY, token);
     else sessionStorage.removeItem(SESSION_KEY);
   } catch(e){}
-  document.dispatchEvent(new CustomEvent('terra-z:auth-changed'));
+  document.dispatchEvent(new CustomEvent('terra-omega:auth-changed'));
 }
 
 function endpoint(path){
@@ -99,7 +99,7 @@ async function publicJson(url){
   return result;
 }
 
-window.TerraZApp.backend = {
+window.TerraOmegaApp.backend = {
   isConfigured:isConfigured,
   isAuthenticated:isAuthenticated,
   login:login,

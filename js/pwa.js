@@ -1,8 +1,8 @@
 (function(){
 "use strict";
 
-window.TerraZApp=window.TerraZApp||{};
-var core=window.TerraZCore;
+window.TerraOmegaApp=window.TerraOmegaApp||{};
+var core=window.TerraOmegaCore;
 var showToast=core&&core.showToast?core.showToast:function(){};
 var deferredPrompt=null;
 var registration=null;
@@ -103,7 +103,7 @@ function syncNetwork(){
   var pill=statusPill();
   pill.hidden=!offline;
   setDisabled("#publishBtn,#adminLoginBtn,[data-admin-action='publish'],#backupExportComplete,#backupExportPublicJson",offline);
-  document.dispatchEvent(new CustomEvent("terra-z:network-changed",{detail:{online:!offline}}));
+  document.dispatchEvent(new CustomEvent("terra-omega:network-changed",{detail:{online:!offline}}));
 }
 async function register(){
   if(!("serviceWorker" in navigator))return;
@@ -160,7 +160,7 @@ window.addEventListener("beforeinstallprompt",function(event){
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",setup);
 else setup();
 
-window.TerraZApp.pwa={
+window.TerraOmegaApp.pwa={
   isStandalone:standalone,
   isOnline:function(){return navigator.onLine;},
   registration:function(){return registration;},

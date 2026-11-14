@@ -1,8 +1,8 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
 if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/editor.js');
 
 var showToast = core.showToast;
@@ -11,8 +11,8 @@ var showConfirm = core.showConfirm;
 /* ===== MODO EDIÇÃO ===== */
 var editMode = false;
 var publishedBaseline = {};
-var EDITS_KEY = 'terraZ_v1_edits';
-var EDITS_LEGACY_BACKUP_KEY = 'terraZ_v1_edits_legacy_backup';
+var EDITS_KEY = 'terraOmega_v1_edits';
+var EDITS_LEGACY_BACKUP_KEY = 'terraOmega_v1_edits_legacy_backup';
 var EDITS_DRAFT_FORMAT = 'terra-z-edit-draft';
 var EDITS_DRAFT_VERSION = 2;
 var EDITS_BACKUP_FORMAT = 'terra-z-edits';
@@ -54,7 +54,7 @@ function captureCurrentEdits(){
 }
 
 function applyPublishedOverrides(){
-  var data = (window.TerraZData && window.TerraZData.contentOverrides) || {};
+  var data = (window.TerraOmegaData && window.TerraOmegaData.contentOverrides) || {};
   initEditables();
 
   getAll().forEach(function(el){
@@ -66,7 +66,7 @@ function applyPublishedOverrides(){
 }
 
 function syncRuntimeOverrides(){
-  var data = (window.TerraZData && window.TerraZData.contentOverrides) || {};
+  var data = (window.TerraOmegaData && window.TerraOmegaData.contentOverrides) || {};
   var current = captureCurrentEdits();
 
   getAll().forEach(function(el){
@@ -129,7 +129,7 @@ function writePendingDraft(){
 }
 
 function notifyEditsChanged(){
-  document.dispatchEvent(new CustomEvent('terra-z:edits-changed', {
+  document.dispatchEvent(new CustomEvent('terra-omega:edits-changed', {
     detail: { count:Object.keys(getPendingChanges()).length }
   }));
 }
@@ -432,7 +432,7 @@ function resetEdits(){
   }, 'Resetar');
 }
 
-var AUTO_BACKUP_KEY = 'terraZ_v1_backups';
+var AUTO_BACKUP_KEY = 'terraOmega_v1_backups';
 function autoBackup(){
   var current = localStorage.getItem(EDITS_KEY);
   if(!current) return;
@@ -453,7 +453,7 @@ applyPublishedOverrides();
 loadEdits();
 notifyEditsChanged();
 
-document.addEventListener('terra-z:runtime-data-loaded',syncRuntimeOverrides);
+document.addEventListener('terra-omega:runtime-data-loaded',syncRuntimeOverrides);
 
 window.toggleEdit = toggleEdit;
 window.saveEdits = saveEdits;
@@ -462,7 +462,7 @@ window.exportHtml = exportHtml;
 window.importEdits = importEdits;
 window.resetEdits = resetEdits;
 
-window.TerraZApp.editor = {
+window.TerraOmegaApp.editor = {
   isEditing: function(){ return editMode; },
   toggle: toggleEdit,
   save: saveEdits,

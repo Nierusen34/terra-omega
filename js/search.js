@@ -1,8 +1,8 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
 if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/search.js');
 
 var showToast = core.showToast;
@@ -161,7 +161,7 @@ function searchLocalDocument(query){
 
         if(parent.getAttribute && parent.hasAttribute('data-character-visibility')){
           var characterLevel=parent.getAttribute('data-character-visibility') || 'public';
-          var characterVisibility=window.TerraZApp && window.TerraZApp.visibility;
+          var characterVisibility=window.TerraOmegaApp && window.TerraOmegaApp.visibility;
           if(characterVisibility && characterVisibility.isLevelAllowed &&
              !characterVisibility.isLevelAllowed(characterLevel)){
             return NodeFilter.FILTER_REJECT;
@@ -170,7 +170,7 @@ function searchLocalDocument(query){
 
         if(parent.hasAttribute && parent.hasAttribute('data-visibility')){
           var level = parent.getAttribute('data-visibility') || 'public';
-          var visibility = window.TerraZApp && window.TerraZApp.visibility;
+          var visibility = window.TerraOmegaApp && window.TerraOmegaApp.visibility;
           if(visibility && visibility.isLevelAllowed && !visibility.isLevelAllowed(level)){
             return NodeFilter.FILTER_REJECT;
           }
@@ -326,12 +326,12 @@ function dcImportDisplayName(title){
 }
 
 function canDcImport(){
-  var b=window.TerraZApp && window.TerraZApp.backend;
+  var b=window.TerraOmegaApp && window.TerraOmegaApp.backend;
   return !!(b && b.isAuthenticated && b.isAuthenticated());
 }
 
 async function ensureDcImportAdmin(){
-  var app=window.TerraZApp || {};
+  var app=window.TerraOmegaApp || {};
   if(app.adminLoader && app.adminLoader.load) await app.adminLoader.load();
   var b=app.backend;
   if(!b || !b.isAuthenticated || !b.isAuthenticated()){
@@ -343,7 +343,7 @@ async function ensureDcImportAdmin(){
 }
 
 function findExistingDcCharacter(title){
-  var app=window.TerraZApp || {};
+  var app=window.TerraOmegaApp || {};
   var characters=app.characters;
   var names=characters && characters.names ? characters.names() : [];
   var keys=[title,dcImportDisplayName(title)].map(dcImportKey).filter(Boolean);
@@ -351,7 +351,7 @@ function findExistingDcCharacter(title){
   var byName=names.find(function(name){ return keys.includes(dcImportKey(name)); });
   if(byName) return byName;
 
-  var media=(window.TerraZData && window.TerraZData.characterMedia) || {};
+  var media=(window.TerraOmegaData && window.TerraOmegaData.characterMedia) || {};
   var titleKey=dcImportKey(title);
   return names.find(function(name){
     var item=media[name] || {};
@@ -361,7 +361,7 @@ function findExistingDcCharacter(title){
 }
 
 function findExistingDcGraphNode(title,characterName){
-  var graph=window.TerraZApp && window.TerraZApp.graph;
+  var graph=window.TerraOmegaApp && window.TerraOmegaApp.graph;
   var data=graph && graph.getData ? graph.getData() : {nodes:[]};
   var keys=[title,dcImportDisplayName(title),characterName].map(dcImportKey).filter(Boolean);
   return (data.nodes || []).find(function(node){
@@ -484,7 +484,7 @@ async function runDcImport(action){
 
   var current={...dcImportCurrent};
   var state=dcImportState(current.title);
-  var app=window.TerraZApp || {};
+  var app=window.TerraOmegaApp || {};
 
   if(action==='card'){
     closeDcImport();
@@ -1124,7 +1124,7 @@ if(dcImportGraphBtn) dcImportGraphBtn.addEventListener('click',function(){runDcI
 var dcImportBothBtn=document.getElementById('dcImportBothBtn');
 if(dcImportBothBtn) dcImportBothBtn.addEventListener('click',function(){runDcImport('both');});
 
-document.addEventListener('terra-z:auth-changed',function(){
+document.addEventListener('terra-omega:auth-changed',function(){
   var btn=document.getElementById('modalImportBtn');
   if(btn) btn.hidden=!canDcImport();
   var query=searchInput ? searchInput.value.trim() : '';
@@ -1141,7 +1141,7 @@ window.goBackFandom = goBackFandom;
 window.switchSearchMode = switchSearchMode;
 window.searchOnFandom = searchOnFandom;
 
-window.TerraZApp.search = {
+window.TerraOmegaApp.search = {
   execute: executeSearch,
   closeModal: closeFandomModal,
   closePanel: closeSearchPanel,

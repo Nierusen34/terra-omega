@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
+window.TerraOmegaApp = window.TerraOmegaApp || {};
 
 var root = document.getElementById('sub-tz-personagens');
 var input = document.getElementById('characterFilter');
@@ -17,14 +17,14 @@ var tagSelect = document.getElementById('characterTagFilter');
 var clearBtn = document.getElementById('characterClearFilters');
 var sizeControl = document.getElementById('characterCardSizeControl');
 var sizeButtons = sizeControl ? Array.from(sizeControl.querySelectorAll('[data-character-size]')) : [];
-var CARD_SIZE_KEY = 'terraZ_character_card_size';
+var CARD_SIZE_KEY = 'terraOmega_character_card_size';
 var cardSize = 'standard';
 try {
   var savedSize = localStorage.getItem(CARD_SIZE_KEY);
   if(savedSize === 'compact' || savedSize === 'standard' || savedSize === 'large') cardSize = savedSize;
 } catch(e){}
 
-var taxonomy = (window.TerraZData && window.TerraZData.characterTaxonomy) || {
+var taxonomy = (window.TerraOmegaData && window.TerraOmegaData.characterTaxonomy) || {
   nuclei:[],types:[],statuses:[],tags:[],characters:{}
 };
 
@@ -170,12 +170,12 @@ function refreshActionStates(){
 }
 
 function editorAuthenticated(){
-  var backend = window.TerraZApp && window.TerraZApp.backend;
+  var backend = window.TerraOmegaApp && window.TerraOmegaApp.backend;
   return !!(backend && backend.isAuthenticated && backend.isAuthenticated());
 }
 function canView(meta){
   if(!meta) return true;
-  var visibility=window.TerraZApp && window.TerraZApp.visibility;
+  var visibility=window.TerraOmegaApp && window.TerraOmegaApp.visibility;
   if(visibility && visibility.isLevelAllowed) return visibility.isLevelAllowed(meta.visibility);
   if(meta.visibility === 'master') return editorAuthenticated();
   return meta.visibility !== 'spoiler';
@@ -262,9 +262,9 @@ if(moreBtn && advanced){
 if(clearBtn) clearBtn.addEventListener('click',clearFilters);
 
 document.addEventListener('terraz:favoriteschange',apply);
-document.addEventListener('terra-z:characters-rendered',apply);
+document.addEventListener('terra-omega:characters-rendered',apply);
 function refreshTaxonomy(){
-  taxonomy = (window.TerraZData && window.TerraZData.characterTaxonomy) || taxonomy;
+  taxonomy = (window.TerraOmegaData && window.TerraOmegaData.characterTaxonomy) || taxonomy;
   fillSelect(typeSelect,taxonomy.types);
   fillSelect(statusSelect,taxonomy.statuses);
   fillSelect(tagSelect,taxonomy.tags);
@@ -278,13 +278,13 @@ function refreshTaxonomy(){
   apply();
 }
 
-document.addEventListener('terra-z:runtime-data-loaded',refreshTaxonomy);
-document.addEventListener('terra-z:private-profiles-changed',refreshTaxonomy);
-document.addEventListener('terra-z:private-content-cleared',refreshTaxonomy);
-document.addEventListener('terra-z:auth-changed',apply);
-document.addEventListener('terra-z:visibility-changed',apply);
+document.addEventListener('terra-omega:runtime-data-loaded',refreshTaxonomy);
+document.addEventListener('terra-omega:private-profiles-changed',refreshTaxonomy);
+document.addEventListener('terra-omega:private-content-cleared',refreshTaxonomy);
+document.addEventListener('terra-omega:auth-changed',apply);
+document.addEventListener('terra-omega:visibility-changed',apply);
 
-window.TerraZApp.characterFilters = {
+window.TerraOmegaApp.characterFilters = {
   apply:apply,
   refreshTaxonomy:refreshTaxonomy,
   clear:clearFilters,

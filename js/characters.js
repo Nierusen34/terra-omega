@@ -1,22 +1,22 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/characters.js');
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/characters.js');
 
 var showToast = core.showToast;
 var escapeHtml = core.escapeHtml;
 
 /* ===== FICHAS DE PERSONAGENS ===== */
-var baseFichasPersonagens = (window.TerraZData && window.TerraZData.characters) || {};
-var characterOverrides = (window.TerraZData && window.TerraZData.characterOverrides) || {};
+var baseFichasPersonagens = (window.TerraOmegaData && window.TerraOmegaData.characters) || {};
+var characterOverrides = (window.TerraOmegaData && window.TerraOmegaData.characterOverrides) || {};
 var fichasPersonagens = {};
 var deletedCharacterNames = new Set();
 
 function rebuildFichas(){
-  baseFichasPersonagens = (window.TerraZData && window.TerraZData.characters) || baseFichasPersonagens || {};
-  characterOverrides = (window.TerraZData && window.TerraZData.characterOverrides) || {};
+  baseFichasPersonagens = (window.TerraOmegaData && window.TerraOmegaData.characters) || baseFichasPersonagens || {};
+  characterOverrides = (window.TerraOmegaData && window.TerraOmegaData.characterOverrides) || {};
   fichasPersonagens = {};
   deletedCharacterNames = new Set(
     Object.keys(characterOverrides).filter(function(name){
@@ -52,25 +52,25 @@ function rebuildFichas(){
 
 rebuildFichas();
 
-if(!window.TerraZData || !window.TerraZData.characters){
-  console.error('Terra Z: data/characters.js não foi carregado.');
+if(!window.TerraOmegaData || !window.TerraOmegaData.characters){
+  console.error('Terra Omega: data/characters.js não foi carregado.');
 }
 
 function characterAccessMeta(name){
-  var taxonomy = (window.TerraZData && window.TerraZData.characterTaxonomy) || {};
+  var taxonomy = (window.TerraOmegaData && window.TerraOmegaData.characterTaxonomy) || {};
   var all = taxonomy.characters && typeof taxonomy.characters === 'object' ? taxonomy.characters : {};
   return all[name] || {};
 }
 
 function editorAuthenticated(){
-  var backend = window.TerraZApp && window.TerraZApp.backend;
+  var backend = window.TerraOmegaApp && window.TerraOmegaApp.backend;
   return !!(backend && backend.isAuthenticated && backend.isAuthenticated());
 }
 
 function canViewCharacter(name){
   var meta=characterAccessMeta(name);
   var level=meta.visibility === 'private' ? 'master' : (meta.visibility || 'public');
-  var visibility=window.TerraZApp && window.TerraZApp.visibility;
+  var visibility=window.TerraOmegaApp && window.TerraOmegaApp.visibility;
   if(visibility && visibility.isLevelAllowed) return visibility.isLevelAllowed(level);
   if(level === 'master') return editorAuthenticated();
   return level !== 'spoiler';
@@ -88,20 +88,20 @@ function openFichaModal(characterName, options){
   var modal = document.getElementById('fichaModal');
   var header = document.getElementById('fichaHeader');
   var body = document.getElementById('fichaBody');
-  var portrait = (window.TerraZApp.characterMedia)
-    ? window.TerraZApp.characterMedia.renderPortraitHtml(characterName, 'large')
+  var portrait = (window.TerraOmegaApp.characterMedia)
+    ? window.TerraOmegaApp.characterMedia.renderPortraitHtml(characterName, 'large')
     : '';
-  var canUploadPortrait = window.TerraZApp.mediaManager && window.TerraZApp.mediaManager.canUpload();
-  var backend = window.TerraZApp && window.TerraZApp.backend;
+  var canUploadPortrait = window.TerraOmegaApp.mediaManager && window.TerraOmegaApp.mediaManager.canUpload();
+  var backend = window.TerraOmegaApp && window.TerraOmegaApp.backend;
   var canEditCharacter = !!(backend && backend.isConfigured && backend.isConfigured() && backend.isAuthenticated && backend.isAuthenticated());
   var uploadBtn = canUploadPortrait ? '<button class="fh-link" id="fichaUploadPortraitBtn" title="Enviar imagem própria">🖼️</button>' : '';
   var browsePortraitBtn = canEditCharacter ? '<button class="fh-link" id="fichaBrowsePortraitBtn" title="Escolher versão ou imagem na DC Database">🎴</button>' : '';
   var editBtn = canEditCharacter ? '<button class="fh-link" id="fichaEditCharacterBtn" title="Editar personagem">✏️</button>' : '';
-  var graphBtn = window.TerraZApp.graph ? '<button class="fh-link" id="fichaGraphBtn" title="Ver este personagem no grafo">◎</button>' : '';
+  var graphBtn = window.TerraOmegaApp.graph ? '<button class="fh-link" id="fichaGraphBtn" title="Ver este personagem no grafo">◎</button>' : '';
   header.innerHTML = portrait + '<div class="fh-info"><div class="fh-eyebrow">' + escapeHtml(ficha.eyebrow) + '</div><h2>' + escapeHtml(characterName) + '</h2></div><div class="fh-actions">' + graphBtn + editBtn + browsePortraitBtn + uploadBtn + '<button class="fh-link" id="fichaCopyLinkBtn" title="Copiar link direto">🔗</button><button class="fh-close" id="fichaCloseBtn">✕</button></div>';
   var bodyHtml = '';
-  var privateSecrets = (window.TerraZApp.privateContent && window.TerraZApp.privateContent.getCharacterSecrets)
-    ? window.TerraZApp.privateContent.getCharacterSecrets(characterName)
+  var privateSecrets = (window.TerraOmegaApp.privateContent && window.TerraOmegaApp.privateContent.getCharacterSecrets)
+    ? window.TerraOmegaApp.privateContent.getCharacterSecrets(characterName)
     : null;
   var secrets = Array.isArray(privateSecrets) ? privateSecrets : ficha.secrets;
   ficha.sections.forEach(function(sec){
@@ -120,8 +120,8 @@ function openFichaModal(characterName, options){
   body.innerHTML = bodyHtml;
   modal.classList.add('show');
   document.body.style.overflow = 'hidden';
-  if(window.TerraZApp.characterMedia) window.TerraZApp.characterMedia.hydrate(header);
-  if(window.TerraZApp.visibility) window.TerraZApp.visibility.apply();
+  if(window.TerraOmegaApp.characterMedia) window.TerraOmegaApp.characterMedia.hydrate(header);
+  if(window.TerraOmegaApp.visibility) window.TerraOmegaApp.visibility.apply();
 
   function openPortraitLightbox(target){
     var wrapper = target && target.closest ? target.closest('.character-portrait.large[data-portrait-zoom]') : null;
@@ -130,7 +130,7 @@ function openFichaModal(characterName, options){
     if(!img) return false;
 
     var src = img.getAttribute('data-full-src') || img.currentSrc || img.src || img.getAttribute('data-src');
-    var nav = window.TerraZApp && window.TerraZApp.navigation;
+    var nav = window.TerraOmegaApp && window.TerraOmegaApp.navigation;
     if(nav && nav.openLightbox) nav.openLightbox(src,img.alt || characterName);
     else if(window.openLightbox) window.openLightbox(src,img.alt || characterName);
     return true;
@@ -154,29 +154,29 @@ function openFichaModal(characterName, options){
   var graphCharacterBtn = document.getElementById('fichaGraphBtn');
   if(graphCharacterBtn) graphCharacterBtn.addEventListener('click', function(){
     closeFichaModal({keepRoute:true});
-    var graph=window.TerraZApp.graph;
+    var graph=window.TerraOmegaApp.graph;
     if(!graph || !graph.focusCharacter || !graph.focusCharacter(characterName)){
       showToast('Este personagem ainda não possui uma bolinha no grafo.','info',4200);
     }
   });
   var editCharacterBtn = document.getElementById('fichaEditCharacterBtn');
   if(editCharacterBtn) editCharacterBtn.addEventListener('click', function(){
-    if(window.TerraZApp.characterEditor) window.TerraZApp.characterEditor.open(characterName);
+    if(window.TerraOmegaApp.characterEditor) window.TerraOmegaApp.characterEditor.open(characterName);
   });
   var browsePortraitBtn = document.getElementById('fichaBrowsePortraitBtn');
   if(browsePortraitBtn) browsePortraitBtn.addEventListener('click', function(){
-    if(window.TerraZApp.portraitBrowser) window.TerraZApp.portraitBrowser.open(characterName);
+    if(window.TerraOmegaApp.portraitBrowser) window.TerraOmegaApp.portraitBrowser.open(characterName);
   });
 
   var uploadPortraitBtn = document.getElementById('fichaUploadPortraitBtn');
   if(uploadPortraitBtn) uploadPortraitBtn.addEventListener('click', function(){
-    if(window.TerraZApp.mediaManager) window.TerraZApp.mediaManager.choose(characterName);
+    if(window.TerraOmegaApp.mediaManager) window.TerraOmegaApp.mediaManager.choose(characterName);
   });
   var copyBtn = document.getElementById('fichaCopyLinkBtn');
   if(copyBtn) copyBtn.addEventListener('click', function(){
-    if(window.TerraZApp.router) window.TerraZApp.router.copyCurrentLink();
+    if(window.TerraOmegaApp.router) window.TerraOmegaApp.router.copyCurrentLink();
   });
-  if(window.TerraZApp.router && !options.fromRouter) window.TerraZApp.router.setCharacter(characterName);
+  if(window.TerraOmegaApp.router && !options.fromRouter) window.TerraOmegaApp.router.setCharacter(characterName);
   document.getElementById('fichaSearchBtn').addEventListener('click', function(){ window.searchOnFandom(characterName); });
   var secretsToggle = document.getElementById('fichaSecretsToggle');
   if(secretsToggle){
@@ -194,7 +194,7 @@ function closeFichaModal(options){
   options = options || {};
   document.getElementById('fichaModal').classList.remove('show');
   document.body.style.overflow = '';
-  if(window.TerraZApp.router && !options.fromRouter) window.TerraZApp.router.clearCharacter();
+  if(window.TerraOmegaApp.router && !options.fromRouter) window.TerraOmegaApp.router.clearCharacter();
 }
 
 
@@ -257,7 +257,7 @@ function basicFieldsFromFicha(ficha){
 }
 
 function taxonomyStatusLabel(name){
-  var taxonomy = (window.TerraZData && window.TerraZData.characterTaxonomy) || {};
+  var taxonomy = (window.TerraOmegaData && window.TerraOmegaData.characterTaxonomy) || {};
   var meta = taxonomy.characters && taxonomy.characters[name] || {};
   var statusId = String(meta.status || '');
   var defs = Array.isArray(taxonomy.statuses) ? taxonomy.statuses : [];
@@ -412,7 +412,7 @@ function attachFichaHandlers(){
     if(match){
       card.setAttribute('data-ficha', match);
       card.setAttribute('data-ficha-bound','1');
-      if(window.TerraZApp.characterMedia) window.TerraZApp.characterMedia.decorateCard(card, match);
+      if(window.TerraOmegaApp.characterMedia) window.TerraOmegaApp.characterMedia.decorateCard(card, match);
       card.setAttribute('title', 'Clique para ver a ficha completa');
       card.addEventListener('click', function(e){
         if(e.target.classList.contains('fav-btn')) return;
@@ -437,19 +437,19 @@ function refreshCharactersFromRuntime(){
   standardizeCharacterCards();
   attachFichaHandlers();
 
-  document.dispatchEvent(new CustomEvent('terra-z:characters-rendered'));
+  document.dispatchEvent(new CustomEvent('terra-omega:characters-rendered'));
 }
 
-document.addEventListener('terra-z:runtime-data-loaded',refreshCharactersFromRuntime);
-document.addEventListener('terra-z:private-profiles-changed',refreshCharactersFromRuntime);
-document.addEventListener('terra-z:private-content-cleared',refreshCharactersFromRuntime);
+document.addEventListener('terra-omega:runtime-data-loaded',refreshCharactersFromRuntime);
+document.addEventListener('terra-omega:private-profiles-changed',refreshCharactersFromRuntime);
+document.addEventListener('terra-omega:private-content-cleared',refreshCharactersFromRuntime);
 
 refreshCharactersFromRuntime();
 
 window.openFichaModal = openFichaModal;
 window.closeFichaModal = closeFichaModal;
 
-window.TerraZApp.characters = {
+window.TerraOmegaApp.characters = {
   open: openFichaModal,
   close: closeFichaModal,
   attach: attachFichaHandlers,

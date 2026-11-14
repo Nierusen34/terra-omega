@@ -1,9 +1,9 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/data-renderer.js');
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/data-renderer.js');
 
 var escapeHtml = core.escapeHtml;
 var escapeAttr = core.escapeAttr;
@@ -34,9 +34,9 @@ function renderDistrictData(){
   var root = document.getElementById('districtsData');
   if(!root || root.children.length > 0) return;
 
-  var districts = window.TerraZData && window.TerraZData.districts;
+  var districts = window.TerraOmegaData && window.TerraOmegaData.districts;
   if(!Array.isArray(districts)){
-    console.error('Terra Z: data/locations.js não foi carregado.');
+    console.error('Terra Omega: data/locations.js não foi carregado.');
     return;
   }
 
@@ -65,7 +65,7 @@ function renderDistrictData(){
     }
   });
 
-  var strategic = window.TerraZData && window.TerraZData.strategicSites;
+  var strategic = window.TerraOmegaData && window.TerraOmegaData.strategicSites;
   if(Array.isArray(strategic) && strategic.length){
     html += '<section class="strategic-sites" id="strategicSites">';
     html += '<div class="subsection-title">🧭 Instalações e Áreas Estratégicas</div>';
@@ -91,16 +91,16 @@ function renderDistrictData(){
     });
   });
 
-  if(window.TerraZApp && window.TerraZApp.visibility) window.TerraZApp.visibility.apply({closeSensitive:false});
+  if(window.TerraOmegaApp && window.TerraOmegaApp.visibility) window.TerraOmegaApp.visibility.apply({closeSensitive:false});
 }
 
 function renderAnnualEventsData(){
   var body = document.getElementById('annualEventsBody');
   if(!body || body.children.length > 0) return;
 
-  var events = window.TerraZData && window.TerraZData.annualEvents;
+  var events = window.TerraOmegaData && window.TerraOmegaData.annualEvents;
   if(!Array.isArray(events)){
-    console.error('Terra Z: data/events.js não foi carregado.');
+    console.error('Terra Omega: data/events.js não foi carregado.');
     return;
   }
 
@@ -119,9 +119,9 @@ function renderTimelineData(){
   var root = document.getElementById('timelineData');
   if(!root || root.children.length > 0) return;
 
-  var groups = window.TerraZData && window.TerraZData.timeline;
+  var groups = window.TerraOmegaData && window.TerraOmegaData.timeline;
   if(!Array.isArray(groups)){
-    console.error('Terra Z: data/timeline.js não foi carregado.');
+    console.error('Terra Omega: data/timeline.js não foi carregado.');
     return;
   }
 
@@ -144,9 +144,9 @@ function renderExternalCitiesData(){
   var body = document.getElementById('externalCitiesBody');
   if(!body || body.children.length > 0) return;
 
-  var cities = window.TerraZData && window.TerraZData.externalCities;
+  var cities = window.TerraOmegaData && window.TerraOmegaData.externalCities;
   if(!Array.isArray(cities)){
-    console.error('Terra Z: data/cities.js não foi carregado.');
+    console.error('Terra Omega: data/cities.js não foi carregado.');
     return;
   }
 
@@ -166,10 +166,10 @@ function renderExternalCitiesData(){
 function renderTeamsData(){
   var teamsBody = document.getElementById('teamsBody');
   var leagueBody = document.getElementById('justiceLeagueBody');
-  var data = window.TerraZData && window.TerraZData.teams;
+  var data = window.TerraOmegaData && window.TerraOmegaData.teams;
 
   if(!data || !Array.isArray(data.teams) || !Array.isArray(data.justiceLeagueMembers)){
-    console.error('Terra Z: data/teams.js não foi carregado.');
+    console.error('Terra Omega: data/teams.js não foi carregado.');
     return;
   }
 
@@ -222,7 +222,7 @@ function renderOrganizationLinks(label,items,kind){
 }
 
 function organizationInGraph(id){
-  var data=window.TerraZData || {};
+  var data=window.TerraOmegaData || {};
   var graph=data.graphOverride && Array.isArray(data.graphOverride.nodes)
     ? data.graphOverride
     : data.defaultGraph;
@@ -239,7 +239,7 @@ function bindOrganizationLinks(root){
     button.addEventListener('click',function(){
       var kind=button.getAttribute('data-org-link-kind');
       var value=button.getAttribute('data-org-link-value') || '';
-      var app=window.TerraZApp || {};
+      var app=window.TerraOmegaApp || {};
       if(kind==='character' && app.router && app.router.setCharacter){
         app.router.setCharacter(value);
         if(app.router.go) app.router.go('/personagens/'+app.router.slugify(value));
@@ -254,7 +254,7 @@ function bindOrganizationLinks(root){
   root.querySelectorAll('[data-org-graph-id]').forEach(function(button){
     button.addEventListener('click',function(){
       var id=button.getAttribute('data-org-graph-id') || '';
-      var app=window.TerraZApp || {};
+      var app=window.TerraOmegaApp || {};
       if(app.graph && app.graph.focusEntity && app.graph.focusEntity('organization',id)) return;
       if(app.router && app.router.go) app.router.go('/universo/relacoes');
     });
@@ -263,14 +263,14 @@ function bindOrganizationLinks(root){
   root.querySelectorAll('[data-org-edit-id]').forEach(function(button){
     button.addEventListener('click',function(){
       var id=button.getAttribute('data-org-edit-id') || '';
-      var app=window.TerraZApp || {};
+      var app=window.TerraOmegaApp || {};
       if(app.organizationEditor && app.organizationEditor.open){
         app.organizationEditor.open(id);
         return;
       }
       if(app.adminLoader && app.adminLoader.load){
         app.adminLoader.load().then(function(){
-          if(window.TerraZApp.organizationEditor) window.TerraZApp.organizationEditor.open(id);
+          if(window.TerraOmegaApp.organizationEditor) window.TerraOmegaApp.organizationEditor.open(id);
         });
       }
     });
@@ -281,9 +281,9 @@ function renderOrganizationsData(){
   var root=document.getElementById('organizationsData');
   if(!root || root.children.length>0) return;
 
-  var organizations=window.TerraZData && window.TerraZData.organizations;
+  var organizations=window.TerraOmegaData && window.TerraOmegaData.organizations;
   if(!Array.isArray(organizations)){
-    console.error('Terra Z: organizações não foram carregadas.');
+    console.error('Terra Omega: organizações não foram carregadas.');
     return;
   }
 
@@ -353,19 +353,19 @@ function renderOrganizationsData(){
   root.innerHTML=html;
   bindOrganizationLinks(root);
   syncOrganizationEditControls();
-  if(window.TerraZApp && window.TerraZApp.visibility) window.TerraZApp.visibility.apply({closeSensitive:false});
+  if(window.TerraOmegaApp && window.TerraOmegaApp.visibility) window.TerraOmegaApp.visibility.apply({closeSensitive:false});
 }
 
 function syncOrganizationEditControls(){
-  var backend=window.TerraZApp && window.TerraZApp.backend;
+  var backend=window.TerraOmegaApp && window.TerraOmegaApp.backend;
   var allowed=!!(backend && backend.isConfigured && backend.isConfigured() && backend.isAuthenticated && backend.isAuthenticated());
   document.querySelectorAll('[data-org-edit-id]').forEach(function(button){
     button.hidden=!allowed;
   });
 }
 
-document.addEventListener('terra-z:auth-changed',syncOrganizationEditControls);
-document.addEventListener('terra-z:admin-modules-loaded',syncOrganizationEditControls);
+document.addEventListener('terra-omega:auth-changed',syncOrganizationEditControls);
+document.addEventListener('terra-omega:admin-modules-loaded',syncOrganizationEditControls);
 
 function renderCanonicalData(){
   renderDistrictData();
@@ -383,7 +383,7 @@ renderCanonicalData();
 
 
 
-window.TerraZApp.dataRenderer = {
+window.TerraOmegaApp.dataRenderer = {
   render: renderCanonicalData
 };
 

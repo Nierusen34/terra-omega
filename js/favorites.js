@@ -1,16 +1,16 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/favorites.js');
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/favorites.js');
 
 var showToast = core.showToast;
 var escapeHtml = core.escapeHtml;
 var escapeAttr = core.escapeAttr;
 
 /* ===== FAVORITOS ===== */
-var FAV_KEY = 'terraZ_favorites';
+var FAV_KEY = 'terraOmega_favorites';
 function getFavorites(){ try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); } catch(e){ return []; } }
 function saveFavorites(list){ try { localStorage.setItem(FAV_KEY, JSON.stringify(list)); } catch(e){ console.error(e); } }
 function isFavorite(name){ return getFavorites().indexOf(name) !== -1; }
@@ -79,7 +79,7 @@ function attachFavoriteButtons(){
 function showFavoritesPanel(){
   var panel = document.getElementById('favoritesPanel');
   var favs = getFavorites();
-  var characters = window.TerraZApp && window.TerraZApp.characters;
+  var characters = window.TerraOmegaApp && window.TerraOmegaApp.characters;
   if(characters && characters.canView){
     favs = favs.filter(function(name){ return characters.canView(name); });
   }
@@ -145,10 +145,10 @@ function initFavoritesPanel(){
 attachFavoriteButtons();
 initFavoritesPanel();
 
-document.addEventListener('terra-z:characters-rendered',function(){
+document.addEventListener('terra-omega:characters-rendered',function(){
   attachFavoriteButtons();
 });
-document.addEventListener('terra-z:auth-changed',function(){
+document.addEventListener('terra-omega:auth-changed',function(){
   var panel = document.getElementById('favoritesPanel');
   if(panel && panel.classList.contains('show')) showFavoritesPanel();
 });
@@ -157,7 +157,7 @@ window.toggleFavorite = toggleFavorite;
 window.showFavoritesPanel = showFavoritesPanel;
 window.closeFavoritesPanel = closeFavoritesPanel;
 
-window.TerraZApp.favorites = {
+window.TerraOmegaApp.favorites = {
   toggle: toggleFavorite,
   show: showFavoritesPanel,
   close: closeFavoritesPanel,

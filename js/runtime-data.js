@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
+window.TerraOmegaApp = window.TerraOmegaApp || {};
 
 var currentSha = '';
 var loadingPromise = null;
@@ -9,20 +9,20 @@ var requestSerial = 0;
 var appliedSerial = 0;
 
 function backend(){
-  return window.TerraZApp && window.TerraZApp.backend;
+  return window.TerraOmegaApp && window.TerraOmegaApp.backend;
 }
 
 function applyData(result){
   if(!result || !result.data) return result;
 
-  window.TerraZData = window.TerraZData || {};
+  window.TerraOmegaData = window.TerraOmegaData || {};
   Object.keys(result.data).forEach(function(key){
-    window.TerraZData[key] = result.data[key];
+    window.TerraOmegaData[key] = result.data[key];
   });
 
   currentSha = result.sha || currentSha;
 
-  document.dispatchEvent(new CustomEvent('terra-z:runtime-data-loaded',{
+  document.dispatchEvent(new CustomEvent('terra-omega:runtime-data-loaded',{
     detail:{
       sha:currentSha,
       data:result.data
@@ -52,7 +52,7 @@ async function refresh(options){
       return applyData(result);
     })
     .catch(function(error){
-      if(!options.silent) console.error('Terra Z runtime data:',error);
+      if(!options.silent) console.error('Terra Omega runtime data:',error);
       return null;
     })
     .finally(function(){
@@ -75,7 +75,7 @@ function mediaUrl(path,sha){
   return url;
 }
 
-window.TerraZApp.runtimeData = {
+window.TerraOmegaApp.runtimeData = {
   refresh:refresh,
   mediaUrl:mediaUrl,
   getSha:function(){ return currentSha; },

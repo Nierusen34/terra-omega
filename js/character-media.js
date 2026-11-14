@@ -1,16 +1,16 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
+window.TerraOmegaApp = window.TerraOmegaApp || {};
 
-var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/character-media.js');
+var core = window.TerraOmegaCore;
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/character-media.js');
 
 var escapeHtml = core.escapeHtml;
 var escapeAttr = core.escapeAttr;
-var media = (window.TerraZData && window.TerraZData.characterMedia) || {};
+var media = (window.TerraOmegaData && window.TerraOmegaData.characterMedia) || {};
 
-var AUTO_CACHE_PREFIX = 'terraZ_dc_portrait_v2:';
+var AUTO_CACHE_PREFIX = 'terraOmega_dc_portrait_v2:';
 var AUTO_CACHE_MS = 24 * 60 * 60 * 1000;
 var autoResolved = Object.create(null);
 var autoResolvedKeys = Object.create(null);
@@ -94,7 +94,7 @@ function framingStyle(name,context,override){
 function getMeta(name){
   var item = media[name] || {};
   var resolved = autoResolved[name] || null;
-  var runtime = window.TerraZApp && window.TerraZApp.runtimeData;
+  var runtime = window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
   var localSrc = item.src && runtime && runtime.mediaUrl ? runtime.mediaUrl(item.src) : item.src;
   return {
     src: localSrc || (resolved && resolved.imageUrl) || '',
@@ -162,7 +162,7 @@ async function directFandom(config){
 
 async function fetchAutomatic(name,config){
   if(config && config.provider === 'external-url'){
-    var externalBackend = window.TerraZApp && window.TerraZApp.backend;
+    var externalBackend = window.TerraOmegaApp && window.TerraOmegaApp.backend;
     var proxiedUrl = config.imageUrl;
 
     if(externalBackend &&
@@ -186,7 +186,7 @@ async function fetchAutomatic(name,config){
     };
   }
 
-  var backend = window.TerraZApp && window.TerraZApp.backend;
+  var backend = window.TerraOmegaApp && window.TerraOmegaApp.backend;
 
   if(backend && backend.isConfigured && backend.isConfigured() && backend.publicJson){
     try{
@@ -195,7 +195,7 @@ async function fetchAutomatic(name,config){
         '&title=' + encodeURIComponent(config.wikiTitle)
       );
     }catch(error){
-      console.warn('Terra Z: fallback direto para DC Fandom em',name,error);
+      console.warn('Terra Omega: fallback direto para DC Fandom em',name,error);
     }
   }
 
@@ -263,7 +263,7 @@ function resolveAutomatic(name){
       return normalized;
     })
     .catch(function(error){
-      console.warn('Terra Z: retrato automático indisponível para',name,error);
+      console.warn('Terra Omega: retrato automático indisponível para',name,error);
       return {found:false,provider:'dc-fandom'};
     })
     .finally(function(){
@@ -341,10 +341,10 @@ function replaceAutomaticPortrait(wrapper,result){
       : automaticTitle(automaticConfig(item));
     wrapper.replaceWith(next);
     bindPortraitErrorFallbacks(next);
-    if(window.TerraZApp.media) window.TerraZApp.media.hydrate(next);
+    if(window.TerraOmegaApp.media) window.TerraOmegaApp.media.hydrate(next);
   }
 
-  document.dispatchEvent(new CustomEvent('terra-z:auto-portrait-resolved',{
+  document.dispatchEvent(new CustomEvent('terra-omega:auto-portrait-resolved',{
     detail:{
       character:name,
       source:result.source || 'DC Database · Fandom',
@@ -498,7 +498,7 @@ function bindPortraitErrorFallbacks(root){
 function hydratePortraits(root){
   root = root || document;
   bindPortraitErrorFallbacks(root);
-  if(window.TerraZApp.media) window.TerraZApp.media.hydrate(root);
+  if(window.TerraOmegaApp.media) window.TerraOmegaApp.media.hydrate(root);
   observeAutomaticPortraits(root);
 }
 
@@ -518,7 +518,7 @@ function clearAutomaticCache(name){
 
 function refreshPortraits(root){
   root = root || document;
-  media = (window.TerraZData && window.TerraZData.characterMedia) || {};
+  media = (window.TerraOmegaData && window.TerraOmegaData.characterMedia) || {};
 
   Array.from(root.querySelectorAll('.character-portrait[data-character]')).forEach(function(wrapper){
     var name = wrapper.getAttribute('data-character');
@@ -535,17 +535,17 @@ function refreshPortraits(root){
   });
 }
 
-document.addEventListener('terra-z:runtime-data-loaded',function(){
+document.addEventListener('terra-omega:runtime-data-loaded',function(){
   refreshPortraits(document);
 });
-document.addEventListener('terra-z:private-profiles-changed',function(){
+document.addEventListener('terra-omega:private-profiles-changed',function(){
   refreshPortraits(document);
 });
-document.addEventListener('terra-z:private-content-cleared',function(){
+document.addEventListener('terra-omega:private-content-cleared',function(){
   refreshPortraits(document);
 });
 
-window.TerraZApp.characterMedia = {
+window.TerraOmegaApp.characterMedia = {
   get:getMeta,
   getFraming:getFraming,
   framingStyle:framingStyle,
