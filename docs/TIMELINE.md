@@ -1,8 +1,8 @@
-# Terra Z — Linha do Tempo da Campanha
+# Universo Oblívio / Terra Omega — Linha do Tempo da Campanha
 
 ## Objetivo
 
-A Etapa 8 transforma **Universo → Linha do Tempo** na cronologia central do Terra Z.
+A Etapa 8 transforma **Universo → Linha do Tempo** na cronologia central de Terra Omega, mundo principal do Universo Oblívio.
 
 Ela não duplica o Diário da Campanha. Eventos de lore continuam em `data/timeline.js`; sessões continuam em seus próprios armazenamentos e são incorporadas dinamicamente por `js/timeline-manager.js`.
 
@@ -20,7 +20,7 @@ Cada evento de lore possui:
 
 - `id` permanente;
 - `category`;
-- `sortKey` cronológico;
+- `sortKey` cronológico, em formato numérico `YYYYMMDD` quando a data for exata;
 - `year` e `text` editáveis;
 - conexões opcionais com `characters`, `locations` e `teams`;
 - `visibility`.
@@ -45,7 +45,7 @@ Eventos possuem deep links:
 
 `#/linha-do-tempo/<id-do-evento>`
 
-Ao abrir o endereço, o Terra Z:
+Ao abrir o endereço, o site:
 
 1. entra em Universo → Linha do Tempo;
 2. limpa filtros que impediriam a visualização;
@@ -53,6 +53,10 @@ Ao abrir o endereço, o Terra Z:
 4. centraliza e destaca o registro.
 
 Conexões reutilizam o roteador da Etapa 7 para abrir personagens, distritos, cidades, equipes e sessões.
+
+## Referências a personagens sem ficha pública
+
+A cronologia pode mencionar personagens cujas fichas ainda serão criadas. Isso não exige fichas provisórias nem alterações automáticas de visibilidade. As referências a **Misty Kilgore** e **Roselie Sterling** são intencionais e permanecem nos acontecimentos existentes. O Quality Gate reconhece esses dois nomes como perfis planejados; quando as fichas forem criadas, eles deverão sair dessa lista de exceções para que a validação passe a confirmar os cadastros reais.
 
 ## Privacidade
 

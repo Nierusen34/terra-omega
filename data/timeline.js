@@ -191,7 +191,7 @@ window.TerraZData.timeline = [
       {
         "id": "20-de-fevereiro-de-2007-tristan-queen-nasce",
         "category": "history",
-        "sortKey": 20072002,
+        "sortKey": 20070220,
         "year": "20 de Fevereiro de 2007",
         "text": "Nascimento de Tristan Queen",
         "characters": [
@@ -343,7 +343,7 @@ window.TerraZData.timeline = [
       {
         "id": "27-de-fevereiro-de-2023-tristan-queen-se-muda-para-gotham-uma-semana-apos-seu-aniversario-a-contrago",
         "category": "history",
-        "sortKey": 20232702,
+        "sortKey": 20230227,
         "year": "27 de Fevereiro de 2023",
         "text": "Tristan Queen se muda para Gotham uma semana após seu aniversário a contragosto de Oliver.",
         "characters": [
@@ -382,7 +382,7 @@ window.TerraZData.timeline = [
       {
         "id": "8-de-marco-de-2024-tristan-queen-conhece-misty-kilgore-aprendiz-de-zatanna-zatara-e-comecam-um-relac",
         "category": "history",
-        "sortKey": 20240101,
+        "sortKey": 20240308,
         "year": "8 de Março de 2024",
         "text": "Tristan Queen conhece Misty Kilgore, aprendiz de Zatanna Zatara e começam um relacionamento um mês depois.",
         "characters": [
@@ -398,7 +398,7 @@ window.TerraZData.timeline = [
       {
         "id": "17-de-outubro-de-2024-apos-6-meses-6-dias-e-6-horas-misty-kilgore-termina-seu-relacionamento-com-tri",
         "category": "history",
-        "sortKey": 20241710,
+        "sortKey": 20241017,
         "year": "17 de Outubro de 2024",
         "text": "Após 6 meses, 6 dias e 6 horas, Misty Kilgore termina seu relacionamento com Tristan Queen; No mesmo dia, Verity Pennyworth e Jason Todd apresentam Roselie Sterling para Tristan, alguém que foi designada para trabalhar como mordomo e suporte para a família Queen.",
         "characters": [
@@ -417,7 +417,7 @@ window.TerraZData.timeline = [
       {
         "id": "26-de-agosto-de-2025-apos-cerca-de-10-meses-desde-o-termino-de-relacionamento-com-misty-kilgore-tris",
         "category": "history",
-        "sortKey": 20252608,
+        "sortKey": 20250826,
         "year": "26 de Agosto de 2025",
         "text": "Após cerca de 10 meses desde o término de relacionamento com Misty Kilgore, Tristan Queen começa a perceber que está desenvolvendo sentimentos pela sua amiga de infâncias Lian Harper durante suas raras visitas presenciais a Gotham City, entretanto, ele decide manter esses sentimentos suprimidos em respeito a sua amizade e história com ela.",
         "characters": [
@@ -462,7 +462,7 @@ window.TerraZData.timeline = [
       {
         "id": "19-de-novembro-de-2026-tristan-queen-e-roselie-sterling-deixam-gotham-city-para-atuar-na-cidade-de-v",
         "category": "pre-campaign",
-        "sortKey": 20261911,
+        "sortKey": 20261119,
         "year": "19 de Novembro de 2026",
         "text": "Tristan Queen e Roselie Sterling deixam Gotham City para atuar na cidade de Vanguard Bay, passando os primeiros meses preparando tudo para instalar sua base de vigilante no local.",
         "characters": [

@@ -356,6 +356,31 @@ function checkSessions(data,characters){
   pass(sessions.length+" sessões públicas validadas");
 }
 
+const PLANNED_TIMELINE_CHARACTERS = new Set(["Misty Kilgore","Roselie Sterling"]);
+const TIMELINE_MONTHS = {
+  janeiro:1, fevereiro:2, marco:3, "março":3, abril:4, maio:5, junho:6,
+  julho:7, agosto:8, setembro:9, outubro:10, novembro:11, dezembro:12,
+  jan:1, fev:2, mar:3, abr:4, mai:5, jun:6, jul:7, ago:8, set:9, out:10, nov:11, dez:12
+};
+
+function expectedTimelineSortKey(label){
+  const value=String(label || "").trim().toLowerCase();
+  const iso=value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(iso) return Number(iso[1])*10000+Number(iso[2])*100+Number(iso[3]);
+
+  const full=value.match(/^(\d{1,2})\s+de\s+([a-záàâãéêíóôõúç]+)\s+de\s+(\d{4})$/i);
+  if(full && TIMELINE_MONTHS[full[2]]){
+    return Number(full[3])*10000+TIMELINE_MONTHS[full[2]]*100+Number(full[1]);
+  }
+
+  const monthYear=value.match(/^([a-záàâãéêíóôõúç]+)\s+(?:de\s+)?(\d{4})$/i);
+  if(monthYear && TIMELINE_MONTHS[monthYear[1]]){
+    return Number(monthYear[2])*10000+TIMELINE_MONTHS[monthYear[1]]*100+1;
+  }
+
+  return null;
+}
+
 function checkTimeline(data,characters){
   const groups=Array.isArray(data.timeline)?data.timeline:[];
   const ids=new Set();
@@ -383,6 +408,10 @@ function checkTimeline(data,characters){
       if(!allowedCategories.has(category)) fail("Categoria inválida na linha do tempo: "+id+" / "+category);
       if(!Number.isFinite(Number(item&&item.sortKey))) fail("sortKey inválido na linha do tempo: "+id);
       if(!String(item&&item.year||"").trim()) fail("Evento sem rótulo temporal: "+id);
+      const expectedSortKey=expectedTimelineSortKey(item&&item.year);
+      if(expectedSortKey!==null && Number(item&&item.sortKey)!==expectedSortKey){
+        fail("sortKey não corresponde à data explícita na linha do tempo: "+id+" / esperado "+expectedSortKey);
+      }
       if(!String(item&&item.text||"").trim()) fail("Evento sem descrição: "+id);
 
       if(item.edit){
@@ -400,7 +429,9 @@ function checkTimeline(data,characters){
       }
 
       for(const name of Array.isArray(item&&item.characters)?item.characters:[]){
-        if(characters&&!characters.has(name)) warn("Linha do tempo "+id+" referencia personagem não público: "+name);
+        if(characters&&!characters.has(name) && !PLANNED_TIMELINE_CHARACTERS.has(name)){
+          warn("Linha do tempo "+id+" referencia personagem não público: "+name);
+        }
       }
     }
   }
