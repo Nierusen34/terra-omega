@@ -82,3 +82,17 @@ Implementado no checkpoint visual seguinte:
 - Sala do Mestre e Conteúdo Mestre usam identidade própria do Universo Oblívio mesmo quando abertos a partir de outra seção do site.
 - Editores de personagem, organização e sessão recebem as variáveis visuais do arquivo central sem alterar sua lógica.
 - O cache PWA é atualizado para `terra-z-pwa-v1.4.0-20261114-oblivio-ui2`.
+
+
+## Passo 3 — Grafo e Mapas
+
+Implementado no checkpoint visual seguinte:
+
+- A área **Mapas** preserva a identidade da **VBN**, mas passa a usar moldura cartográfica/broadcasting consistente com o novo fundo global de Terra Omega.
+- Os mapas de Vanguard Bay, transporte e referência nacional recebem hierarquia de leitura, identificação operacional, legenda e acabamento responsivo sem alterar os arquivos cartográficos.
+- A área de **Criminalidade** permanece como dossiê editorial da VBN e recebe integração visual com a mesma família cartográfica.
+- O **Grafo de Relações** preserva toda a lógica existente de zoom, pan, foco, núcleos, arraste local, tela cheia, filtros e edição.
+- O grafo passa a funcionar visualmente como uma **rede de inteligência da Sentinela Dourada**, com hierarquia mais clara entre resumo, filtros, viewport, legenda e inspector.
+- O viewport normal ganha presença e área útil maiores em desktop sem comprometer o enquadramento mobile/PWA.
+- Legenda e controles recebem melhor separação visual; no mobile, a legenda pode ser percorrida horizontalmente sem reduzir a área do mapa.
+- Nenhum dado de relações, posição publicada, núcleo ou imagem é alterado por este passo.

@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION="terra-z-pwa-v1.4.0-20261114-oblivio-ui4-unified-paper";
+const VERSION="terra-z-pwa-v1.4.0-20261114-oblivio-ui5-graph-maps";
 const CORE_CACHE=VERSION+"-core";
 const IMAGE_CACHE=VERSION+"-images";
 const TRANSLATION_CACHE=VERSION+"-translation";
