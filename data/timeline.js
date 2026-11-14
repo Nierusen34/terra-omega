@@ -394,6 +394,25 @@ window.TerraZData.timeline = [
         ],
         "teams": [],
         "visibility": "public"
+      },
+      {
+        "id": "17-de-outubro-de-2024-apos-6-meses-6-dias-e-6-horas-misty-kilgore-termina-seu-relacionamento-com-tri",
+        "category": "history",
+        "sortKey": 20241710,
+        "year": "17 de Outubro de 2024",
+        "text": "Após 6 meses, 6 dias e 6 horas, Misty Kilgore termina seu relacionamento com Tristan Queen; No mesmo dia, Verity Pennyworth e Jason Todd apresentam Roselie Sterling para Tristan, alguém que foi designada para trabalhar como mordomo e suporte para a família Queen.",
+        "characters": [
+          "Tristan Queen",
+          "Misty Kilgore",
+          "Roselie Sterling",
+          "Jason Todd",
+          "Verity Pennyworth"
+        ],
+        "locations": [
+          "Gotham City"
+        ],
+        "teams": [],
+        "visibility": "public"
       }
     ]
   },
