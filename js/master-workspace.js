@@ -1,9 +1,9 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/master-workspace.js');
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/master-workspace.js');
 
 var showToast = core.showToast;
 var showConfirm = core.showConfirm;
@@ -56,8 +56,8 @@ var LABELS = {
 };
 
 function el(id){ return document.getElementById(id); }
-function backend(){ return window.TerraZApp && window.TerraZApp.backend; }
-function privateContent(){ return window.TerraZApp && window.TerraZApp.privateContent; }
+function backend(){ return window.TerraOmegaApp && window.TerraOmegaApp.backend; }
+function privateContent(){ return window.TerraOmegaApp && window.TerraOmegaApp.privateContent; }
 
 function emptyState(){
   return {
@@ -481,7 +481,7 @@ async function persist(nextState,message){
     showToast(message || 'Conteúdo Mestre salvo.','success',4200);
     return true;
   } catch(error){
-    console.error('Terra Z master workspace:',error);
+    console.error('Terra Omega master workspace:',error);
     setStatus('Erro ao salvar','error');
     showToast(error.message || 'Falha ao salvar conteúdo Mestre.','error',6000);
     return false;
@@ -552,7 +552,7 @@ async function open(tab){
   if(DEFINITIONS[tab]) activeTab=tab;
   if(!authenticated()){
     showToast('Entre como editor para acessar o Conteúdo Mestre.','warning',5000);
-    if(window.TerraZApp.publishing) window.TerraZApp.publishing.open();
+    if(window.TerraOmegaApp.publishing) window.TerraOmegaApp.publishing.open();
     return;
   }
 
@@ -630,7 +630,7 @@ function setup(){
     }
   });
 
-  document.addEventListener('terra-z:auth-changed',updateAccess);
+  document.addEventListener('terra-omega:auth-changed',updateAccess);
   updateAccess();
   renderTabs();
   renderList();
@@ -638,7 +638,7 @@ function setup(){
 
 setup();
 
-window.TerraZApp.masterWorkspace = {
+window.TerraOmegaApp.masterWorkspace = {
   open:open,
   close:close,
   reload:function(){ return loadState(true); },

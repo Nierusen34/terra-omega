@@ -1,15 +1,15 @@
 (function(){
 "use strict";
 
-window.TerraZApp=window.TerraZApp||{};
-var core=window.TerraZCore;
+window.TerraOmegaApp=window.TerraOmegaApp||{};
+var core=window.TerraOmegaCore;
 if(!core) throw new Error("Terra Omega: núcleo não carregado antes de js/backup-export.js");
 
 var showToast=core.showToast;
 var escapeHtml=core.escapeHtml;
 
 function el(id){return document.getElementById(id);}
-function app(){return window.TerraZApp||{};}
+function app(){return window.TerraOmegaApp||{};}
 function backend(){return app().backend;}
 function authenticated(){var b=backend();return !!(b&&b.isAuthenticated&&b.isAuthenticated());}
 var capability=null;
@@ -156,8 +156,8 @@ function setup(){
   var htmlMaster=el("backupExportHtmlMaster");if(htmlMaster)htmlMaster.addEventListener("click",function(){exportReading(true);});
   var old=el("backupExportLocalDraft");if(old)old.addEventListener("click",function(){if(app().editor&&app().editor.exportEdits)app().editor.exportEdits();});
   var panel=el("backupExportPanel");if(panel)panel.addEventListener("click",function(e){if(e.target===panel)close();});
-  document.addEventListener("terra-z:auth-changed",function(){capability=null;});
+  document.addEventListener("terra-omega:auth-changed",function(){capability=null;});
 }
 setup();
-window.TerraZApp.backupExport={open:open,close:close,complete:completeBackup,exportPublic:exportPublicJson,exportReading:exportReading};
+window.TerraOmegaApp.backupExport={open:open,close:close,complete:completeBackup,exportPublic:exportPublicJson,exportReading:exportReading};
 })();

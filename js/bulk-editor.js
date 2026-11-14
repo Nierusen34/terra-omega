@@ -1,26 +1,26 @@
 (function(){
 "use strict";
 
-window.TerraZApp=window.TerraZApp||{};
-var core=window.TerraZCore;
-if(!core) throw new Error("Terra Z: núcleo não carregado antes de js/bulk-editor.js");
+window.TerraOmegaApp=window.TerraOmegaApp||{};
+var core=window.TerraOmegaCore;
+if(!core) throw new Error("Terra Omega: núcleo não carregado antes de js/bulk-editor.js");
 
 var showToast=core.showToast;
 var escapeHtml=core.escapeHtml;
 var escapeAttr=core.escapeAttr;
-var foundation=window.TerraZApp.adminFoundation;
+var foundation=window.TerraOmegaApp.adminFoundation;
 var selection=foundation&&foundation.createSelection
-  ? foundation.createSelection({eventName:"terra-z:bulk-selection-changed"})
+  ? foundation.createSelection({eventName:"terra-omega:bulk-selection-changed"})
   : null;
 var capability=null;
 
 function el(id){return document.getElementById(id);}
-function backend(){return window.TerraZApp&&window.TerraZApp.backend;}
+function backend(){return window.TerraOmegaApp&&window.TerraOmegaApp.backend;}
 function taxonomy(){
-  return (window.TerraZData&&window.TerraZData.characterTaxonomy)||{nuclei:[],types:[],statuses:[],tags:[],characters:{}};
+  return (window.TerraOmegaData&&window.TerraOmegaData.characterTaxonomy)||{nuclei:[],types:[],statuses:[],tags:[],characters:{}};
 }
-function privateApi(){return window.TerraZApp&&window.TerraZApp.privateContent;}
-function charactersApi(){return window.TerraZApp&&window.TerraZApp.characters;}
+function privateApi(){return window.TerraOmegaApp&&window.TerraOmegaApp.privateContent;}
+function charactersApi(){return window.TerraOmegaApp&&window.TerraOmegaApp.characters;}
 function authenticated(){
   var b=backend();
   return !!(b&&b.isAuthenticated&&b.isAuthenticated());
@@ -190,24 +190,24 @@ async function apply(){
     var result=await backend().request("/api/character",{method:"POST",body:{
       action:"bulk-update-meta",characters:names,patch:patch
     }});
-    window.TerraZData=window.TerraZData||{};
-    window.TerraZData.characterTaxonomy=result.taxonomy||taxonomy();
+    window.TerraOmegaData=window.TerraOmegaData||{};
+    window.TerraOmegaData.characterTaxonomy=result.taxonomy||taxonomy();
 
-    var runtime=window.TerraZApp&&window.TerraZApp.runtimeData;
+    var runtime=window.TerraOmegaApp&&window.TerraOmegaApp.runtimeData;
     if(runtime&&runtime.refresh)await runtime.refresh({force:true,bust:result.sha,silent:true});
     var p=privateApi();if(p&&p.reload)await p.reload();
 
-    document.dispatchEvent(new CustomEvent("terra-z:taxonomy-changed",{detail:{bulk:true,updated:result.updated||[]}}));
-    var filters=window.TerraZApp&&window.TerraZApp.characterFilters;
+    document.dispatchEvent(new CustomEvent("terra-omega:taxonomy-changed",{detail:{bulk:true,updated:result.updated||[]}}));
+    var filters=window.TerraOmegaApp&&window.TerraOmegaApp.characterFilters;
     if(filters&&filters.refreshTaxonomy)filters.refreshTaxonomy();
 
     setStatus((result.updated||[]).length+" personagens atualizados.","success");
     showToast((result.updated||[]).length+" personagens atualizados em lote.","success",5000);
     render();
-    var publishing=window.TerraZApp&&window.TerraZApp.publishing;
+    var publishing=window.TerraOmegaApp&&window.TerraOmegaApp.publishing;
     if(publishing&&publishing.trackDeployment&&result.status_url)publishing.trackDeployment(result.status_url);
   }catch(error){
-    console.error("Terra Z bulk editor:",error);
+    console.error("Terra Omega bulk editor:",error);
     setStatus(error.message||"Falha na edição em lote.","error");
     showToast(error.message||"Falha na edição em lote.","error",6500);
   }finally{
@@ -238,9 +238,9 @@ function setup(){
   var selectVisible=el("bulkEditorSelectVisible");if(selectVisible)selectVisible.addEventListener("click",function(){selection.add(visibleRows().map(function(row){return row.name;}));render();});
   var clear=el("bulkEditorClearSelection");if(clear)clear.addEventListener("click",function(){selection.clear();render();});
   var panel=el("bulkEditorPanel");if(panel)panel.addEventListener("click",function(e){if(e.target===panel)close();});
-  document.addEventListener("terra-z:taxonomy-changed",function(){if(panel&&panel.classList.contains("show")){renderControls();render();}});
-  document.addEventListener("terra-z:auth-changed",function(){capability=null;});
+  document.addEventListener("terra-omega:taxonomy-changed",function(){if(panel&&panel.classList.contains("show")){renderControls();render();}});
+  document.addEventListener("terra-omega:auth-changed",function(){capability=null;});
 }
 setup();
-window.TerraZApp.bulkEditor={open:open,close:close,refresh:render};
+window.TerraOmegaApp.bulkEditor={open:open,close:close,refresh:render};
 })();

@@ -1,9 +1,9 @@
 (function(){
 "use strict";
 
-window.TerraZApp=window.TerraZApp || {};
-var core=window.TerraZCore;
-if(!core) throw new Error("Terra Z: núcleo não carregado antes de js/media-library.js");
+window.TerraOmegaApp=window.TerraOmegaApp || {};
+var core=window.TerraOmegaCore;
+if(!core) throw new Error("Terra Omega: núcleo não carregado antes de js/media-library.js");
 
 var showToast=core.showToast;
 var showConfirm=core.showConfirm;
@@ -25,12 +25,12 @@ var CATEGORIES={
 };
 
 function el(id){ return document.getElementById(id); }
-function backend(){ return window.TerraZApp && window.TerraZApp.backend; }
-function graph(){ return window.TerraZApp && window.TerraZApp.graph; }
-function characterMedia(){ return window.TerraZApp && window.TerraZApp.characterMedia; }
+function backend(){ return window.TerraOmegaApp && window.TerraOmegaApp.backend; }
+function graph(){ return window.TerraOmegaApp && window.TerraOmegaApp.graph; }
+function characterMedia(){ return window.TerraOmegaApp && window.TerraOmegaApp.characterMedia; }
 
 function assets(){
-  var library=(window.TerraZData && window.TerraZData.mediaLibrary) || {};
+  var library=(window.TerraOmegaData && window.TerraOmegaData.mediaLibrary) || {};
   return Array.isArray(library.assets) ? library.assets : [];
 }
 
@@ -42,7 +42,7 @@ function assetUrl(asset){
   if(!asset) return "";
   var src=String(asset.src || "");
   if(!src) return "";
-  var runtime=window.TerraZApp && window.TerraZApp.runtimeData;
+  var runtime=window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
   return runtime && runtime.mediaUrl ? runtime.mediaUrl(src) : src;
 }
 
@@ -65,7 +65,7 @@ function graphUsage(id){
 }
 
 function characterItems(){
-  var data=(window.TerraZData && window.TerraZData.characterMedia) || {};
+  var data=(window.TerraOmegaData && window.TerraOmegaData.characterMedia) || {};
   return Object.keys(data).map(function(name){
     var api=characterMedia();
     var meta=api && api.get ? api.get(name) : data[name];
@@ -179,7 +179,7 @@ function render(){
   });
   root.querySelectorAll("[data-media-character]").forEach(function(button){
     button.addEventListener("click",function(){
-      var editor=window.TerraZApp && window.TerraZApp.characterEditor;
+      var editor=window.TerraOmegaApp && window.TerraOmegaApp.characterEditor;
       close();
       if(editor && editor.open) editor.open(button.getAttribute("data-media-character"));
     });
@@ -224,7 +224,7 @@ function open(){
   var b=backend();
   if(!b || !b.isAuthenticated || !b.isAuthenticated()){
     showToast("Entre como editor para abrir a Biblioteca de Mídia.","warning",5000);
-    if(window.TerraZApp.publishing) window.TerraZApp.publishing.open();
+    if(window.TerraOmegaApp.publishing) window.TerraOmegaApp.publishing.open();
     return;
   }
   var modal=el("mediaLibraryModal");
@@ -382,22 +382,22 @@ async function saveAsset(){
     }
 
     var result=await b.request("/api/media",{method:"POST",body:body});
-    window.TerraZData=window.TerraZData || {};
-    window.TerraZData.mediaLibrary=result.library || {version:1,assets:[]};
+    window.TerraOmegaData=window.TerraOmegaData || {};
+    window.TerraOmegaData.mediaLibrary=result.library || {version:1,assets:[]};
     var savedId=result.asset && result.asset.id || selectedId;
     closeEditor();
     render();
     showToast("Ativo salvo na Biblioteca de Mídia.","success",4200);
 
-    var runtime=window.TerraZApp && window.TerraZApp.runtimeData;
+    var runtime=window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
     if(runtime && runtime.refresh) await runtime.refresh({force:true,bust:result.sha,silent:true});
 
-    document.dispatchEvent(new CustomEvent("terra-z:media-library-changed",{detail:{id:savedId}}));
+    document.dispatchEvent(new CustomEvent("terra-omega:media-library-changed",{detail:{id:savedId}}));
 
-    var publishing=window.TerraZApp && window.TerraZApp.publishing;
+    var publishing=window.TerraOmegaApp && window.TerraOmegaApp.publishing;
     if(publishing && publishing.trackDeployment && result.status_url) publishing.trackDeployment(result.status_url);
   }catch(error){
-    console.error("Terra Z media library save:",error);
+    console.error("Terra Omega media library save:",error);
     showToast(error.message || "Falha ao salvar o ativo.","error",6500);
   }finally{
     if(save){ save.disabled=false; save.textContent="💾 Salvar ativo"; }
@@ -426,14 +426,14 @@ function requestDelete(){
           method:"POST",
           body:{action:"library-delete",id:asset.id}
         });
-        window.TerraZData.mediaLibrary=result.library || {version:1,assets:[]};
+        window.TerraOmegaData.mediaLibrary=result.library || {version:1,assets:[]};
         closeEditor();
         render();
         showToast("Ativo removido da Biblioteca.","success",4200);
 
-        var runtime=window.TerraZApp && window.TerraZApp.runtimeData;
+        var runtime=window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
         if(runtime && runtime.refresh) await runtime.refresh({force:true,bust:result.sha,silent:true});
-        document.dispatchEvent(new CustomEvent("terra-z:media-library-changed",{detail:{id:asset.id,deleted:true}}));
+        document.dispatchEvent(new CustomEvent("terra-omega:media-library-changed",{detail:{id:asset.id,deleted:true}}));
       }catch(error){
         console.error(error);
         showToast(error.message || "Falha ao excluir o ativo.","error",6000);
@@ -494,13 +494,13 @@ function setup(){
     if(node) node.addEventListener("change",renderEditorPreview);
   });
 
-  document.addEventListener("terra-z:runtime-data-loaded",render);
-  document.addEventListener("terra-z:character-media-changed",render);
-  document.addEventListener("terra-z:graph-rendered",function(){ if(modal && modal.classList.contains("show")) render(); });
-  document.addEventListener("terra-z:auth-changed",function(){ capability=null;refreshAccess(); });
+  document.addEventListener("terra-omega:runtime-data-loaded",render);
+  document.addEventListener("terra-omega:character-media-changed",render);
+  document.addEventListener("terra-omega:graph-rendered",function(){ if(modal && modal.classList.contains("show")) render(); });
+  document.addEventListener("terra-omega:auth-changed",function(){ capability=null;refreshAccess(); });
 }
 
-window.TerraZApp.mediaLibrary={
+window.TerraOmegaApp.mediaLibrary={
   open:open,
   close:close,
   render:render,

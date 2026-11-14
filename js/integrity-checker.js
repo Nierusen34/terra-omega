@@ -1,8 +1,8 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
 if(!core) throw new Error("Terra Omega: núcleo não carregado antes de js/integrity-checker.js");
 
 var escapeHtml = core.escapeHtml;
@@ -13,8 +13,8 @@ var currentNature = "all";
 var running = false;
 
 function el(id){ return document.getElementById(id); }
-function app(){ return window.TerraZApp || {}; }
-function data(){ return window.TerraZData || {}; }
+function app(){ return window.TerraOmegaApp || {}; }
+function data(){ return window.TerraOmegaData || {}; }
 
 function normalize(value){
   return String(value || "")
@@ -753,7 +753,7 @@ function setup(){
 
 setup();
 
-window.TerraZApp.integrityChecker = {
+window.TerraOmegaApp.integrityChecker = {
   open:open,
   close:close,
   run:run,

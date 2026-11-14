@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-window.TerraZApp=window.TerraZApp || {};
+window.TerraOmegaApp=window.TerraOmegaApp || {};
 
 var scripts=[
   "js/admin-foundation.js",
@@ -59,7 +59,7 @@ function loadScript(src){
 }
 
 async function loadAll(){
-  if(loaded) return window.TerraZApp;
+  if(loaded) return window.TerraOmegaApp;
   if(promise) return promise;
 
   promise=(async function(){
@@ -70,8 +70,8 @@ async function loadAll(){
       document.documentElement.classList.add("admin-loaded");
       var button=document.getElementById("adminPanelBtn");
       if(button) button.removeEventListener("click",openAdmin);
-      document.dispatchEvent(new CustomEvent("terra-z:admin-modules-loaded"));
-      return window.TerraZApp;
+      document.dispatchEvent(new CustomEvent("terra-omega:admin-modules-loaded"));
+      return window.TerraOmegaApp;
     }finally{
       document.documentElement.classList.remove("admin-loading");
     }
@@ -81,8 +81,8 @@ async function loadAll(){
     return await promise;
   }catch(error){
     promise=null;
-    console.error("Terra Z admin loader:",error);
-    var core=window.TerraZCore;
+    console.error("Terra Omega admin loader:",error);
+    var core=window.TerraOmegaCore;
     if(core && core.showToast) core.showToast("Falha ao carregar as ferramentas administrativas.","error",6500);
     throw error;
   }
@@ -96,8 +96,8 @@ async function openAdmin(){
   }
   try{
     await loadAll();
-    if(window.TerraZApp.adminPanel && window.TerraZApp.adminPanel.open){
-      window.TerraZApp.adminPanel.open();
+    if(window.TerraOmegaApp.adminPanel && window.TerraOmegaApp.adminPanel.open){
+      window.TerraOmegaApp.adminPanel.open();
     }
   }finally{
     if(button){
@@ -114,12 +114,12 @@ function setup(){
 
   // If an authenticated editor returns to a page, load the private/admin layer
   // only after authentication is actually detected.
-  document.addEventListener("terra-z:auth-changed",function(event){
+  document.addEventListener("terra-omega:auth-changed",function(event){
     if(event && event.detail && event.detail.authenticated && !loaded) loadAll();
   });
 }
 
-window.TerraZApp.adminLoader={
+window.TerraOmegaApp.adminLoader={
   load:loadAll,
   open:openAdmin,
   isLoaded:function(){ return loaded; },

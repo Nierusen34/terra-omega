@@ -1,9 +1,9 @@
 (function(){
 "use strict";
 
-window.TerraZApp=window.TerraZApp||{};
-var core=window.TerraZCore;
-if(!core) throw new Error("Terra Z: núcleo não carregado antes de js/master-quick.js");
+window.TerraOmegaApp=window.TerraOmegaApp||{};
+var core=window.TerraOmegaCore;
+if(!core) throw new Error("Terra Omega: núcleo não carregado antes de js/master-quick.js");
 
 var escapeHtml=core.escapeHtml;
 var escapeAttr=core.escapeAttr;
@@ -11,8 +11,8 @@ var showToast=core.showToast;
 var searchTerm="";
 
 function el(id){return document.getElementById(id);}
-function backend(){return window.TerraZApp&&window.TerraZApp.backend;}
-function privateApi(){return window.TerraZApp&&window.TerraZApp.privateContent;}
+function backend(){return window.TerraOmegaApp&&window.TerraOmegaApp.backend;}
+function privateApi(){return window.TerraOmegaApp&&window.TerraOmegaApp.privateContent;}
 function authenticated(){
   var b=backend();
   return !!(b&&b.isAuthenticated&&b.isAuthenticated());
@@ -65,7 +65,7 @@ function renderList(id,countId,items,mapper,empty){
   root.innerHTML=list.length?list.map(mapper).join(""):'<div class="master-quick-empty">'+escapeHtml(empty)+'</div>';
 }
 function recentEvents(state){
-  var app=window.TerraZApp||{};
+  var app=window.TerraOmegaApp||{};
   var rows=[];
 
   var parseDate=app.timeline&&app.timeline.parseWorldDate
@@ -76,7 +76,7 @@ function recentEvents(state){
       };
   var sessions=app.sessions&&app.sessions.getAll
     ? app.sessions.getAll()
-    : ((window.TerraZData&&window.TerraZData.sessions)||[]);
+    : ((window.TerraOmegaData&&window.TerraOmegaData.sessions)||[]);
   sessions.forEach(function(session){
     rows.push({
       kind:"session",
@@ -103,7 +103,7 @@ function recentEvents(state){
       });
     });
   }else{
-    var timeline=(window.TerraZData&&window.TerraZData.timeline)||[];
+    var timeline=(window.TerraOmegaData&&window.TerraOmegaData.timeline)||[];
     timeline.forEach(function(group){
       (group.events||[]).forEach(function(event){
         rows.push({
@@ -202,20 +202,20 @@ function setup(){
   var refreshBtn=el("masterQuickRefresh");if(refreshBtn)refreshBtn.addEventListener("click",refresh);
   var search=el("masterQuickSearch");if(search)search.addEventListener("input",function(){searchTerm=normalize(search.value).trim();render();});
   var workspace=el("masterQuickWorkspace");if(workspace)workspace.addEventListener("click",function(){
-    close();var w=window.TerraZApp&&window.TerraZApp.masterWorkspace;if(w&&w.open)w.open();
+    close();var w=window.TerraOmegaApp&&window.TerraOmegaApp.masterWorkspace;if(w&&w.open)w.open();
   });
   var table=el("masterQuickTableMode");if(table)table.addEventListener("click",function(){
-    close();var tableMode=window.TerraZApp&&window.TerraZApp.tableMode;if(tableMode&&tableMode.open)tableMode.open();
+    close();var tableMode=window.TerraOmegaApp&&window.TerraOmegaApp.tableMode;if(tableMode&&tableMode.open)tableMode.open();
   });
   var mode=el("masterQuickSessionMode");if(mode)mode.addEventListener("click",function(){
-    close();var sessionMode=window.TerraZApp&&window.TerraZApp.sessionMode;if(sessionMode&&sessionMode.open)sessionMode.open();
+    close();var sessionMode=window.TerraOmegaApp&&window.TerraOmegaApp.sessionMode;if(sessionMode&&sessionMode.open)sessionMode.open();
   });
   var session=el("masterQuickNewSession");if(session)session.addEventListener("click",function(){
-    close();var editor=window.TerraZApp&&window.TerraZApp.sessionEditor;if(editor&&editor.open)editor.open("");
+    close();var editor=window.TerraOmegaApp&&window.TerraOmegaApp.sessionEditor;if(editor&&editor.open)editor.open("");
   });
-  document.addEventListener("terra-z:private-content-loaded",function(){if(panel&&panel.classList.contains("show"))render();});
-  document.addEventListener("terra-z:runtime-data-loaded",function(){if(panel&&panel.classList.contains("show"))render();});
+  document.addEventListener("terra-omega:private-content-loaded",function(){if(panel&&panel.classList.contains("show"))render();});
+  document.addEventListener("terra-omega:runtime-data-loaded",function(){if(panel&&panel.classList.contains("show"))render();});
 }
 setup();
-window.TerraZApp.masterQuick={open:open,close:close,refresh:refresh,render:render};
+window.TerraOmegaApp.masterQuick={open:open,close:close,refresh:refresh,render:render};
 })();

@@ -1,8 +1,8 @@
 (function(){
 "use strict";
 
-window.TerraZApp=window.TerraZApp || {};
-var core=window.TerraZCore;
+window.TerraOmegaApp=window.TerraOmegaApp || {};
+var core=window.TerraOmegaCore;
 if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/history-manager.js');
 
 var escapeHtml=core.escapeHtml;
@@ -15,7 +15,7 @@ var kindFilter='all';
 var busy=false;
 
 function el(id){ return document.getElementById(id); }
-function app(){ return window.TerraZApp || {}; }
+function app(){ return window.TerraOmegaApp || {}; }
 function backend(){ return app().backend; }
 function shortSha(value){ return String(value || '').slice(0,7) || '—'; }
 
@@ -413,7 +413,7 @@ function setup(){
     if(event.key === 'Escape' && panel && panel.classList.contains('show')) close();
   });
 
-  document.addEventListener('terra-z:auth-changed',function(){
+  document.addEventListener('terra-omega:auth-changed',function(){
     overview=null;
     if(panel && panel.classList.contains('show')) load();
   });
@@ -421,7 +421,7 @@ function setup(){
 
 setup();
 
-window.TerraZApp.historyManager={
+window.TerraOmegaApp.historyManager={
   open:open,
   close:close,
   load:load,

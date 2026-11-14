@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-window.TerraZApp=window.TerraZApp || {};
+window.TerraOmegaApp=window.TerraOmegaApp || {};
 
 function normalize(value){
   return String(value == null ? "" : value)
@@ -76,7 +76,7 @@ function filterRows(rows,options){
   });
 }
 
-window.TerraZApp.adminFoundation={
+window.TerraOmegaApp.adminFoundation={
   normalize:normalize,
   slugify:slugify,
   unique:unique,
@@ -84,5 +84,5 @@ window.TerraZApp.adminFoundation={
   filterRows:filterRows
 };
 
-document.dispatchEvent(new CustomEvent("terra-z:admin-foundation-ready"));
+document.dispatchEvent(new CustomEvent("terra-omega:admin-foundation-ready"));
 })();

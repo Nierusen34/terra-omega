@@ -1,8 +1,8 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
 if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/admin-panel.js');
 
 var showToast = core.showToast;
@@ -10,7 +10,7 @@ var showConfirm = core.showConfirm;
 var escapeHtml = core.escapeHtml;
 
 function el(id){ return document.getElementById(id); }
-function backend(){ return window.TerraZApp && window.TerraZApp.backend; }
+function backend(){ return window.TerraOmegaApp && window.TerraOmegaApp.backend; }
 
 function isAuthenticated(){
   var b = backend();
@@ -25,23 +25,23 @@ function setLoginStatus(message,state){
 }
 
 function pendingCount(){
-  var editor = window.TerraZApp && window.TerraZApp.editor;
+  var editor = window.TerraOmegaApp && window.TerraOmegaApp.editor;
   if(!editor || !editor.getPendingChanges) return 0;
   return Object.keys(editor.getPendingChanges() || {}).length;
 }
 
 function characterCount(){
-  var characters = window.TerraZApp && window.TerraZApp.characters;
+  var characters = window.TerraOmegaApp && window.TerraOmegaApp.characters;
   return characters && characters.names ? characters.names().length : 0;
 }
 
 function sessionCount(){
-  var sessions = window.TerraZApp && window.TerraZApp.sessions;
+  var sessions = window.TerraOmegaApp && window.TerraOmegaApp.sessions;
   return sessions && sessions.count ? sessions.count() : 0;
 }
 
 function privateCount(){
-  var privateContent = window.TerraZApp && window.TerraZApp.privateContent;
+  var privateContent = window.TerraOmegaApp && window.TerraOmegaApp.privateContent;
   if(!privateContent || !privateContent.isLoaded || !privateContent.isLoaded()) return null;
   if(!privateContent.getPrivateCharacterNames) return null;
   return privateContent.getPrivateCharacterNames().length;
@@ -288,7 +288,7 @@ function refresh(){
   }
 
   var editAction = document.querySelector('[data-admin-action="edit"] strong');
-  var editor = window.TerraZApp && window.TerraZApp.editor;
+  var editor = window.TerraOmegaApp && window.TerraOmegaApp.editor;
   if(editAction && editor && editor.isEditing){
     editAction.textContent = editor.isEditing() ? 'Encerrar edição' : 'Editar conteúdo';
   }
@@ -387,7 +387,7 @@ function openCharacters(){
 }
 
 function handleAction(action){
-  var app = window.TerraZApp || {};
+  var app = window.TerraOmegaApp || {};
 
   if(action === 'edit'){
     requireEditorAction(function(){
@@ -670,11 +670,11 @@ function setup(){
   });
 
   [
-    'terra-z:auth-changed',
-    'terra-z:edits-changed',
-    'terra-z:runtime-data-loaded',
-    'terra-z:characters-rendered',
-    'terra-z:private-content-loaded'
+    'terra-omega:auth-changed',
+    'terra-omega:edits-changed',
+    'terra-omega:runtime-data-loaded',
+    'terra-omega:characters-rendered',
+    'terra-omega:private-content-loaded'
   ].forEach(function(name){
     document.addEventListener(name,refresh);
   });
@@ -685,7 +685,7 @@ function setup(){
 
 setup();
 
-window.TerraZApp.adminPanel = {
+window.TerraOmegaApp.adminPanel = {
   open:open,
   close:close,
   refresh:refresh,

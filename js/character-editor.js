@@ -1,8 +1,8 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
 if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/character-editor.js');
 
 var showToast = core.showToast;
@@ -13,10 +13,10 @@ var currentName = '';
 var createMode = false;
 var privateLoaded = false;
 var createImportContext = null;
-var taxonomy = (window.TerraZData && window.TerraZData.characterTaxonomy) || {nuclei:[],types:[],statuses:[],tags:[],characters:{}};
+var taxonomy = (window.TerraOmegaData && window.TerraOmegaData.characterTaxonomy) || {nuclei:[],types:[],statuses:[],tags:[],characters:{}};
 
 function el(id){ return document.getElementById(id); }
-function backend(){ return window.TerraZApp && window.TerraZApp.backend; }
+function backend(){ return window.TerraOmegaApp && window.TerraOmegaApp.backend; }
 
 var visibilityCapability=null;
 var portraitFramingCapability=null;
@@ -266,12 +266,12 @@ function setCreateFieldsVisible(visible){
 }
 
 function mediaFor(name){
-  var all = (window.TerraZData && window.TerraZData.characterMedia) || {};
+  var all = (window.TerraOmegaData && window.TerraOmegaData.characterMedia) || {};
   return all[name] || {};
 }
 
 function characterMediaApi(){
-  return window.TerraZApp && window.TerraZApp.characterMedia;
+  return window.TerraOmegaApp && window.TerraOmegaApp.characterMedia;
 }
 
 function cloneFrame(frame){
@@ -456,9 +456,9 @@ async function saveMediaFraming(){
       }
     });
 
-    window.TerraZData=window.TerraZData || {};
-    window.TerraZData.characterMedia=window.TerraZData.characterMedia || {};
-    window.TerraZData.characterMedia[currentName]=result.media || window.TerraZData.characterMedia[currentName] || {};
+    window.TerraOmegaData=window.TerraOmegaData || {};
+    window.TerraOmegaData.characterMedia=window.TerraOmegaData.characterMedia || {};
+    window.TerraOmegaData.characterMedia[currentName]=result.media || window.TerraOmegaData.characterMedia[currentName] || {};
 
     var api=characterMediaApi();
     if(api && api.refresh) api.refresh(document);
@@ -466,21 +466,21 @@ async function saveMediaFraming(){
     framingDraft=buildFramingDraft(currentName);
     syncFramingControls();
 
-    document.dispatchEvent(new CustomEvent('terra-z:character-media-changed',{
+    document.dispatchEvent(new CustomEvent('terra-omega:character-media-changed',{
       detail:{character:currentName,framingChanged:true}
     }));
 
     showToast('Enquadramento atualizado em cards, ficha e grafo.','success',4500);
 
-    var runtime=window.TerraZApp && window.TerraZApp.runtimeData;
+    var runtime=window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
     if(runtime && runtime.refresh) await runtime.refresh({force:true,bust:result.sha,silent:true});
 
     if(result.private){
-      var privateApi=window.TerraZApp && window.TerraZApp.privateContent;
+      var privateApi=window.TerraOmegaApp && window.TerraOmegaApp.privateContent;
       if(privateApi && privateApi.reload) await privateApi.reload();
     }
 
-    var publishing=window.TerraZApp && window.TerraZApp.publishing;
+    var publishing=window.TerraOmegaApp && window.TerraOmegaApp.publishing;
     if(publishing && publishing.trackDeployment && result.status_url){
       publishing.trackDeployment(result.status_url);
     }
@@ -566,27 +566,27 @@ async function saveMediaSource(){
   try{
     var result = await b.request('/api/media',{method:'POST',body:body});
 
-    window.TerraZData = window.TerraZData || {};
-    window.TerraZData.characterMedia = window.TerraZData.characterMedia || {};
-    window.TerraZData.characterMedia[currentName] = result.media || window.TerraZData.characterMedia[currentName] || {};
+    window.TerraOmegaData = window.TerraOmegaData || {};
+    window.TerraOmegaData.characterMedia = window.TerraOmegaData.characterMedia || {};
+    window.TerraOmegaData.characterMedia[currentName] = result.media || window.TerraOmegaData.characterMedia[currentName] || {};
 
-    var characterMedia = window.TerraZApp && window.TerraZApp.characterMedia;
+    var characterMedia = window.TerraOmegaApp && window.TerraOmegaApp.characterMedia;
     if(characterMedia && characterMedia.clearAutomaticCache) characterMedia.clearAutomaticCache(currentName);
     if(characterMedia && characterMedia.refresh) characterMedia.refresh(document);
 
     fillMediaSource(currentName);
     refreshPortraitRemoval(currentName);
 
-    document.dispatchEvent(new CustomEvent('terra-z:character-media-changed',{
+    document.dispatchEvent(new CustomEvent('terra-omega:character-media-changed',{
       detail:{character:currentName,sourceChanged:true}
     }));
 
     showToast('Fonte do retrato atualizada sem alterar a ficha.','success',4500);
 
-    var runtime = window.TerraZApp && window.TerraZApp.runtimeData;
+    var runtime = window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
     if(runtime && runtime.refresh) runtime.refresh({force:true,bust:result.sha,silent:true});
 
-    var publishing = window.TerraZApp && window.TerraZApp.publishing;
+    var publishing = window.TerraOmegaApp && window.TerraOmegaApp.publishing;
     if(publishing && publishing.trackDeployment && result.status_url){
       publishing.trackDeployment(result.status_url);
     }
@@ -603,7 +603,7 @@ async function saveMediaSource(){
 
 function refreshAutomaticPortrait(){
   if(createMode || !currentName) return;
-  var characterMedia = window.TerraZApp && window.TerraZApp.characterMedia;
+  var characterMedia = window.TerraOmegaApp && window.TerraOmegaApp.characterMedia;
   if(!characterMedia) return;
 
   if(characterMedia.clearAutomaticCache) characterMedia.clearAutomaticCache(currentName);
@@ -631,7 +631,7 @@ function refreshPortraitRemoval(name){
     return;
   }
 
-  var media = (window.TerraZData && window.TerraZData.characterMedia) || {};
+  var media = (window.TerraOmegaData && window.TerraOmegaData.characterMedia) || {};
   var item = media[name] || {};
   var hasLocal = !!item.src;
   var hasAutomatic = !!(item.auto && (
@@ -704,7 +704,7 @@ async function loadExistingSecrets(name){
   setStatus('Carregando conteúdo privado…','working');
 
   try {
-    var privateApi = window.TerraZApp.privateContent;
+    var privateApi = window.TerraOmegaApp.privateContent;
     var privateData = privateApi && privateApi.load ? await privateApi.load() : null;
     if(privateData){
       var secrets = privateApi.getCharacterSecrets ? privateApi.getCharacterSecrets(name) : null;
@@ -728,11 +728,11 @@ async function open(name){
   var b = backend();
   if(!b || !b.isConfigured() || !b.isAuthenticated()){
     showToast('Entre como editor para editar personagens.','warning',5000);
-    if(window.TerraZApp.publishing) window.TerraZApp.publishing.open();
+    if(window.TerraOmegaApp.publishing) window.TerraOmegaApp.publishing.open();
     return;
   }
 
-  var manager = window.TerraZApp.characters;
+  var manager = window.TerraOmegaApp.characters;
   var ficha = manager && manager.get ? manager.get(name) : null;
   if(!ficha){
     showToast('Ficha não encontrada para: ' + name,'error');
@@ -779,7 +779,7 @@ function openCreate(prefill){
   var b = backend();
   if(!b || !b.isConfigured() || !b.isAuthenticated()){
     showToast('Entre como editor para criar personagens.','warning',5000);
-    if(window.TerraZApp.publishing) window.TerraZApp.publishing.open();
+    if(window.TerraOmegaApp.publishing) window.TerraOmegaApp.publishing.open();
     return;
   }
 
@@ -956,7 +956,7 @@ async function save(){
     // A API separa dados públicos e Mestre no armazenamento. Para evitar que
     // uma resposta combinada seja aplicada sobre um overlay privado já ativo,
     // recarregamos primeiro a base pública canônica e depois o cofre.
-    var runtime = window.TerraZApp && window.TerraZApp.runtimeData;
+    var runtime = window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
     var runtimeResult = null;
 
     if(runtime && runtime.refresh){
@@ -967,7 +967,7 @@ async function save(){
       });
     }
 
-    var privateApi = window.TerraZApp && window.TerraZApp.privateContent;
+    var privateApi = window.TerraOmegaApp && window.TerraOmegaApp.privateContent;
     if(privateLoaded && privateApi && privateApi.reload){
       await privateApi.reload();
     }
@@ -983,18 +983,18 @@ async function save(){
       );
     }
 
-    taxonomy = (window.TerraZData && window.TerraZData.characterTaxonomy) || taxonomy;
+    taxonomy = (window.TerraOmegaData && window.TerraOmegaData.characterTaxonomy) || taxonomy;
 
-    var filters = window.TerraZApp && window.TerraZApp.characterFilters;
+    var filters = window.TerraOmegaApp && window.TerraOmegaApp.characterFilters;
     if(filters && filters.refreshTaxonomy) filters.refreshTaxonomy();
 
-    var characters = window.TerraZApp && window.TerraZApp.characters;
+    var characters = window.TerraOmegaApp && window.TerraOmegaApp.characters;
     if(characters && characters.refresh) characters.refresh();
 
     close();
 
-    if(wasCreating && importContext && importContext.addToGraph && window.TerraZApp.graph && window.TerraZApp.graph.importCharacter){
-      await window.TerraZApp.graph.importCharacter(name,{
+    if(wasCreating && importContext && importContext.addToGraph && window.TerraOmegaApp.graph && window.TerraOmegaApp.graph.importCharacter){
+      await window.TerraOmegaApp.graph.importCharacter(name,{
         wikiTitle:importContext.wikiTitle,
         portraitConfigured:portraitConfigured
       });
@@ -1010,7 +1010,7 @@ async function save(){
       5200
     );
 
-    var publishing = window.TerraZApp && window.TerraZApp.publishing;
+    var publishing = window.TerraOmegaApp && window.TerraOmegaApp.publishing;
     if(publishing && publishing.trackDeployment && result.status_url){
       publishing.trackDeployment(result.status_url);
     }
@@ -1064,42 +1064,42 @@ async function performDelete(name){
 
     var deletedName = result.deleted || name;
 
-    window.TerraZData = window.TerraZData || {};
-    window.TerraZData.characterOverrides = window.TerraZData.characterOverrides || {};
-    window.TerraZData.characterTaxonomy = window.TerraZData.characterTaxonomy || {characters:{}};
-    window.TerraZData.characterTaxonomy.characters = window.TerraZData.characterTaxonomy.characters || {};
-    window.TerraZData.characterMedia = window.TerraZData.characterMedia || {};
+    window.TerraOmegaData = window.TerraOmegaData || {};
+    window.TerraOmegaData.characterOverrides = window.TerraOmegaData.characterOverrides || {};
+    window.TerraOmegaData.characterTaxonomy = window.TerraOmegaData.characterTaxonomy || {characters:{}};
+    window.TerraOmegaData.characterTaxonomy.characters = window.TerraOmegaData.characterTaxonomy.characters || {};
+    window.TerraOmegaData.characterMedia = window.TerraOmegaData.characterMedia || {};
 
     if(result.mode === 'tombstone'){
-      window.TerraZData.characterOverrides[deletedName] = {deleted:true};
+      window.TerraOmegaData.characterOverrides[deletedName] = {deleted:true};
     } else {
-      delete window.TerraZData.characterOverrides[deletedName];
+      delete window.TerraOmegaData.characterOverrides[deletedName];
     }
 
-    delete window.TerraZData.characterTaxonomy.characters[deletedName];
-    delete window.TerraZData.characterMedia[deletedName];
-    taxonomy = window.TerraZData.characterTaxonomy;
+    delete window.TerraOmegaData.characterTaxonomy.characters[deletedName];
+    delete window.TerraOmegaData.characterMedia[deletedName];
+    taxonomy = window.TerraOmegaData.characterTaxonomy;
 
-    var privateApi = window.TerraZApp && window.TerraZApp.privateContent;
+    var privateApi = window.TerraOmegaApp && window.TerraOmegaApp.privateContent;
     if(privateApi && privateApi.removeCharacter) privateApi.removeCharacter(deletedName);
 
-    var favorites = window.TerraZApp && window.TerraZApp.favorites;
+    var favorites = window.TerraOmegaApp && window.TerraOmegaApp.favorites;
     if(favorites && favorites.remove) favorites.remove(deletedName);
 
-    var characters = window.TerraZApp && window.TerraZApp.characters;
+    var characters = window.TerraOmegaApp && window.TerraOmegaApp.characters;
     close();
     if(characters && characters.close) characters.close();
 
-    var filters = window.TerraZApp && window.TerraZApp.characterFilters;
+    var filters = window.TerraOmegaApp && window.TerraOmegaApp.characterFilters;
     if(filters && filters.refreshTaxonomy) filters.refreshTaxonomy();
     if(characters && characters.refresh) characters.refresh();
 
     showToast(deletedName + ' foi apagado do Terra Omega.','success',5000);
 
-    var runtime = window.TerraZApp && window.TerraZApp.runtimeData;
+    var runtime = window.TerraOmegaApp && window.TerraOmegaApp.runtimeData;
     if(runtime && runtime.refresh) runtime.refresh({force:true,bust:result.sha,silent:true});
 
-    var publishing = window.TerraZApp && window.TerraZApp.publishing;
+    var publishing = window.TerraOmegaApp && window.TerraOmegaApp.publishing;
     if(publishing && publishing.trackDeployment && result.status_url){
       publishing.trackDeployment(result.status_url);
     }
@@ -1122,15 +1122,15 @@ function openPortrait(){
     showToast('Salve o personagem antes de adicionar o retrato.','info',4000);
     return;
   }
-  if(currentName && window.TerraZApp.mediaManager){
-    window.TerraZApp.mediaManager.choose(currentName);
+  if(currentName && window.TerraOmegaApp.mediaManager){
+    window.TerraOmegaApp.mediaManager.choose(currentName);
   }
 }
 
 function removePortrait(){
   if(createMode || !currentName) return;
-  if(window.TerraZApp.mediaManager && window.TerraZApp.mediaManager.requestRemove){
-    window.TerraZApp.mediaManager.requestRemove(currentName);
+  if(window.TerraOmegaApp.mediaManager && window.TerraOmegaApp.mediaManager.requestRemove){
+    window.TerraOmegaApp.mediaManager.requestRemove(currentName);
   }
 }
 
@@ -1142,7 +1142,7 @@ async function openGraph(){
 
   var name=currentName;
   close();
-  var graph=window.TerraZApp.graph;
+  var graph=window.TerraOmegaApp.graph;
   if(!graph) return;
 
   if(graph.focusCharacter && graph.focusCharacter(name)){
@@ -1179,7 +1179,7 @@ function setup(){
   });
   if(el('characterEditorMediaProvider')) el('characterEditorMediaProvider').addEventListener('change',syncMediaSourceFields);
   if(el('characterEditorMediaBrowseBtn')) el('characterEditorMediaBrowseBtn').addEventListener('click',function(){
-    if(currentName && window.TerraZApp.portraitBrowser) window.TerraZApp.portraitBrowser.open(currentName);
+    if(currentName && window.TerraOmegaApp.portraitBrowser) window.TerraOmegaApp.portraitBrowser.open(currentName);
   });
   if(el('characterEditorMediaSaveBtn')) el('characterEditorMediaSaveBtn').addEventListener('click',saveMediaSource);
   if(el('characterEditorMediaRefreshBtn')) el('characterEditorMediaRefreshBtn').addEventListener('click',refreshAutomaticPortrait);
@@ -1206,7 +1206,7 @@ function setup(){
     });
   }
 
-  document.addEventListener('terra-z:auth-changed',function(){
+  document.addEventListener('terra-omega:auth-changed',function(){
     visibilityCapability=null;
     portraitFramingCapability=null;
     refreshCreateButton();
@@ -1215,8 +1215,8 @@ function setup(){
     if(!b || !b.isAuthenticated()) close();
   });
 
-  document.addEventListener('terra-z:runtime-data-loaded',function(){
-    taxonomy = (window.TerraZData && window.TerraZData.characterTaxonomy) || taxonomy;
+  document.addEventListener('terra-omega:runtime-data-loaded',function(){
+    taxonomy = (window.TerraOmegaData && window.TerraOmegaData.characterTaxonomy) || taxonomy;
     if(currentName){
       refreshPortraitRemoval(currentName);
       fillMediaSource(currentName);
@@ -1224,7 +1224,7 @@ function setup(){
     }
   });
 
-  document.addEventListener('terra-z:character-media-changed',function(event){
+  document.addEventListener('terra-omega:character-media-changed',function(event){
     var changed = event.detail && event.detail.character;
     if(currentName && changed === currentName){
       refreshPortraitRemoval(currentName);
@@ -1238,7 +1238,7 @@ function setup(){
 
 setup();
 
-window.TerraZApp.characterEditor = {
+window.TerraOmegaApp.characterEditor = {
   open:open,
   openCreate:openCreate,
   close:close,

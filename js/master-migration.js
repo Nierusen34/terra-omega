@@ -1,16 +1,16 @@
 (function(){
 "use strict";
 
-window.TerraZApp = window.TerraZApp || {};
-var core = window.TerraZCore;
-if(!core) throw new Error('Terra Z: núcleo não carregado antes de js/master-migration.js');
+window.TerraOmegaApp = window.TerraOmegaApp || {};
+var core = window.TerraOmegaCore;
+if(!core) throw new Error('Terra Omega: núcleo não carregado antes de js/master-migration.js');
 
 var showToast = core.showToast;
 var showConfirm = core.showConfirm;
 
 function el(id){ return document.getElementById(id); }
-function backend(){ return window.TerraZApp && window.TerraZApp.backend; }
-function publishing(){ return window.TerraZApp && window.TerraZApp.publishing; }
+function backend(){ return window.TerraOmegaApp && window.TerraOmegaApp.backend; }
+function publishing(){ return window.TerraOmegaApp && window.TerraOmegaApp.publishing; }
 
 function setStatus(text,state){
   var node=el('masterMigrationStatus');
@@ -59,7 +59,7 @@ async function refresh(){
       setButtons(true,false);
     }
   } catch(err){
-    console.error('Terra Z master health:',err);
+    console.error('Terra Omega master health:',err);
     setStatus('Não foi possível verificar o estado do conteúdo Mestre.','error');
   }
 }
@@ -103,7 +103,7 @@ async function copyTemplate(){
     setStatus('JSON copiado: '+result.secrets+' segredos de '+result.characters+' personagens. Cole em MASTER_CONTENT_JSON na Vercel e faça redeploy.','success');
     showToast('MASTER_CONTENT_JSON copiado para a área de transferência.','success',6000);
   } catch(err){
-    console.error('Terra Z master template:',err);
+    console.error('Terra Omega master template:',err);
     setStatus(err.message || 'Falha ao gerar conteúdo Mestre.','error');
     showToast(err.message || 'Falha ao gerar conteúdo Mestre.','error',6000);
   } finally {
@@ -140,7 +140,7 @@ async function performFinalize(){
       showToast('A remoção foi commitada; o deploy ainda está processando.','info',6000);
     }
   } catch(err){
-    console.error('Terra Z master finalize:',err);
+    console.error('Terra Omega master finalize:',err);
     setStatus(err.message || 'Falha ao finalizar migração.','error');
     showToast(err.message || 'Falha ao finalizar migração.','error',7000);
   } finally {
@@ -162,13 +162,13 @@ function setup(){
   var finalizeBtn=el('masterFinalizeBtn');
   if(copy) copy.addEventListener('click',copyTemplate);
   if(finalizeBtn) finalizeBtn.addEventListener('click',finalize);
-  document.addEventListener('terra-z:auth-changed',refresh);
+  document.addEventListener('terra-omega:auth-changed',refresh);
   refresh();
 }
 
 setup();
 
-window.TerraZApp.masterMigration={
+window.TerraOmegaApp.masterMigration={
   refresh:refresh,
   copyTemplate:copyTemplate,
   finalize:finalize
