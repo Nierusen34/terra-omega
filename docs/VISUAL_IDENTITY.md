@@ -72,8 +72,8 @@ Implementado no checkpoint visual de 14/11/2026:
 
 Implementado no checkpoint visual seguinte:
 
-- A aba **Universo** deixa de herdar a identidade da Sentinela Dourada e passa a usar o tema central do Universo Oblívio.
-- Breadcrumbs e navegação lateral identificam o arquivo de Terra Omega, preservando os jornais ficcionais apenas nas áreas em que eles realmente são a fonte editorial.
+- A aba **Universo** mantém a identidade editorial da **Sentinela Dourada** (tipografia, rosa/dourado, masthead e linguagem de publicação), mas compartilha o mesmo papel/fundo do Dossiê Central do Universo Oblívio.
+- Breadcrumbs e navegação da aba Universo voltam a identificar **A Sentinela Dourada**, enquanto Terra Omega e Universo Oblívio permanecem como identidade global do site.
 - Personagens recebem ferramentas, filtros, cards e retratos com acabamento de arquivo.
 - Organizações recebem visão geral e cards com hierarquia consistente de facção/instituição.
 - Linha do Tempo mantém suas categorias funcionais, mas passa a usar a mesma linguagem de cronologia documental do dossiê central.

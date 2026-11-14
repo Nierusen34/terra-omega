@@ -56,10 +56,12 @@ var paperConfig = {
   }
 };
 
-function applyPaper(k){
+function applyPaper(k, publicationKey){
   if(!paperConfig[k]) return;
+  var publication = (publicationKey && paperConfig[publicationKey]) ? publicationKey : k;
   document.documentElement.setAttribute('data-paper', k);
-  var c = paperConfig[k];
+  document.documentElement.setAttribute('data-publication', publication);
+  var c = paperConfig[publication];
   var mt = document.getElementById('mastTitle');
   var ms = document.getElementById('mastSubtitle');
   var msec = document.getElementById('mastSection');
@@ -76,7 +78,10 @@ function applyPaper(k){
   if(issue) issue.textContent = c.issue || '';
 }
 
-applyPaper(document.documentElement.getAttribute('data-paper') || 'oblivio');
+applyPaper(
+  document.documentElement.getAttribute('data-paper') || 'oblivio',
+  document.documentElement.getAttribute('data-publication') || document.documentElement.getAttribute('data-paper') || 'oblivio'
+);
 
 
 
@@ -98,6 +103,7 @@ document.querySelectorAll('.tab-btn').forEach(function(btn){
   btn.addEventListener('click', function(){
     var t = btn.getAttribute('data-tab');
     var p = btn.getAttribute('data-paper') || 'farol';
+    var publication = btn.getAttribute('data-publication') || p;
     document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
     document.querySelectorAll('.tab-content').forEach(function(c){ c.classList.remove('active'); });
     btn.classList.add('active');
@@ -105,7 +111,7 @@ document.querySelectorAll('.tab-btn').forEach(function(btn){
     if(el && window.TerraZApp && window.TerraZApp.media){
       window.TerraZApp.media.hydrate(el.querySelector('.sub-content.active') || el);
     }
-    applyPaper(p);
+    applyPaper(p, publication);
     syncGlobalSidebar(t, null);
     closeDrawer();
     window.scrollTo({top:0, behavior:'smooth'});
