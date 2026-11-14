@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 
 const API = "https://api.github.com";
-const DEFAULT_REPO = "Nierusen34/terra-z";
+const DEFAULT_REPO = "Nierusen34/terra-omega";
 
 function repo(){
   return process.env.GITHUB_REPOSITORY || DEFAULT_REPO;
