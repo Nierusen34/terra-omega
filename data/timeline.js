@@ -437,8 +437,17 @@ window.TerraZData.timeline = [
     "order": 40,
     "items": [
       {
+        "id": "rei-omega-e-apresentacao-de-mark",
+        "category": "history",
+        "sortKey": 20260000,
         "year": "2026",
         "text": "Superman torna-se Rei Ômega. M'ark apresentado como Marciano Verde.",
+        "characters": [
+          "M'ark"
+        ],
+        "locations": [],
+        "teams": [],
+        "visibility": "public",
         "edit": {
           "year": {
             "id": "tz-0514",
@@ -448,16 +457,7 @@ window.TerraZData.timeline = [
             "id": "tz-0515",
             "legacyId": "e_514"
           }
-        },
-        "id": "rei-omega-e-apresentacao-de-mark",
-        "category": "pre-campaign",
-        "sortKey": 20260000,
-        "characters": [
-          "M'ark"
-        ],
-        "locations": [],
-        "teams": [],
-        "visibility": "public"
+        }
       },
       {
         "id": "19-de-novembro-de-2026-tristan-queen-e-roselie-sterling-deixam-gotham-city-para-atuar-na-cidade-de-v",
