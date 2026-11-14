@@ -120,7 +120,7 @@ function normalizeSecrets(value){
 }
 
 function extractTopLevelCharacterNames(source){
-  const marker = "window.TerraZData.characters =";
+  const marker = "window.TerraOmegaData.characters =";
   const markerIndex = source.indexOf(marker);
   if(markerIndex < 0) return [];
 

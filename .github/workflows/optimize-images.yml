@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: terra-z-image-optimization
+  group: terra-omega-image-optimization
   cancel-in-progress: false
 
 jobs:

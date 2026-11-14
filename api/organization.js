@@ -86,11 +86,11 @@ function renderOrganizations(items){
   return `(function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Organizações, facções, empresas e instituições de Vanguard Bay.
 // Arquivo próprio para permitir edição estruturada pelo painel administrativo.
-window.TerraZData.organizations = ${JSON.stringify(items,null,2)};
+window.TerraOmegaData.organizations = ${JSON.stringify(items,null,2)};
 
 })();
 `;

@@ -36,8 +36,8 @@ export function applyCors(req, res){
   const allowed = allowedOrigins();
 
   // Requisições feitas pelo próprio domínio da API são sempre válidas.
-  // Isso evita bloquear o login quando o Terra Z está aberto diretamente
-  // no domínio de produção da Vercel (ex.: https://terra-z.vercel.app).
+  // Isso evita bloquear o login quando o Terra Omega está aberto diretamente
+  // no domínio de produção da Vercel (ex.: https://terra-omega-rpg.vercel.app).
   const forwardedProto = String(req.headers["x-forwarded-proto"] || "https")
     .split(",")[0]
     .trim();

@@ -45,7 +45,7 @@ export function verifyPassword(password){
 export function createEditorToken(){
   const now = Math.floor(Date.now()/1000);
   const payload = {
-    sub:"terra-z-editor",
+    sub:"terra-omega-editor",
     iat:now,
     exp:now + TOKEN_TTL_SECONDS
   };
@@ -61,7 +61,7 @@ export function verifyEditorToken(token){
 
   try {
     const payload = JSON.parse(Buffer.from(encoded,"base64url").toString("utf8"));
-    return payload.sub === "terra-z-editor" && Number(payload.exp) > Math.floor(Date.now()/1000);
+    return ["terra-omega-editor","terra-z-editor"].includes(payload.sub) && Number(payload.exp) > Math.floor(Date.now()/1000);
   } catch {
     return false;
   }

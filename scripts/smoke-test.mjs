@@ -32,7 +32,7 @@ async function staticSmoke(){
   if(!home.text.includes("js/admin-loader.js")) throw new Error("HTML principal não carrega o lazy loader administrativo");
 
   const assets=[
-    "terra-z.css",
+    "terra-omega.css",
     "js/characters.js",
     "js/admin-loader.js",
     "js/admin-foundation.js",

@@ -150,7 +150,7 @@ async function fandomQuery(params){
   const response = await fetch(url,{
     headers:{
       "Accept":"application/json",
-      "User-Agent":"Terra-Z/1.0 (character portrait resolver)"
+      "User-Agent":"Terra-Omega/1.0 (character portrait resolver)"
     },
     signal:AbortSignal.timeout(9000)
   });
@@ -266,7 +266,7 @@ async function handleDcPortrait(req,res){
       source:"DC Database · Fandom"
     });
   }catch(error){
-    console.error("Terra Z DC portrait resolver:",error);
+    console.error("Terra Omega DC portrait resolver:",error);
     res.setHeader("Cache-Control","no-store");
     return res.status(502).json({
       error:"dc_source_unavailable",
@@ -300,7 +300,7 @@ async function handleExternalPortrait(req,res){
       redirect:"follow",
       headers:{
         "Accept":"image/avif,image/webp,image/apng,image/jpeg,image/png,image/*,*/*;q=0.8",
-        "User-Agent":"Mozilla/5.0 (compatible; Terra-Z/1.0; +https://terra-z.vercel.app)"
+        "User-Agent":"Mozilla/5.0 (compatible; Terra-Omega/1.0; +https://terra-omega-rpg.vercel.app)"
       },
       signal:AbortSignal.timeout(12000)
     });
@@ -318,7 +318,7 @@ async function handleExternalPortrait(req,res){
     res.setHeader("X-Content-Type-Options","nosniff");
     return res.status(200).send(buffer);
   }catch(error){
-    console.error("Terra Z external portrait proxy:",name,error);
+    console.error("Terra Omega external portrait proxy:",name,error);
     res.setHeader("Cache-Control","no-store");
     return res.status(502).json({
       error:"external_source_unavailable",

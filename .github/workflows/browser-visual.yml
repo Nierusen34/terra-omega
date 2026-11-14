@@ -1,4 +1,4 @@
-name: Terra Z browser visual check
+name: Terra Omega browser visual check
 
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: terra-z-browser-${{ github.event.pull_request.number || github.ref }}
+  group: terra-omega-browser-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -30,10 +30,10 @@ jobs:
       - name: Install Playwright test runner
         run: npm install --no-save --ignore-scripts @playwright/test@1.55.0
 
-      - name: Start local Terra Z
+      - name: Start local Terra Omega
         run: |
-          python3 -m http.server 4173 --bind 0.0.0.0 > /tmp/terra-z-browser-http.log 2>&1 &
-          echo $! > /tmp/terra-z-browser-http.pid
+          python3 -m http.server 4173 --bind 0.0.0.0 > /tmp/terra-omega-browser-http.log 2>&1 &
+          echo $! > /tmp/terra-omega-browser-http.pid
           sleep 1
 
       - name: Browser checks
@@ -41,18 +41,18 @@ jobs:
           TERRA_Z_E2E_URL: http://127.0.0.1:4173/
         run: npx playwright test --config=playwright.config.mjs
 
-      - name: Stop local Terra Z
+      - name: Stop local Terra Omega
         if: always()
         run: |
-          if [ -f /tmp/terra-z-browser-http.pid ]; then
-            kill "$(cat /tmp/terra-z-browser-http.pid)" || true
+          if [ -f /tmp/terra-omega-browser-http.pid ]; then
+            kill "$(cat /tmp/terra-omega-browser-http.pid)" || true
           fi
 
       - name: Upload failure screenshots
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: terra-z-browser-failure-${{ github.run_id }}
+          name: terra-omega-browser-failure-${{ github.run_id }}
           path: test-results/browser/
           if-no-files-found: ignore
           retention-days: 1

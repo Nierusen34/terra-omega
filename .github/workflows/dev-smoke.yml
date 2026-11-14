@@ -1,4 +1,4 @@
-name: Terra Z dev smoke
+name: Terra Omega dev smoke
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: terra-z-dev-smoke
+  group: terra-omega-dev-smoke
   cancel-in-progress: true
 
 jobs:
@@ -28,8 +28,8 @@ jobs:
 
       - name: Start local static server
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/terra-z-http.log 2>&1 &
-          echo $! > /tmp/terra-z-http.pid
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/terra-omega-http.log 2>&1 &
+          echo $! > /tmp/terra-omega-http.pid
           sleep 1
 
       - name: Run static smoke test
@@ -38,6 +38,6 @@ jobs:
       - name: Stop local static server
         if: always()
         run: |
-          if [ -f /tmp/terra-z-http.pid ]; then
-            kill "$(cat /tmp/terra-z-http.pid)" || true
+          if [ -f /tmp/terra-omega-http.pid ]; then
+            kill "$(cat /tmp/terra-omega-http.pid)" || true
           fi
