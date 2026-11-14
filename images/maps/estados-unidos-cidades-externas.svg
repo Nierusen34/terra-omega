@@ -15,5 +15,19 @@
     <rect x="1417" y="846" width="107" height="55" fill="#040c13"/>
     <text x="1470.5" y="864" text-anchor="middle" fill="#ece2d3" font-family="Georgia, 'Times New Roman', serif" font-size="10" font-style="italic">Cidade principal</text>
     <text x="1470.5" y="885" text-anchor="middle" fill="#ece2d3" font-family="Georgia, 'Times New Roman', serif" font-size="10" font-style="italic">de Terra Omega</text>
-  </g>
+  
+    <g id="vanguard-bay-callout-v2" aria-label="Vanguard Bay, Flórida — Cidade principal de Terra Omega">
+      <rect x="1404" y="718" width="124" height="188" rx="7" fill="#030a0f" fill-opacity="0.97" stroke="#d2b872" stroke-width="1.4"/>
+      <rect x="1413" y="728" width="106" height="22" rx="3" fill="#0a151d" stroke="#74623a" stroke-width="0.65"/>
+      <text x="1466" y="743" text-anchor="middle" fill="#f0dfb8" font-family="Arial, Helvetica, sans-serif" font-size="8.5" font-weight="bold" letter-spacing="1.5">TERRA OMEGA</text>
+      <line x1="1420" y1="759" x2="1512" y2="759" stroke="#d2b872" stroke-width="0.8" stroke-opacity="0.72"/>
+      <text x="1466" y="786" text-anchor="middle" fill="#f3eee4" font-family="Georgia, 'Times New Roman', serif" font-size="17" font-weight="bold">Vanguard</text>
+      <text x="1466" y="807" text-anchor="middle" fill="#f3eee4" font-family="Georgia, 'Times New Roman', serif" font-size="19" font-weight="bold">Bay</text>
+      <text x="1466" y="826" text-anchor="middle" fill="#d8cdb9" font-family="Georgia, 'Times New Roman', serif" font-size="10" font-style="italic">(Flórida)</text>
+      <line x1="1425" y1="840" x2="1507" y2="840" stroke="#8c7647" stroke-width="0.7" stroke-opacity="0.75"/>
+      <text x="1466" y="862" text-anchor="middle" fill="#e9dfcf" font-family="Arial, Helvetica, sans-serif" font-size="8.2" font-weight="bold" letter-spacing="0.75">CIDADE PRINCIPAL</text>
+      <text x="1466" y="881" text-anchor="middle" fill="#d8cdb9" font-family="Georgia, 'Times New Roman', serif" font-size="9.5" font-style="italic">de Terra Omega</text>
+      <circle cx="1466" cy="895" r="1.7" fill="#d2b872"/>
+    </g>
+</g>
 </svg>
