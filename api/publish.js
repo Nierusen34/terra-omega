@@ -484,7 +484,7 @@ export default async function handler(req,res){
         backup:{
           schema:"terra-omega-backup-v2",
           generated_at:new Date().toISOString(),
-          repository:process.env.GITHUB_REPOSITORY || "Nierusen34/terra-z",
+          repository:process.env.GITHUB_REPOSITORY || "Nierusen34/terra-omega",
           branch:"main",
           head_sha:head,
           private_content:"encrypted-aes-256-gcm",
