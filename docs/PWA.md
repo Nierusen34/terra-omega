@@ -18,7 +18,7 @@ A barra superior do aplicativo e a tela inicial usam o mesmo grafite ameixa e do
 
 ## Instalação
 
-O manifesto usa caminhos relativos para funcionar tanto na Vercel, na raiz do domínio, quanto no GitHub Pages em `/terra-z/`.
+O manifesto usa caminhos relativos para funcionar tanto na Vercel, na raiz do domínio, quanto no GitHub Pages em `/terra-omega/`.
 
 ## Estratégia offline
 
@@ -52,7 +52,7 @@ Em modo offline, leitura e navegação pelo conteúdo público em cache continua
 ## Compatibilidade
 
 - Vercel: escopo `/`.
-- GitHub Pages: escopo `/terra-z/`.
+- GitHub Pages: escopo `/terra-omega/`.
 - Android/Chromium: instalação via prompt nativo.
 - iPhone/iPad: instrução via Compartilhar → Adicionar à Tela de Início.
 
