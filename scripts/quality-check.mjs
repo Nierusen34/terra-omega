@@ -1394,6 +1394,21 @@ function checkOrganizations(data){
   pass(rows.length+" organizações/instituições de Vanguard Bay validadas");
 }
 
+function checkCanonicalRendererResilience(){
+  const renderer=read("js/data-renderer.js");
+  if(!renderer.includes("var edit=item && item.edit ? item.edit : {};")){
+    fail("Renderizador da Linha do Tempo não tolera eventos sem metadados de edição.");
+  }
+  if(!renderer.includes("safeRender('Cidades Externas',renderExternalCitiesData)") ||
+     !renderer.includes("safeRender('Equipes',renderTeamsData)") ||
+     !renderer.includes("safeRender('Organizações',renderOrganizationsData)")){
+    fail("Renderização canônica não isola falhas entre seções.");
+  }else{
+    pass("Renderização canônica isola falhas e preserva Cidades, Equipes e Organizações");
+  }
+}
+
+checkCanonicalRendererResilience();
 const data=loadTerraData();
 checkCanonRegressionGuards();
 const characters=checkCharacterData(data);
