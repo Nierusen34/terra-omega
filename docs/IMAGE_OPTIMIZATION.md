@@ -1,4 +1,4 @@
-# Terra Z — Otimização de Imagens
+# Terra Omega — Otimização de Imagens
 
 Conversão automatizada e conservadora das imagens PNG mais pesadas de cidade/distritos.
 

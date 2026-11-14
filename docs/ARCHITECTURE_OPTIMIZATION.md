@@ -1,8 +1,8 @@
-# Terra Z — Otimização de Arquitetura
+# Terra Omega — Otimização de Arquitetura
 
 ## Objetivo
 
-Esta etapa técnica reduz o custo de desenvolvimento, deploy e carregamento sem reescrever o Terra Z ou alterar seu modelo de privacidade.
+Esta etapa técnica reduz o custo de desenvolvimento, deploy e carregamento sem reescrever o Terra Omega ou alterar seu modelo de privacidade.
 
 ## Resultado
 
@@ -83,8 +83,8 @@ Isso evita reconstruir a mesma infraestrutura em:
 
 Cada push executa:
 
-- **Terra Z quality gate**
-- **Terra Z dev smoke**
+- **Terra Omega quality gate**
+- **Terra Omega dev smoke**
 
 Execuções antigas são canceladas quando substituídas por commits novos.
 

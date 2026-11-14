@@ -1,4 +1,4 @@
-# Terra Z — Administração Avançada · Etapas 11, 12 e 13
+# Terra Omega — Administração Avançada · Etapas 11, 12 e 13
 
 ## Visão geral
 

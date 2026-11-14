@@ -1,14 +1,14 @@
-# Terra Z — Testes de Navegador com Playwright
+# Terra Omega — Testes de Navegador com Playwright
 
 ## Objetivo
 
-O Terra Z possui uma camada leve de testes reais em Chromium para detectar regressões que o Quality Gate estrutural não enxerga sozinho.
+O Terra Omega possui uma camada leve de testes reais em Chromium para detectar regressões que o Quality Gate estrutural não enxerga sozinho.
 
 O navegador é executado dentro do GitHub Actions. Nenhum screenshot de sucesso é salvo no repositório.
 
 ## Quando roda
 
-O workflow **Terra Z browser visual check** roda:
+O workflow **Terra Omega browser visual check** roda:
 
 - em pull requests direcionados ao `main`;
 - manualmente por `workflow_dispatch`.

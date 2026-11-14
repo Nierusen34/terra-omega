@@ -1,6 +1,6 @@
 # Editor de Organizações
 
-O Terra Z mantém organizações, facções, empresas, instituições acadêmicas, veículos de mídia e agências em `data/organizations.js`.
+O Terra Omega mantém organizações, facções, empresas, instituições acadêmicas, veículos de mídia e agências em `data/organizations.js`.
 
 ## Acesso
 
@@ -45,4 +45,4 @@ Isso evita referências quebradas.
 
 ## Persistência
 
-As alterações são publicadas por `/api/organization` e entram no histórico/restauração de conteúdo do Terra Z. O runtime de `/api/health?runtime=1` também inclui `organizations`, permitindo atualização sem depender apenas do arquivo carregado no primeiro boot.
+As alterações são publicadas por `/api/organization` e entram no histórico/restauração de conteúdo do Terra Omega. O runtime de `/api/health?runtime=1` também inclui `organizations`, permitindo atualização sem depender apenas do arquivo carregado no primeiro boot.

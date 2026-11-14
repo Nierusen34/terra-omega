@@ -35,7 +35,7 @@ Ambos usam envelope AES-256-GCM e são lidos somente pelo backend autenticado.
 
 `js/runtime-data.js` pode atualizar os contêineres públicos a partir do backend sem depender de um novo deploy estático para cada alteração de conteúdo.
 
-Os módulos de renderização consomem `window.TerraZData` e reagem aos eventos de atualização.
+Os módulos de renderização consomem `window.TerraOmegaData` e reagem aos eventos de atualização.
 
 ## Persistência
 

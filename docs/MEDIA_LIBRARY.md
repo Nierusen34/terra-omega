@@ -1,4 +1,4 @@
-# Terra Z — Biblioteca de Mídia
+# Terra Omega — Biblioteca de Mídia
 
 ## Objetivo
 
@@ -8,7 +8,7 @@ Isso resolve casos como **Armek**: a entidade pode existir no Grafo 2.0, possuir
 
 ## Fontes de mídia
 
-O Terra Z agora trabalha com duas famílias principais:
+O Terra Omega agora trabalha com duas famílias principais:
 
 1. **Retratos de personagens**
    - continuam em `data/character-media.js`;
