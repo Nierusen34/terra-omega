@@ -413,6 +413,22 @@ window.TerraZData.timeline = [
         ],
         "teams": [],
         "visibility": "public"
+      },
+      {
+        "id": "26-de-agosto-de-2025-apos-cerca-de-10-meses-desde-o-termino-de-relacionamento-com-misty-kilgore-tris",
+        "category": "history",
+        "sortKey": 20252608,
+        "year": "26 de Agosto de 2025",
+        "text": "Após cerca de 10 meses desde o término de relacionamento com Misty Kilgore, Tristan Queen começa a perceber que está desenvolvendo sentimentos pela sua amiga de infâncias Lian Harper durante suas raras visitas presenciais a Gotham City, entretanto, ele decide manter esses sentimentos suprimidos em respeito a sua amizade e história com ela.",
+        "characters": [
+          "Tristan Queen",
+          "Lian Harper"
+        ],
+        "locations": [
+          "Gotham City"
+        ],
+        "teams": [],
+        "visibility": "public"
       }
     ]
   },
