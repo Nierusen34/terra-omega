@@ -1,10 +1,10 @@
 (function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Grafo publicado pelo editor visual. null = usar data/relations.js como padrão.
-window.TerraZData.graphOverride = {
+window.TerraOmegaData.graphOverride = {
   "version": 3,
   "nuclei": [
     {

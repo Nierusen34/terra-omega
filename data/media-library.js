@@ -1,10 +1,10 @@
 (function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Biblioteca de mídia reutilizável de Terra Omega.
-window.TerraZData.mediaLibrary = {
+window.TerraOmegaData.mediaLibrary = {
   "version": 1,
   "assets": [
     {

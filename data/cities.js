@@ -1,10 +1,10 @@
 (function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Cidades externas e tempos/distâncias de referência.
-window.TerraZData.externalCities = [
+window.TerraOmegaData.externalCities = [
   {
     "city": "Gotham City",
     "flightKm": "~1.750",

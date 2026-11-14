@@ -1,10 +1,10 @@
 (function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Alterações publicadas pelo editor visual, indexadas pelos data-edit-id permanentes.
-window.TerraZData.contentOverrides = {
+window.TerraOmegaData.contentOverrides = {
   "tz-0036": "Vista aérea de Vanguard Bay ao anoitecer — o continente e a Ilha Solara ligados por duas pontes.",
   "tz-0394": "Kendra, Lobo <strong>e Riot</strong>",
   "tz-0018": "Documento revisado e publicado. Versão 1.4.0.",

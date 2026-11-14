@@ -1,11 +1,11 @@
 (function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Sobrescritas estruturadas de personagens existentes.
 // A base canônica continua em data/characters.js.
-window.TerraZData.characterOverrides = {
+window.TerraOmegaData.characterOverrides = {
   "Tristan Queen": {
     "eyebrow": "🏹 Ranger · Filho de Arqueiros",
     "sections": [

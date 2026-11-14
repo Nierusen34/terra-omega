@@ -1,10 +1,10 @@
 (function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Distritos, pontos de interesse e locais estratégicos canônicos de Vanguard Bay.
-window.TerraZData.districts = [
+window.TerraOmegaData.districts = [
   {
     "id": "a-muralha",
     "name": "A Muralha",
@@ -562,7 +562,7 @@ window.TerraZData.districts = [
   }
 ];
 
-window.TerraZData.strategicSites = [
+window.TerraOmegaData.strategicSites = [
   {
     "id": "black-reef",
     "name": "Penitenciária Estadual de Black-Reef",

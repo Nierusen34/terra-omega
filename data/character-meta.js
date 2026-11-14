@@ -1,9 +1,9 @@
 (function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
-window.TerraZData.characterTaxonomy = {
+window.TerraOmegaData.characterTaxonomy = {
   "nuclei": [
     {
       "id": "vanguard",

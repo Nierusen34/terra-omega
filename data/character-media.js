@@ -1,11 +1,11 @@
 (function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Metadados visuais de personagens.
-// src vazio = usar placeholder do Terra Z.
-window.TerraZData.characterMedia = {
+// src vazio = usar placeholder do Terra Omega.
+window.TerraOmegaData.characterMedia = {
   "Tristan Queen": {
     "src": "images/characters/tristan-queen.jpg",
     "alt": "Tristan Queen",

@@ -1,10 +1,10 @@
 (function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Eventos anuais canônicos de Vanguard Bay.
-window.TerraZData.annualEvents = [
+window.TerraOmegaData.annualEvents = [
   {
     "name": "Dia de Ouro",
     "month": "Janeiro",
