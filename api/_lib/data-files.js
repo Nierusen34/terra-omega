@@ -56,17 +56,17 @@ function scanJsonValue(text, assignment){
 }
 
 export function parseDataAssignment(text, property){
-  return JSON.parse(scanJsonValue(text, "window.TerraZData." + property + " ="));
+  return JSON.parse(scanJsonValue(text, "window.TerraOmegaData." + property + " ="));
 }
 
 export function renderContentOverrides(data){
   return `(function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Alterações publicadas pelo editor visual, indexadas pelos data-edit-id permanentes.
-window.TerraZData.contentOverrides = ${JSON.stringify(data,null,2)};
+window.TerraOmegaData.contentOverrides = ${JSON.stringify(data,null,2)};
 
 })();
 `;
@@ -76,11 +76,11 @@ export function renderCharacterMedia(data){
   return `(function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Metadados visuais de personagens.
 // src vazio = usar placeholder de Terra Omega.
-window.TerraZData.characterMedia = ${JSON.stringify(data,null,2)};
+window.TerraOmegaData.characterMedia = ${JSON.stringify(data,null,2)};
 
 })();
 `;
@@ -91,11 +91,11 @@ export function renderCharacterOverrides(data){
   return `(function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Sobrescritas estruturadas de personagens existentes.
 // A base canônica continua em data/characters.js.
-window.TerraZData.characterOverrides = ${JSON.stringify(data,null,2)};
+window.TerraOmegaData.characterOverrides = ${JSON.stringify(data,null,2)};
 
 })();
 `;
@@ -105,12 +105,12 @@ export function renderSessions(data){
   return `(function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Histórico vivo da campanha.
-window.TerraZData.sessions = ${JSON.stringify(data,null,2)};
+window.TerraOmegaData.sessions = ${JSON.stringify(data,null,2)};
 
-window.TerraZData.sessionSchema = {
+window.TerraOmegaData.sessionSchema = {
   id: "slug-estavel-da-sessao",
   title: "Título da sessão",
   realDate: "YYYY-MM-DD",
@@ -132,10 +132,10 @@ export function renderGraphOverride(data){
   return `(function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Grafo publicado pelo editor visual. null = usar data/relations.js como padrão.
-window.TerraZData.graphOverride = ${JSON.stringify(data,null,2)};
+window.TerraOmegaData.graphOverride = ${JSON.stringify(data,null,2)};
 
 })();
 `;
@@ -146,9 +146,9 @@ export function renderCharacterTaxonomy(data){
   return `(function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
-window.TerraZData.characterTaxonomy = ${JSON.stringify(data,null,2)};
+window.TerraOmegaData.characterTaxonomy = ${JSON.stringify(data,null,2)};
 
 })();
 `;
@@ -160,13 +160,13 @@ export function renderTimeline(data){
   return `(function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Linha do tempo canônica do Universo Oblívio, centrado em Terra Omega.
 // Sessões continuam no Diário da Campanha e são agregadas dinamicamente.
-window.TerraZData.timeline = ${JSON.stringify(groups,null,2)};
+window.TerraOmegaData.timeline = ${JSON.stringify(groups,null,2)};
 
-window.TerraZData.timelineSchema = {
+window.TerraOmegaData.timelineSchema = {
   id:"slug-estavel-do-evento",
   category:"history | pre-campaign | campaign | current | future",
   sortKey:"número cronológico YYYYMMDD; períodos imprecisos usam valor aproximado estável",
@@ -192,10 +192,10 @@ export function renderMediaLibrary(data){
   return `(function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Biblioteca de mídia reutilizável de Terra Omega.
-window.TerraZData.mediaLibrary = ${JSON.stringify(library,null,2)};
+window.TerraOmegaData.mediaLibrary = ${JSON.stringify(library,null,2)};
 
 })();
 `;

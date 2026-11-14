@@ -48,7 +48,7 @@ function checkSyntax(){
 }
 
 function loadTerraData(){
-  const sandbox={window:{TerraZData:{}}};
+  const sandbox={window:{TerraOmegaData:{}}};
   sandbox.window.window=sandbox.window;
   vm.createContext(sandbox);
 
@@ -79,7 +79,7 @@ function loadTerraData(){
       fail("Não foi possível carregar "+file+": "+error.message);
     }
   }
-  return sandbox.window.TerraZData || {};
+  return sandbox.window.TerraOmegaData || {};
 }
 
 function checkIndexAssets(){
@@ -1305,11 +1305,11 @@ function checkOrganizationEditor(data){
   if(!html.includes('src="data/organizations.js"')){
     fail("data/organizations.js não está carregado no boot público.");
   }
-  if(teams.includes("window.TerraZData.organizations")){
+  if(teams.includes("window.TerraOmegaData.organizations")){
     fail("Organizações continuam misturadas em data/teams.js.");
   }
-  if(!organizations.includes("window.TerraZData.organizations")){
-    fail("Arquivo dedicado de organizações não exporta TerraZData.organizations.");
+  if(!organizations.includes("window.TerraOmegaData.organizations")){
+    fail("Arquivo dedicado de organizações não exporta TerraOmegaData.organizations.");
   }
 
   for(const id of [

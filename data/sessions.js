@@ -1,10 +1,10 @@
 (function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Histórico vivo da campanha.
-window.TerraZData.sessions = [
+window.TerraOmegaData.sessions = [
   {
     "id": "2026-09-27-dupla-improvavel",
     "title": "Dupla Improvável",
@@ -26,7 +26,7 @@ window.TerraZData.sessions = [
   }
 ];
 
-window.TerraZData.sessionSchema = {
+window.TerraOmegaData.sessionSchema = {
   id: "slug-estavel-da-sessao",
   title: "Título da sessão",
   realDate: "YYYY-MM-DD",

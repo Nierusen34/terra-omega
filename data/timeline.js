@@ -1,11 +1,11 @@
 (function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Linha do tempo canônica do Universo Oblívio, centrada em Terra Omega.
 // Sessões continuam no Diário da Campanha e são agregadas dinamicamente.
-window.TerraZData.timeline = [
+window.TerraOmegaData.timeline = [
   {
     "title": "Séculos Atrás – Marte",
     "order": 10,
@@ -553,7 +553,7 @@ window.TerraZData.timeline = [
   }
 ];
 
-window.TerraZData.timelineSchema = {
+window.TerraOmegaData.timelineSchema = {
   id:"slug-estavel-do-evento",
   category:"history | pre-campaign | campaign | current | future",
   sortKey:"número cronológico YYYYMMDD; períodos imprecisos usam valor aproximado estável",

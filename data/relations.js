@@ -1,11 +1,11 @@
 (function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Grafo narrativo padrão. O editor pode expandi-lo com personagens, equipes,
 // facções, organizações, locais, eventos e entidades personalizadas.
-window.TerraZData.defaultGraph = {
+window.TerraOmegaData.defaultGraph = {
   "version": 3,
   "nuclei": [
     {

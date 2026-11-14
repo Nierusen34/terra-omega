@@ -1,11 +1,11 @@
 (function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Organizações, facções, empresas e instituições de Vanguard Bay.
 // Arquivo próprio para permitir edição estruturada pelo painel administrativo.
-window.TerraZData.organizations = [
+window.TerraOmegaData.organizations = [
   {
     "id": "bratva-volkov",
     "name": "Bratva Volkov",

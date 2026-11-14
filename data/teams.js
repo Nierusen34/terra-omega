@@ -1,10 +1,10 @@
 (function(){
 "use strict";
 
-window.TerraZData = window.TerraZData || {};
+window.TerraOmegaData = window.TerraOmegaData || {};
 
-// Equipes e membros de referência do universo Terra Z.
-window.TerraZData.teams = {
+// Equipes e membros de referência do universo Terra Omega.
+window.TerraOmegaData.teams = {
   "teams": [
     {
       "name": "Sociedade da Justiça",
