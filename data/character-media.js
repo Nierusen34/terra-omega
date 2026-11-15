@@ -277,9 +277,9 @@ window.TerraOmegaData.characterMedia = {
     }
   },
   "Lian Harper": {
-    "src": "",
+    "src": "images/characters/lian-harper.jpg",
     "alt": "Lian Harper",
-    "source": "auto",
+    "source": "local",
     "credit": "",
     "auto": {
       "provider": "dc-fandom",
