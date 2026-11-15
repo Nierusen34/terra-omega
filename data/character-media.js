@@ -521,7 +521,7 @@ window.TerraOmegaData.characterMedia = {
     "credit": ""
   },
   "Roselie Sterling": {
-    "src": "",
+    "src": "images/characters/roselie-sterling.jpg",
     "alt": "Roselie Sterling",
     "source": "local",
     "credit": ""
