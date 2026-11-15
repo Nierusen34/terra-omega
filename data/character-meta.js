@@ -766,6 +766,14 @@ window.TerraOmegaData.characterTaxonomy = {
         "downtown"
       ],
       "visibility": "public"
+    },
+    "Misty Kilgore": {
+      "featured": false,
+      "nuclei": [],
+      "type": "npc",
+      "status": "active",
+      "tags": [],
+      "visibility": "public"
     }
   }
 };

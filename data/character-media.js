@@ -525,6 +525,12 @@ window.TerraOmegaData.characterMedia = {
     "alt": "Roselie Sterling",
     "source": "local",
     "credit": ""
+  },
+  "Misty Kilgore": {
+    "src": "",
+    "alt": "Misty Kilgore",
+    "source": "local",
+    "credit": ""
   }
 };
 

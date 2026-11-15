@@ -1937,6 +1937,49 @@ window.TerraOmegaData.characterOverrides = {
       "origin": "Humana",
       "status": "Ativa"
     }
+  },
+  "Misty Kilgore": {
+    "eyebrow": "Aprendiz de Zatanna Zatara",
+    "sections": [
+      {
+        "title": "📋 Ficha Básica",
+        "content": "<p><strong>Nome: Misty Kilgore</strong><br><strong>Codinome: Rhiannon</strong><br><strong>Idade: Desconhecida</strong><br><strong>Origem: Homo-Magi?</strong><br><strong>Status: Ativa</strong><br><strong>Local: San Francisco</strong></p>",
+        "visibility": "public",
+        "position": 0
+      },
+      {
+        "title": "📖 História",
+        "content": "<p>Escreva aqui a história do personagem.</p>",
+        "visibility": "public",
+        "position": 1
+      },
+      {
+        "title": "🎯 Personalidade",
+        "content": "<p>Descreva a personalidade do personagem.</p>",
+        "visibility": "public",
+        "position": 2
+      },
+      {
+        "title": "⚔️ Habilidades",
+        "content": "<ul><li>Adicione uma habilidade.</li></ul>",
+        "visibility": "public",
+        "position": 3
+      },
+      {
+        "title": "🔗 Relações",
+        "content": "<ul><li>Adicione uma relação importante.</li></ul>",
+        "visibility": "public",
+        "position": 4
+      }
+    ],
+    "created": true,
+    "card": {
+      "icon": "🟢",
+      "codename": "Rhiannon",
+      "age": "Desconhecida",
+      "origin": "Homo Magi?",
+      "status": "Ativa"
+    }
   }
 };
 
