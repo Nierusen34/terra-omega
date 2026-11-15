@@ -527,7 +527,7 @@ window.TerraOmegaData.characterMedia = {
     "credit": ""
   },
   "Misty Kilgore": {
-    "src": "",
+    "src": "images/characters/misty-kilgore.jpg",
     "alt": "Misty Kilgore",
     "source": "local",
     "credit": ""
