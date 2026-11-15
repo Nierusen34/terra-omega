@@ -524,7 +524,27 @@ window.TerraOmegaData.characterMedia = {
     "src": "images/characters/roselie-sterling.jpg",
     "alt": "Roselie Sterling",
     "source": "local",
-    "credit": ""
+    "credit": "",
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 50,
+        "y": 0,
+        "zoom": 2.25
+      },
+      "sheet": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
+    }
   },
   "Misty Kilgore": {
     "src": "images/characters/misty-kilgore.jpg",
