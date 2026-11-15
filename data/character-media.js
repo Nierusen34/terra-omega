@@ -274,6 +274,26 @@ window.TerraOmegaData.characterMedia = {
     "auto": {
       "provider": "dc-fandom",
       "wikiTitle": "Verity Pennyworth"
+    },
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 46,
+        "y": 31,
+        "zoom": 2
+      },
+      "sheet": {
+        "fit": "contain",
+        "x": 50,
+        "y": 8,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
     }
   },
   "Lian Harper": {
