@@ -1974,7 +1974,7 @@ window.TerraOmegaData.characterOverrides = {
     ],
     "created": true,
     "card": {
-      "icon": "🟢",
+      "icon": "🎲",
       "codename": "Rhiannon",
       "age": "Desconhecida",
       "origin": "Homo Magi?",
