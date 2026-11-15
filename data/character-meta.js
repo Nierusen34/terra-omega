@@ -753,6 +753,19 @@ window.TerraOmegaData.characterTaxonomy = {
         "o-dique"
       ],
       "visibility": "public"
+    },
+    "Roselie Sterling": {
+      "featured": false,
+      "nuclei": [
+        "vanguard",
+        "queen"
+      ],
+      "type": "npc",
+      "status": "active",
+      "tags": [
+        "downtown"
+      ],
+      "visibility": "public"
     }
   }
 };

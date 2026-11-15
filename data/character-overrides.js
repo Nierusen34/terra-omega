@@ -1894,6 +1894,49 @@ window.TerraOmegaData.characterOverrides = {
       "origin": "Humana",
       "status": "Ativa"
     }
+  },
+  "Roselie Sterling": {
+    "eyebrow": "Mordoma de Tristan",
+    "sections": [
+      {
+        "title": "📋 Ficha Básica",
+        "content": "<p><strong>Nome: Roselie Sterling</strong><br><strong>Codinome: Nenhum</strong><br><strong>Idade: 28 anos</strong><br><strong>Origem: Connecticut, Eua</strong><br><strong>Status: Ativa</strong><br><strong>Local: Vanguard Bay</strong></p>",
+        "visibility": "public",
+        "position": 0
+      },
+      {
+        "title": "📖 História",
+        "content": "<p>Escreva aqui a história do personagem.</p>",
+        "visibility": "public",
+        "position": 1
+      },
+      {
+        "title": "🎯 Personalidade",
+        "content": "<p>Descreva a personalidade do personagem.</p>",
+        "visibility": "public",
+        "position": 2
+      },
+      {
+        "title": "⚔️ Habilidades",
+        "content": "<ul><li>Adicione uma habilidade.</li></ul>",
+        "visibility": "public",
+        "position": 3
+      },
+      {
+        "title": "🔗 Relações",
+        "content": "<ul><li>Adicione uma relação importante.</li></ul>",
+        "visibility": "public",
+        "position": 4
+      }
+    ],
+    "created": true,
+    "card": {
+      "icon": "🎩",
+      "codename": "Nenhum",
+      "age": "28 anos",
+      "origin": "Humana",
+      "status": "Ativa"
+    }
   }
 };
 

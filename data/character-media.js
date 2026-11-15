@@ -4,7 +4,7 @@
 window.TerraOmegaData = window.TerraOmegaData || {};
 
 // Metadados visuais de personagens.
-// src vazio = usar placeholder do Terra Omega.
+// src vazio = usar placeholder de Terra Omega.
 window.TerraOmegaData.characterMedia = {
   "Tristan Queen": {
     "src": "images/characters/tristan-queen.jpg",
@@ -517,6 +517,12 @@ window.TerraOmegaData.characterMedia = {
   "Brigitte Oliveira": {
     "src": "images/characters/brigitte-oliveira.jpg",
     "alt": "Brigitte Oliveira",
+    "source": "local",
+    "credit": ""
+  },
+  "Roselie Sterling": {
+    "src": "",
+    "alt": "Roselie Sterling",
     "source": "local",
     "credit": ""
   }
