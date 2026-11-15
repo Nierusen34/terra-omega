@@ -530,7 +530,27 @@ window.TerraOmegaData.characterMedia = {
     "src": "images/characters/misty-kilgore.jpg",
     "alt": "Misty Kilgore",
     "source": "local",
-    "credit": ""
+    "credit": "",
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 44,
+        "y": 7,
+        "zoom": 2.15
+      },
+      "sheet": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
+    }
   }
 };
 
