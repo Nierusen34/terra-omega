@@ -760,7 +760,7 @@ window.TerraOmegaData.characterTaxonomy = {
         "vanguard",
         "queen"
       ],
-      "type": "npc",
+      "type": "civilian",
       "status": "active",
       "tags": [
         "downtown"

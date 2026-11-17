@@ -1906,25 +1906,25 @@ window.TerraOmegaData.characterOverrides = {
       },
       {
         "title": "📖 História",
-        "content": "<p>Escreva aqui a história do personagem.</p>",
+        "content": "<p>Nascida em 1999, sempre foi uma promissora corredora vinda de uma família de esportistas famosos como seu irmão que foi uma lenda do futebol e do vôlei, entretanto, quando foi participar de seu primeiro grande evento esportivo aos 18 anos de idade, antes que pudesse competir ela foi atingida por uma flecha que destruiu seu joelho. A flecha possuia um quimico corrosivo que obrigou seus médicos a amputar sua perna e acabar com seus sonhos, mas um membro da Sociedade da Chave da Meia Noite fez uma proposta para ela, se juntar a sociedade e servir a familia Queen, em troca eles iriam custear o tratamento dela e dariam um novo significado para sua vida.&nbsp;</p>",
         "visibility": "public",
         "position": 1
       },
       {
         "title": "🎯 Personalidade",
-        "content": "<p>Descreva a personalidade do personagem.</p>",
+        "content": "<p>É uma mulher pro ativa, decidida e impaciente, mas dificilmente demonstra seu pavio curto por causa do extensivo treinamento de etiqueta e comportamento que passou.&nbsp;</p>",
         "visibility": "public",
         "position": 2
       },
       {
         "title": "⚔️ Habilidades",
-        "content": "<ul><li>Adicione uma habilidade.</li></ul>",
+        "content": "<ul><li>Habilidades de atletismo, manufatura e reparo de equipamentos e habilidades eximias de administração e controle financeiro.</li></ul>",
         "visibility": "public",
         "position": 3
       },
       {
         "title": "🔗 Relações",
-        "content": "<ul><li>Adicione uma relação importante.</li></ul>",
+        "content": "<ul><li>Irmã de Scott Sterling</li><li>Mordoma de Tristan Queen</li></ul>",
         "visibility": "public",
         "position": 4
       }
