@@ -1949,25 +1949,25 @@ window.TerraOmegaData.characterOverrides = {
       },
       {
         "title": "📖 História",
-        "content": "<p>Escreva aqui a história do personagem.</p>",
+        "content": "<p>Pouco se sabe sobre Misty e sua vida antes de encontrar sua mentora Zatanna devido a uma amnésia provocada por um vestido mágico feito das teias de um ser antigo. Em um certo período ela namorou Tristan Queen, mas o relacionamento não durou muito por diferenças no que buscavam naquilo.&nbsp;</p>",
         "visibility": "public",
         "position": 1
       },
       {
         "title": "🎯 Personalidade",
-        "content": "<p>Descreva a personalidade do personagem.</p>",
+        "content": "<p>É uma jovem rebelde, cinica e que usa sarcasmo constantemente, tentando parecer bem apática e desinteressada na maior parte do tempo. É bastante impaciente quando sua curiosidade por aprender coisas mágicas aflora, mas é leal e heróica prezando por pessoas inocentes.</p>",
         "visibility": "public",
         "position": 2
       },
       {
         "title": "⚔️ Habilidades",
-        "content": "<ul><li>Adicione uma habilidade.</li></ul>",
+        "content": "<ul><li>Proficiente em diversos rituais e feitiços.&nbsp;</li></ul>",
         "visibility": "public",
         "position": 3
       },
       {
         "title": "🔗 Relações",
-        "content": "<ul><li>Adicione uma relação importante.</li></ul>",
+        "content": "<ul><li>Aprendiz de Zatanna Zatara</li><li>Filha de Melmoth</li><li>Rival de Klarion o Garoto Bruxo</li></ul>",
         "visibility": "public",
         "position": 4
       }
