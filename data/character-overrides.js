@@ -2010,7 +2010,7 @@ window.TerraOmegaData.characterOverrides = {
       },
       {
         "title": "🔗 Relações",
-        "content": "<ul><li>Filho de Alonso Salvatierras</li><li>Neto de Santiago Salvatierras</li><li>Primo de Nicola e Gabriel Salvatierras</li><li>Irmão por parte de mãe de um rapaz de 24 anos que não é envolvido com os negócios da família.&nbsp;</li></ul>",
+        "content": "<ul><li>Filho de Alonso Salvatierras</li><li>Neto de Santiago Salvatierras</li><li>Primo de Nicola e Gabriel Salvatierras</li><li>Irmão por parte de mãe de Isabela e Carlo Duarte</li></ul>",
         "visibility": "public",
         "position": 4
       }
