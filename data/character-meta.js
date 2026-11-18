@@ -208,8 +208,7 @@ window.TerraOmegaData.characterTaxonomy = {
     "Dinah Lance": {
       "featured": false,
       "nuclei": [
-        "queen",
-        "gotham"
+        "queen"
       ],
       "type": "hero",
       "status": "active",
