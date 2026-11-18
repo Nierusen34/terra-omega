@@ -268,7 +268,6 @@ window.TerraOmegaData.characterTaxonomy = {
     "Barbara Gordon": {
       "featured": false,
       "nuclei": [
-        "jlu",
         "gotham"
       ],
       "type": "hero",
