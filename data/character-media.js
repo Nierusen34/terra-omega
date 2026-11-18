@@ -72,6 +72,26 @@ window.TerraOmegaData.characterMedia = {
     "auto": {
       "provider": "dc-fandom",
       "wikiTitle": "Kendra Saunders"
+    },
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 73,
+        "y": 24,
+        "zoom": 1.95
+      },
+      "sheet": {
+        "fit": "contain",
+        "x": 50,
+        "y": 8,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
     }
   },
   "Lobo": {
