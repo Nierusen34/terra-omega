@@ -71,7 +71,7 @@ window.TerraOmegaData.characterMedia = {
     "credit": "",
     "auto": {
       "provider": "dc-fandom",
-      "wikiTitle": "Kendra Saunders (Prime Earth)"
+      "wikiTitle": "Kendra Saunders"
     }
   },
   "Lobo": {
