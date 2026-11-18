@@ -195,10 +195,7 @@ window.TerraOmegaData.characterTaxonomy = {
     "Oliver Queen": {
       "featured": false,
       "nuclei": [
-        "jlu",
-        "queen",
-        "gotham",
-        "lobo-cadmus"
+        "queen"
       ],
       "type": "hero",
       "status": "active",
