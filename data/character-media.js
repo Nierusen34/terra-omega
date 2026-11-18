@@ -852,7 +852,27 @@ window.TerraOmegaData.characterMedia = {
     "src": "images/characters/alonso-salvatierras.jpg",
     "alt": "Alonso Salvatierras",
     "source": "local",
-    "credit": ""
+    "credit": "",
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 50,
+        "y": 4,
+        "zoom": 1.65
+      },
+      "sheet": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
+    }
   },
   "Carmen Duarte": {
     "src": "",
