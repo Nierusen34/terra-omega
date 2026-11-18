@@ -881,7 +881,7 @@ window.TerraOmegaData.characterMedia = {
     "credit": ""
   },
   "Santiago Salvatierras": {
-    "src": "",
+    "src": "images/characters/santiago-salvatierras.jpg",
     "alt": "Santiago Salvatierras",
     "source": "local",
     "credit": ""
