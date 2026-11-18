@@ -859,6 +859,12 @@ window.TerraOmegaData.characterMedia = {
     "alt": "Carmen Duarte",
     "source": "local",
     "credit": ""
+  },
+  "Santiago Salvatierras": {
+    "src": "",
+    "alt": "Santiago Salvatierras",
+    "source": "local",
+    "credit": ""
   }
 };
 
