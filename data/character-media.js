@@ -10,7 +10,27 @@ window.TerraOmegaData.characterMedia = {
     "src": "images/characters/tristan-queen.jpg",
     "alt": "Tristan Queen",
     "source": "local",
-    "credit": ""
+    "credit": "",
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 10,
+        "y": 4,
+        "zoom": 1.55
+      },
+      "sheet": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
+    }
   },
   "Riot": {
     "src": "images/characters/riot.jpg",
