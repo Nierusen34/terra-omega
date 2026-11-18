@@ -877,6 +877,12 @@ window.TerraOmegaData.characterMedia = {
     "alt": "Gabriel Salvatierras",
     "source": "local",
     "credit": ""
+  },
+  "isabela Duarte": {
+    "src": "",
+    "alt": "isabela Duarte",
+    "source": "local",
+    "credit": ""
   }
 };
 

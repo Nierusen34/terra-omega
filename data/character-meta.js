@@ -844,6 +844,16 @@ window.TerraOmegaData.characterTaxonomy = {
       "status": "active",
       "tags": [],
       "visibility": "public"
+    },
+    "isabela Duarte": {
+      "featured": false,
+      "nuclei": [
+        "salvatierras"
+      ],
+      "type": "npc",
+      "status": "active",
+      "tags": [],
+      "visibility": "public"
     }
   }
 };
