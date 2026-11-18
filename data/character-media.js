@@ -102,6 +102,26 @@ window.TerraOmegaData.characterMedia = {
     "auto": {
       "provider": "dc-fandom",
       "wikiTitle": "Lobo (Prime Earth)"
+    },
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 47,
+        "y": 38,
+        "zoom": 2.5
+      },
+      "sheet": {
+        "fit": "contain",
+        "x": 50,
+        "y": 8,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
     }
   },
   "M'gann M'orzz": {
