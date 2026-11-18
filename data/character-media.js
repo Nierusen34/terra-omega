@@ -888,9 +888,9 @@ window.TerraOmegaData.characterMedia = {
     "framing": {
       "card": {
         "fit": "cover",
-        "x": 50,
-        "y": 2,
-        "zoom": 1.8
+        "x": 43,
+        "y": 0,
+        "zoom": 1.65
       },
       "sheet": {
         "fit": "cover",
