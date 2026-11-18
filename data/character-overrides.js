@@ -1986,7 +1986,7 @@ window.TerraOmegaData.characterOverrides = {
     "sections": [
       {
         "title": "📋 Ficha Básica",
-        "content": "<p><strong>Nome: Augusto ''Guto'' Salvatierras</strong><br><strong>Codinome: La Víbora</strong><br><strong>Idade: Desconhecido</strong><br><strong>Origem: Desconhecido</strong><br><strong>Status: Ativo</strong><br><strong>Local: Coral Gate</strong></p>",
+        "content": "<p><strong>Nome: Augusto ''Guto'' Salvatierras</strong><br><strong>Codinome: La Víbora</strong><br><strong>Idade: 35 anos</strong><br><strong>Origem: México</strong><br><strong>Status: Ativo</strong><br><strong>Local: Coral Gate</strong></p>",
         "visibility": "public",
         "position": 0
       },
