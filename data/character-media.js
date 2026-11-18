@@ -131,8 +131,10 @@ window.TerraOmegaData.characterMedia = {
     "source": "auto",
     "credit": "",
     "auto": {
-      "provider": "dc-fandom",
-      "wikiTitle": "Connor Hawke"
+      "provider": "external-url",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/original/11156/111564182/9455701-chawke.jpg",
+      "fallbackWikiTitle": "Connor Hawke",
+      "sourceLabel": "Google Imagens · imagem selecionada"
     }
   },
   "Jason Todd": {
