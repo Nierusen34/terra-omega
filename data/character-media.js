@@ -274,8 +274,10 @@ window.TerraOmegaData.characterMedia = {
     "source": "auto",
     "credit": "",
     "auto": {
-      "provider": "dc-fandom",
-      "wikiTitle": "Damian Wayne (Prime Earth)"
+      "provider": "external-url",
+      "imageUrl": "https://i.pinimg.com/564x/8e/1f/54/8e1f54f9b733e3623dcd4af973af9acd.jpg",
+      "fallbackWikiTitle": "Damian Wayne (Prime Earth)",
+      "sourceLabel": "Google Imagens · imagem selecionada"
     }
   },
   "Tim Drake": {
