@@ -933,7 +933,7 @@ window.TerraOmegaData.characterMedia = {
     }
   },
   "Gabriel Salvatierras": {
-    "src": "",
+    "src": "images/characters/gabriel-salvatierras.jpg",
     "alt": "Gabriel Salvatierras",
     "source": "local",
     "credit": ""
