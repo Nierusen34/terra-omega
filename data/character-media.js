@@ -884,7 +884,27 @@ window.TerraOmegaData.characterMedia = {
     "src": "images/characters/santiago-salvatierras.jpg",
     "alt": "Santiago Salvatierras",
     "source": "local",
-    "credit": ""
+    "credit": "",
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 50,
+        "y": 2,
+        "zoom": 1.8
+      },
+      "sheet": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
+    }
   },
   "Nicola Salvatierras": {
     "src": "",
