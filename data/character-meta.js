@@ -6,6 +6,22 @@ window.TerraOmegaData = window.TerraOmegaData || {};
 window.TerraOmegaData.characterTaxonomy = {
   "nuclei": [
     {
+      "id": "queen",
+      "label": "Queen / Arqueiros"
+    },
+    {
+      "id": "lobo-cadmus",
+      "label": "Projeto Sumdac"
+    },
+    {
+      "id": "martian",
+      "label": "Marcianos"
+    },
+    {
+      "id": "salvatierras",
+      "label": "Salvatierras"
+    },
+    {
       "id": "vanguard",
       "label": "Vanguard Bay"
     },
@@ -14,20 +30,8 @@ window.TerraOmegaData.characterTaxonomy = {
       "label": "Liga da Justiça"
     },
     {
-      "id": "queen",
-      "label": "Queen / Arqueiros"
-    },
-    {
       "id": "gotham",
       "label": "Gotham / Bat Família"
-    },
-    {
-      "id": "martian",
-      "label": "Marcianos"
-    },
-    {
-      "id": "lobo-cadmus",
-      "label": "Projeto Sumdac"
     },
     {
       "id": "new-titans",
