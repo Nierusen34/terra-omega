@@ -936,7 +936,27 @@ window.TerraOmegaData.characterMedia = {
     "src": "images/characters/gabriel-salvatierras.jpg",
     "alt": "Gabriel Salvatierras",
     "source": "local",
-    "credit": ""
+    "credit": "",
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 29,
+        "y": 0,
+        "zoom": 2
+      },
+      "sheet": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
+    }
   },
   "isabela Duarte": {
     "src": "",
