@@ -910,7 +910,27 @@ window.TerraOmegaData.characterMedia = {
     "src": "images/characters/nicola-salvatierras.jpg",
     "alt": "Nicola Salvatierras",
     "source": "local",
-    "credit": ""
+    "credit": "",
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 50,
+        "y": 10,
+        "zoom": 2.1
+      },
+      "sheet": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
+    }
   },
   "Gabriel Salvatierras": {
     "src": "",
