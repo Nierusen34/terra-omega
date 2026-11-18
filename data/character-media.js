@@ -907,7 +907,7 @@ window.TerraOmegaData.characterMedia = {
     }
   },
   "Nicola Salvatierras": {
-    "src": "",
+    "src": "images/characters/nicola-salvatierras.jpg",
     "alt": "Nicola Salvatierras",
     "source": "local",
     "credit": ""
