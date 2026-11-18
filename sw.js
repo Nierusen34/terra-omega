@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION="terra-omega-pwa-v2.0.0-20261118-interaction-responsiveness";
+const VERSION="terra-omega-pwa-v2.0.0-20261118-taxonomy-nucleus-fix";
 const CORE_CACHE=VERSION+"-core";
 const IMAGE_CACHE=VERSION+"-images";
 const TRANSLATION_CACHE=VERSION+"-translation";

@@ -180,7 +180,7 @@ function renderList(){
 }
 function render(){renderTabs();renderList();}
 function validate(){
-  var requirements={nuclei:"other",types:"other",statuses:"unknown"};
+  var requirements={types:"other",statuses:"unknown"};
   for(var kind of Object.keys(DEFINITIONS)){
     var list=draft[kind]||[],labels=new Set(),ids=new Set();
     if(requirements[kind]&&!list.some(function(item){return item.id===requirements[kind];})) return "A categoria protegida “"+requirements[kind]+"” é obrigatória.";
