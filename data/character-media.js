@@ -156,6 +156,26 @@ window.TerraOmegaData.characterMedia = {
       "imageUrl": "https://i.pinimg.com/736x/49/cb/fa/49cbfa383b18e113e26d6d97630bc24a.jpg",
       "fallbackWikiTitle": "Oliver Queen (Prime Earth)",
       "sourceLabel": "Google Imagens · imagem selecionada"
+    },
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 74,
+        "y": 0,
+        "zoom": 1.85
+      },
+      "sheet": {
+        "fit": "contain",
+        "x": 50,
+        "y": 8,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
     }
   },
   "Dinah Lance": {
