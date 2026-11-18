@@ -797,7 +797,9 @@ window.TerraOmegaData.characterTaxonomy = {
     },
     "Alonso Salvatierras": {
       "featured": false,
-      "nuclei": [],
+      "nuclei": [
+        "salvatierras"
+      ],
       "type": "npc",
       "status": "active",
       "tags": [],
