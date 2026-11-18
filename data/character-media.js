@@ -229,6 +229,26 @@ window.TerraOmegaData.characterMedia = {
     "auto": {
       "provider": "dc-fandom",
       "wikiTitle": "Jason Todd (Prime Earth)"
+    },
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 52,
+        "y": 27,
+        "zoom": 2.5
+      },
+      "sheet": {
+        "fit": "contain",
+        "x": 50,
+        "y": 8,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
     }
   },
   "Conner Kent": {
