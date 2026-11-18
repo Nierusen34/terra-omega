@@ -871,6 +871,12 @@ window.TerraOmegaData.characterMedia = {
     "alt": "Nicola Salvatierras",
     "source": "local",
     "credit": ""
+  },
+  "Gabriel Salvatierras": {
+    "src": "",
+    "alt": "Gabriel Salvatierras",
+    "source": "local",
+    "credit": ""
   }
 };
 

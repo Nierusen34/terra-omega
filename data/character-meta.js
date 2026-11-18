@@ -832,6 +832,16 @@ window.TerraOmegaData.characterTaxonomy = {
       "status": "active",
       "tags": [],
       "visibility": "public"
+    },
+    "Gabriel Salvatierras": {
+      "featured": false,
+      "nuclei": [
+        "salvatierras"
+      ],
+      "type": "npc",
+      "status": "active",
+      "tags": [],
+      "visibility": "public"
     }
   }
 };
