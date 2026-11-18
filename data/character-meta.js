@@ -794,6 +794,14 @@ window.TerraOmegaData.characterTaxonomy = {
         "coral-gate"
       ],
       "visibility": "public"
+    },
+    "Alonso Salvatierras": {
+      "featured": false,
+      "nuclei": [],
+      "type": "npc",
+      "status": "active",
+      "tags": [],
+      "visibility": "public"
     }
   }
 };

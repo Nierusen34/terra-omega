@@ -847,6 +847,12 @@ window.TerraOmegaData.characterMedia = {
         "zoom": 1
       }
     }
+  },
+  "Alonso Salvatierras": {
+    "src": "",
+    "alt": "Alonso Salvatierras",
+    "source": "local",
+    "credit": ""
   }
 };
 
