@@ -3385,6 +3385,16 @@ function setupGraphEditor(){
   });
 }
 
+function graphSurfaceVisible(){
+  var section=document.getElementById("sub-tz-relacoes");
+  var modal=document.getElementById("graphEditorModal");
+  return !!(
+    (section && section.classList.contains("active")) ||
+    (modal && modal.classList.contains("show")) ||
+    graphFullscreen
+  );
+}
+
 function refreshGraphFromSources(){
   var modal=document.getElementById("graphEditorModal");
   if(modal && modal.classList.contains("show")) return;
@@ -3396,7 +3406,11 @@ function refreshGraphFromSources(){
   if(graphActiveNucleus!=="all" && !graphNucleus(graphActiveNucleus,graphData)) graphActiveNucleus="all";
   saveLocalGraph();
   updateNucleusPickerUi();
-  renderGraph();renderInspector();
+
+  if(graphSurfaceVisible()){
+    renderGraph();
+    renderInspector();
+  }
 }
 
 document.addEventListener("terra-omega:runtime-data-loaded",function(){

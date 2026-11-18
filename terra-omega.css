@@ -8795,3 +8795,40 @@ a:focus-visible{
     transition-duration:.01ms!important;
   }
 }
+
+
+/* ===== RESPONSIVIDADE DE INTERAÇÃO ===== */
+button,
+[role="button"],
+.tab-btn,
+.sidebar-item,
+.gs-group-btn,
+.gs-sub-btn{
+  touch-action:manipulation;
+}
+
+[hidden]{
+  pointer-events:none!important;
+}
+
+.pwa-network-status{
+  pointer-events:none;
+}
+
+/* Mantém o alvo parado durante a troca de página/seção. */
+.tab-content.active,
+.sub-content.active{
+  animation:interactionFadeIn .12s ease-out!important;
+}
+
+@keyframes interactionFadeIn{
+  from{opacity:.97}
+  to{opacity:1}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .tab-content.active,
+  .sub-content.active{
+    animation:none!important;
+  }
+}

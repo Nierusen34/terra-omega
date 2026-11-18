@@ -114,7 +114,7 @@ document.querySelectorAll('.tab-btn').forEach(function(btn){
     applyPaper(p, publication);
     syncGlobalSidebar(t, null);
     closeDrawer();
-    window.scrollTo({top:0, behavior:'smooth'});
+    window.scrollTo(0,0);
   });
 });
 
@@ -131,7 +131,7 @@ document.querySelectorAll('.sidebar-item').forEach(function(item){
     if(crumb) crumb.textContent = item.textContent.replace(/[^\w\sÀ-ÿ]/g,'').trim();
     syncGlobalSidebar(parent.id, t);
     closeDrawer();
-    window.scrollTo({top:0, behavior:'smooth'});
+    window.scrollTo(0,0);
     if(t === 'sub-tz-relacoes' && window.TerraOmegaApp && window.TerraOmegaApp.graph) window.TerraOmegaApp.graph.render();
   });
 });

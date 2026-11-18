@@ -535,9 +535,41 @@ function refreshPortraits(root){
   });
 }
 
-document.addEventListener('terra-omega:runtime-data-loaded',function(){
-  refreshPortraits(document);
-});
+var runtimePortraitRefreshToken = null;
+
+function refreshRuntimePortraits(){
+  var characters=document.getElementById('sub-tz-personagens');
+  var ficha=document.getElementById('fichaModal');
+  var needsNow=!!(
+    (characters && characters.classList.contains('active')) ||
+    (ficha && ficha.classList.contains('show'))
+  );
+
+  function run(){
+    runtimePortraitRefreshToken=null;
+    refreshPortraits(document);
+  }
+
+  if(needsNow){
+    if(runtimePortraitRefreshToken && window.cancelIdleCallback){
+      try{ window.cancelIdleCallback(runtimePortraitRefreshToken); }catch(e){}
+    }else if(runtimePortraitRefreshToken){
+      window.clearTimeout(runtimePortraitRefreshToken);
+    }
+    runtimePortraitRefreshToken=null;
+    run();
+    return;
+  }
+
+  if(runtimePortraitRefreshToken) return;
+  if(window.requestIdleCallback){
+    runtimePortraitRefreshToken=window.requestIdleCallback(run,{timeout:1200});
+  }else{
+    runtimePortraitRefreshToken=window.setTimeout(run,180);
+  }
+}
+
+document.addEventListener('terra-omega:runtime-data-loaded',refreshRuntimePortraits);
 document.addEventListener('terra-omega:private-profiles-changed',function(){
   refreshPortraits(document);
 });
