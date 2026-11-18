@@ -2019,7 +2019,7 @@ window.TerraOmegaData.characterOverrides = {
     "card": {
       "icon": "🐍",
       "codename": "La Víbora",
-      "age": "Desconhecido",
+      "age": "35 Anos",
       "origin": "Humano",
       "status": "Ativo"
     }
