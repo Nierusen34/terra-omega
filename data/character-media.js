@@ -110,8 +110,10 @@ window.TerraOmegaData.characterMedia = {
     "source": "auto",
     "credit": "",
     "auto": {
-      "provider": "dc-fandom",
-      "wikiTitle": "M'gann M'orzz (Prime Earth)"
+      "provider": "external-url",
+      "imageUrl": "https://static.wikia.nocookie.net/book-of-heroes-and-villains/images/c/cf/Ms_Martian.jpg/revision/latest?cb=20220125212755",
+      "fallbackWikiTitle": "M'gann M'orzz (Prime Earth)",
+      "sourceLabel": "Google Imagens · imagem selecionada"
     },
     "framing": {
       "card": {
