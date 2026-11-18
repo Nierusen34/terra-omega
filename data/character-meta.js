@@ -822,6 +822,16 @@ window.TerraOmegaData.characterTaxonomy = {
       "status": "active",
       "tags": [],
       "visibility": "public"
+    },
+    "Nicola Salvatierras": {
+      "featured": false,
+      "nuclei": [
+        "salvatierras"
+      ],
+      "type": "npc",
+      "status": "active",
+      "tags": [],
+      "visibility": "public"
     }
   }
 };
