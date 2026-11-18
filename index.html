@@ -1313,6 +1313,16 @@ UNIVERSO OBLÍVIO · TERRA OMEGA · DOSSIÊ CENTRAL · v2.0 · JAN 2027
     <button id="characterFavoritesToggle" class="character-filter-action" type="button" aria-pressed="false">⭐ Favoritos</button>
     <button id="characterMoreFiltersBtn" class="character-filter-action" type="button" aria-expanded="false">⚙️ Mais filtros</button>
     <button id="addCharacterBtn" class="character-add-btn" type="button" disabled>＋ Novo personagem</button>
+    <label class="character-sort-control" for="characterSort">
+      <span>Organizar</span>
+      <select id="characterSort" aria-label="Organizar personagens">
+        <option value="narrative">Narrativa</option>
+        <option value="name">Nome A–Z</option>
+        <option value="type">Tipo</option>
+        <option value="nucleus">Núcleo</option>
+        <option value="recent">Mais recentes</option>
+      </select>
+    </label>
     <span id="characterCount"></span>
     <div id="characterCardSizeControl" class="character-card-size-control" aria-label="Tamanho dos cards">
       <span class="character-card-size-label">Cards</span>
@@ -1887,6 +1897,9 @@ UNIVERSO OBLÍVIO · TERRA OMEGA · DOSSIÊ CENTRAL · v2.0 · JAN 2027
 <div class="character-editor-meta-grid">
 <label>Tipo<select id="characterEditorType"></select></label>
 <label>Status<select id="characterEditorStatusMeta"></select></label>
+<label>Prioridade narrativa
+<input id="characterEditorNarrativeOrder" type="number" min="1" max="9999" step="1" inputmode="numeric" placeholder="Automática">
+</label>
 <label class="character-featured-toggle"><input id="characterEditorFeatured" type="checkbox"> <span>Personagem principal</span></label>
 <label class="character-visibility-field">Visibilidade
 <select id="characterEditorVisibility">
@@ -1896,6 +1909,7 @@ UNIVERSO OBLÍVIO · TERRA OMEGA · DOSSIÊ CENTRAL · v2.0 · JAN 2027
 </select>
 </label>
 </div>
+<p class="character-editor-note">Prioridade narrativa: números menores aparecem antes em “Narrativa”. Deixe em branco para ordem automática por tipo e importância.</p>
 <p class="character-editor-note character-private-note">Público aparece sempre. Spoiler é ocultado no Modo Jogador. Mestre remove card, ficha e mídia dos arquivos públicos e usa o cofre criptografado.</p>
 <div class="character-editor-nuclei">
 <div class="character-editor-note">Núcleos narrativos — um personagem pode pertencer a vários.</div>

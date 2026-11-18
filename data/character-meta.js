@@ -115,6 +115,7 @@ window.TerraOmegaData.characterTaxonomy = {
   "characters": {
     "Tristan Queen": {
       "featured": true,
+      "narrativeOrder": 10,
       "nuclei": [
         "queen"
       ],
@@ -125,6 +126,7 @@ window.TerraOmegaData.characterTaxonomy = {
     },
     "Riot": {
       "featured": true,
+      "narrativeOrder": 20,
       "nuclei": [
         "lobo-cadmus"
       ],
@@ -135,6 +137,7 @@ window.TerraOmegaData.characterTaxonomy = {
     },
     "M'ark": {
       "featured": true,
+      "narrativeOrder": 30,
       "nuclei": [
         "martian"
       ],
@@ -777,6 +780,7 @@ window.TerraOmegaData.characterTaxonomy = {
     },
     "Augusto Salvatierras": {
       "featured": true,
+      "narrativeOrder": 40,
       "nuclei": [
         "vanguard"
       ],

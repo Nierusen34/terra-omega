@@ -72,6 +72,7 @@ function metaFor(name){
   var meta = all[name] || {};
   return {
     featured:meta.featured === true,
+    narrativeOrder:Number.isFinite(Number(meta.narrativeOrder)) ? Number(meta.narrativeOrder) : null,
     nuclei:Array.isArray(meta.nuclei) ? meta.nuclei.slice() : [],
     type:meta.type || 'other',
     status:meta.status || 'unknown',
@@ -148,6 +149,9 @@ function fillOrganization(meta){
   var featured = el('characterEditorFeatured');
   if(featured) featured.checked = meta.featured === true;
 
+  var narrativeOrder = el('characterEditorNarrativeOrder');
+  if(narrativeOrder) narrativeOrder.value = Number.isFinite(meta.narrativeOrder) ? String(meta.narrativeOrder) : '';
+
   var visibilitySelect=el('characterEditorVisibility');
   if(visibilitySelect){
     var value=meta.visibility === 'private' ? 'master' : (meta.visibility || 'public');
@@ -161,6 +165,11 @@ function fillOrganization(meta){
 function collectOrganization(){
   var nucleiRoot = el('characterEditorNuclei');
   var tagsRoot=el('characterEditorTags');
+  var narrativeInput=el('characterEditorNarrativeOrder');
+  var narrativeRaw=narrativeInput ? String(narrativeInput.value || '').trim() : '';
+  var narrativeOrder=narrativeRaw ? Number.parseInt(narrativeRaw,10) : null;
+  if(!Number.isFinite(narrativeOrder) || narrativeOrder < 1) narrativeOrder=null;
+  if(narrativeOrder !== null) narrativeOrder=Math.min(9999,narrativeOrder);
   var nuclei = nucleiRoot
     ? Array.from(nucleiRoot.querySelectorAll('input[type="checkbox"]:checked')).map(function(input){ return input.value; })
     : [];
@@ -171,6 +180,7 @@ function collectOrganization(){
 
   return {
     featured:!!(el('characterEditorFeatured') && el('characterEditorFeatured').checked),
+    narrativeOrder:narrativeOrder,
     nuclei:nuclei,
     tags:tags,
     type:el('characterEditorType') ? el('characterEditorType').value : 'other',

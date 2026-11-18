@@ -223,8 +223,15 @@ function normalizeCharacterMeta(value,taxonomy,creating){
     ? [...new Set(input.tags.map(v => String(v || "")).filter(v => allowedTags.has(v)))]
     : [];
 
+  const narrativeRaw = input.narrativeOrder == null ? "" : String(input.narrativeOrder).trim();
+  const narrativeValue = narrativeRaw ? Number.parseInt(narrativeRaw,10) : NaN;
+  const narrativeOrder = Number.isFinite(narrativeValue)
+    ? Math.max(1,Math.min(9999,narrativeValue))
+    : null;
+
   return {
     featured:input.featured === true,
+    ...(narrativeOrder !== null ? {narrativeOrder} : {}),
     nuclei:[...new Set(nuclei)],
     type,
     status,
@@ -476,6 +483,12 @@ function applyMetaPatch(meta,patch,taxonomy,isPrivate){
   if(!typesAllowed.has(String(next.type||""))) next.type=typesAllowed.has("other") ? "other" : "";
   if(!statusesAllowed.has(String(next.status||""))) next.status=statusesAllowed.has("unknown") ? "unknown" : "";
   if(typeof patch.featured==="boolean") next.featured=patch.featured;
+  if(Object.prototype.hasOwnProperty.call(patch,"narrativeOrder")){
+    const raw=patch.narrativeOrder == null ? "" : String(patch.narrativeOrder).trim();
+    const value=raw ? Number.parseInt(raw,10) : NaN;
+    if(Number.isFinite(value)) next.narrativeOrder=Math.max(1,Math.min(9999,value));
+    else delete next.narrativeOrder;
+  }
 
   if(!isPrivate && (patch.visibility==="public" || patch.visibility==="spoiler")){
     next.visibility=patch.visibility;

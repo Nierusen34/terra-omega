@@ -17,11 +17,19 @@ var tagSelect = document.getElementById('characterTagFilter');
 var clearBtn = document.getElementById('characterClearFilters');
 var sizeControl = document.getElementById('characterCardSizeControl');
 var sizeButtons = sizeControl ? Array.from(sizeControl.querySelectorAll('[data-character-size]')) : [];
+var sortSelect = document.getElementById('characterSort');
 var CARD_SIZE_KEY = 'terraOmega_character_card_size';
+var SORT_KEY = 'terraOmega_character_sort';
 var cardSize = 'standard';
+var sortMode = 'narrative';
+var SORT_MODES = ['narrative','name','type','nucleus','recent'];
 try {
   var savedSize = localStorage.getItem(CARD_SIZE_KEY);
   if(savedSize === 'compact' || savedSize === 'standard' || savedSize === 'large') cardSize = savedSize;
+} catch(e){}
+try {
+  var savedSort = localStorage.getItem(SORT_KEY);
+  if(SORT_MODES.indexOf(savedSort) !== -1) sortMode = savedSort;
 } catch(e){}
 
 var taxonomy = (window.TerraOmegaData && window.TerraOmegaData.characterTaxonomy) || {
@@ -58,6 +66,7 @@ function metaFor(name){
   var meta = all[name] || {};
   return {
     featured:meta.featured === true,
+    narrativeOrder:Number.isFinite(Number(meta.narrativeOrder)) ? Number(meta.narrativeOrder) : null,
     nuclei:Array.isArray(meta.nuclei) && meta.nuclei.length ? meta.nuclei : ['other'],
     type:meta.type || 'other',
     status:meta.status || 'unknown',
@@ -83,6 +92,85 @@ function searchableText(card,name,meta){
     labelFor(taxonomy.statuses,meta.status),
     meta.tags.map(function(id){ return labelFor(taxonomy.tags,id); }).join(' ')
   ].join(' '));
+}
+
+var TYPE_ORDER = {
+  protagonist:0,
+  hero:1,
+  antihero:2,
+  villain:3,
+  npc:4,
+  civilian:5,
+  other:6
+};
+
+function compareNames(a,b){
+  return String(a || '').localeCompare(String(b || ''),'pt-BR',{sensitivity:'base'});
+}
+
+function typeRank(meta){
+  return Object.prototype.hasOwnProperty.call(TYPE_ORDER,meta.type) ? TYPE_ORDER[meta.type] : 99;
+}
+
+function narrativeRank(meta){
+  if(Number.isFinite(meta.narrativeOrder) && meta.narrativeOrder > 0) return meta.narrativeOrder;
+  return 10000 + (typeRank(meta) * 1000) + (meta.featured ? 0 : 200);
+}
+
+function nucleusRank(meta){
+  var defs = Array.isArray(taxonomy.nuclei) ? taxonomy.nuclei : [];
+  var ranks = meta.nuclei.map(function(id){
+    var index = defs.findIndex(function(item){ return item && item.id === id; });
+    return index === -1 ? 9999 : index;
+  });
+  return ranks.length ? Math.min.apply(Math,ranks) : 9999;
+}
+
+function recentRank(name){
+  var all = taxonomy.characters && typeof taxonomy.characters === 'object' ? taxonomy.characters : {};
+  return Object.keys(all).indexOf(name);
+}
+
+function compareCards(a,b){
+  var nameA = characterName(a);
+  var nameB = characterName(b);
+  var metaA = metaFor(nameA);
+  var metaB = metaFor(nameB);
+
+  if(sortMode === 'name') return compareNames(nameA,nameB);
+
+  if(sortMode === 'type'){
+    var typeDiff = typeRank(metaA) - typeRank(metaB);
+    if(typeDiff) return typeDiff;
+    var featuredDiff = Number(metaB.featured) - Number(metaA.featured);
+    if(featuredDiff) return featuredDiff;
+    return compareNames(nameA,nameB);
+  }
+
+  if(sortMode === 'nucleus'){
+    var nucleusDiff = nucleusRank(metaA) - nucleusRank(metaB);
+    if(nucleusDiff) return nucleusDiff;
+    var narrativeDiffInNucleus = narrativeRank(metaA) - narrativeRank(metaB);
+    if(narrativeDiffInNucleus) return narrativeDiffInNucleus;
+    return compareNames(nameA,nameB);
+  }
+
+  if(sortMode === 'recent'){
+    var recentDiff = recentRank(nameB) - recentRank(nameA);
+    if(recentDiff) return recentDiff;
+    return compareNames(nameA,nameB);
+  }
+
+  var narrativeDiff = narrativeRank(metaA) - narrativeRank(metaB);
+  if(narrativeDiff) return narrativeDiff;
+  return compareNames(nameA,nameB);
+}
+
+function sortCards(cards){
+  if(!root) return;
+  var grid = root.querySelector('.card-grid');
+  if(!grid) return;
+  cards.slice().sort(compareCards).forEach(function(card){ grid.appendChild(card); });
 }
 
 function matchesNucleus(meta){
@@ -195,7 +283,8 @@ function apply(){
   var term = normalize(input ? input.value : '').trim();
   var visible = 0;
 
-  getCards().forEach(function(card){
+  var cards = getCards();
+  cards.forEach(function(card){
     var name = characterName(card);
     var meta = metaFor(name);
 
@@ -214,6 +303,7 @@ function apply(){
     if(show) visible++;
   });
 
+  sortCards(cards);
   if(countEl) countEl.textContent = visible + (visible === 1 ? ' personagem' : ' personagens');
   refreshActionStates();
 }
@@ -239,6 +329,14 @@ applyCardSize(cardSize,false);
 sizeButtons.forEach(function(button){
   button.addEventListener('click',function(){ applyCardSize(button.getAttribute('data-character-size'),true); });
 });
+if(sortSelect){
+  sortSelect.value = sortMode;
+  sortSelect.addEventListener('change',function(){
+    sortMode = SORT_MODES.indexOf(sortSelect.value) !== -1 ? sortSelect.value : 'narrative';
+    try { localStorage.setItem(SORT_KEY,sortMode); } catch(e){}
+    apply();
+  });
+}
 if(input) input.addEventListener('input',apply);
 if(typeSelect) typeSelect.addEventListener('change',apply);
 if(statusSelect) statusSelect.addEventListener('change',apply);
@@ -290,6 +388,13 @@ window.TerraOmegaApp.characterFilters = {
   clear:clearFilters,
   setCardSize:function(size){ applyCardSize(size,true); },
   getCardSize:function(){ return cardSize; },
+  setSort:function(mode){
+    sortMode = SORT_MODES.indexOf(mode) !== -1 ? mode : 'narrative';
+    if(sortSelect) sortSelect.value = sortMode;
+    try { localStorage.setItem(SORT_KEY,sortMode); } catch(e){}
+    apply();
+  },
+  getSort:function(){ return sortMode; },
   nucleus:function(id){
     activeNucleus = id || 'all';
     renderNuclei();
