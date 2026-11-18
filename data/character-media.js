@@ -823,7 +823,7 @@ window.TerraOmegaData.characterMedia = {
     }
   },
   "Augusto Salvatierras": {
-    "src": "images/characters/augusto-salvatierras.jpg",
+    "src": "",
     "alt": "Augusto Salvatierras",
     "source": "local",
     "credit": "",
