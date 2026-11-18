@@ -616,7 +616,27 @@ window.TerraOmegaData.characterMedia = {
     "src": "images/characters/augusto-salvatierras.jpg",
     "alt": "Augusto Salvatierras",
     "source": "local",
-    "credit": ""
+    "credit": "",
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 51,
+        "y": 100,
+        "zoom": 1
+      },
+      "sheet": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
+    }
   }
 };
 
