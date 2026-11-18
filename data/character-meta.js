@@ -786,7 +786,7 @@ window.TerraOmegaData.characterTaxonomy = {
       "featured": true,
       "narrativeOrder": 40,
       "nuclei": [
-        "vanguard"
+        "salvatierras"
       ],
       "type": "protagonist",
       "status": "active",
