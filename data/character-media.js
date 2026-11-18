@@ -883,6 +883,12 @@ window.TerraOmegaData.characterMedia = {
     "alt": "isabela Duarte",
     "source": "local",
     "credit": ""
+  },
+  "Carlo Duarte": {
+    "src": "",
+    "alt": "Carlo Duarte",
+    "source": "local",
+    "credit": ""
   }
 };
 

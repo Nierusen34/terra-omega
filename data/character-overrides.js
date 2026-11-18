@@ -2281,6 +2281,49 @@ window.TerraOmegaData.characterOverrides = {
       "origin": "",
       "status": ""
     }
+  },
+  "Carlo Duarte": {
+    "eyebrow": "",
+    "sections": [
+      {
+        "title": "📋 Ficha Básica",
+        "content": "<p><strong>Nome:</strong> <br><strong>Codinome:</strong> <br><strong>Idade:</strong> <br><strong>Origem:</strong> <br><strong>Status:</strong> <br><strong>Local:</strong> </p>",
+        "visibility": "public",
+        "position": 0
+      },
+      {
+        "title": "📖 História",
+        "content": "<p>Escreva aqui a história do personagem.</p>",
+        "visibility": "public",
+        "position": 1
+      },
+      {
+        "title": "🎯 Personalidade",
+        "content": "<p>Descreva a personalidade do personagem.</p>",
+        "visibility": "public",
+        "position": 2
+      },
+      {
+        "title": "⚔️ Habilidades",
+        "content": "<ul><li>Adicione uma habilidade.</li></ul>",
+        "visibility": "public",
+        "position": 3
+      },
+      {
+        "title": "🔗 Relações",
+        "content": "<ul><li>Adicione uma relação importante.</li></ul>",
+        "visibility": "public",
+        "position": 4
+      }
+    ],
+    "created": true,
+    "card": {
+      "icon": "👤",
+      "codename": "",
+      "age": "",
+      "origin": "",
+      "status": ""
+    }
   }
 };
 
