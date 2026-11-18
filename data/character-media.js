@@ -420,6 +420,26 @@ window.TerraOmegaData.characterMedia = {
       "imageUrl": "https://i.redd.it/uy1lm1c8ch7b1.jpg",
       "fallbackWikiTitle": "Roy Harper (Prime Earth)",
       "sourceLabel": "Google Imagens · imagem selecionada"
+    },
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 2.05
+      },
+      "sheet": {
+        "fit": "contain",
+        "x": 50,
+        "y": 8,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
     }
   },
   "George Gandenzio Toombs": {
