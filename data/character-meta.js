@@ -804,6 +804,16 @@ window.TerraOmegaData.characterTaxonomy = {
       "status": "active",
       "tags": [],
       "visibility": "public"
+    },
+    "Carmen Duarte": {
+      "featured": false,
+      "nuclei": [
+        "salvatierras"
+      ],
+      "type": "npc",
+      "status": "active",
+      "tags": [],
+      "visibility": "public"
     }
   }
 };
