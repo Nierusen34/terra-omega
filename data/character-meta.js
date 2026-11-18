@@ -774,6 +774,18 @@ window.TerraOmegaData.characterTaxonomy = {
       "status": "active",
       "tags": [],
       "visibility": "public"
+    },
+    "Augusto Salvatierras": {
+      "featured": true,
+      "nuclei": [
+        "vanguard"
+      ],
+      "type": "protagonist",
+      "status": "active",
+      "tags": [
+        "coral-gate"
+      ],
+      "visibility": "public"
     }
   }
 };

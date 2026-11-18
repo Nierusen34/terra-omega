@@ -1980,6 +1980,49 @@ window.TerraOmegaData.characterOverrides = {
       "origin": "Homo Magi?",
       "status": "Ativa"
     }
+  },
+  "Augusto Salvatierras": {
+    "eyebrow": "Herdeiro dos Salvatierras",
+    "sections": [
+      {
+        "title": "📋 Ficha Básica",
+        "content": "<p><strong>Nome: Augusto ''Guto'' Salvatierras</strong><br><strong>Codinome: La Víbora</strong><br><strong>Idade: Desconhecido</strong><br><strong>Origem: Desconhecido</strong><br><strong>Status: Ativo</strong><br><strong>Local: Coral Gate</strong></p>",
+        "visibility": "public",
+        "position": 0
+      },
+      {
+        "title": "📖 História",
+        "content": "<p>Escreva aqui a história do personagem.</p>",
+        "visibility": "public",
+        "position": 1
+      },
+      {
+        "title": "🎯 Personalidade",
+        "content": "<p>Descreva a personalidade do personagem.</p>",
+        "visibility": "public",
+        "position": 2
+      },
+      {
+        "title": "⚔️ Habilidades",
+        "content": "<ul><li>Adicione uma habilidade.</li></ul>",
+        "visibility": "public",
+        "position": 3
+      },
+      {
+        "title": "🔗 Relações",
+        "content": "<ul><li>Adicione uma relação importante.</li></ul>",
+        "visibility": "public",
+        "position": 4
+      }
+    ],
+    "created": true,
+    "card": {
+      "icon": "🐍",
+      "codename": "La Víbora",
+      "age": "Desconhecido",
+      "origin": "Humano",
+      "status": "Ativo"
+    }
   }
 };
 

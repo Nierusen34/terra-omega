@@ -611,6 +611,12 @@ window.TerraOmegaData.characterMedia = {
         "zoom": 1
       }
     }
+  },
+  "Augusto Salvatierras": {
+    "src": "",
+    "alt": "Augusto Salvatierras",
+    "source": "local",
+    "credit": ""
   }
 };
 
