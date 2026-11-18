@@ -2150,7 +2150,7 @@ window.TerraOmegaData.characterOverrides = {
       "codename": "",
       "age": "",
       "origin": "",
-      "status": ""
+      "status": "Ativo"
     }
   },
   "Nicola Salvatierras": {

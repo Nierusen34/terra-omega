@@ -817,7 +817,9 @@ window.TerraOmegaData.characterTaxonomy = {
     },
     "Santiago Salvatierras": {
       "featured": false,
-      "nuclei": [],
+      "nuclei": [
+        "salvatierras"
+      ],
       "type": "npc",
       "status": "active",
       "tags": [],
