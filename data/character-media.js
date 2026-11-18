@@ -278,6 +278,26 @@ window.TerraOmegaData.characterMedia = {
       "imageUrl": "https://i.pinimg.com/564x/8e/1f/54/8e1f54f9b733e3623dcd4af973af9acd.jpg",
       "fallbackWikiTitle": "Damian Wayne (Prime Earth)",
       "sourceLabel": "Google Imagens · imagem selecionada"
+    },
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 50,
+        "y": 33,
+        "zoom": 1.25
+      },
+      "sheet": {
+        "fit": "contain",
+        "x": 50,
+        "y": 8,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
     }
   },
   "Tim Drake": {
