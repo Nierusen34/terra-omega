@@ -1114,7 +1114,27 @@ window.TerraOmegaData.characterMedia = {
     "src": "images/characters/matteo-ferraro.jpg",
     "alt": "Matteo Ferraro",
     "source": "local",
-    "credit": ""
+    "credit": "",
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 50,
+        "y": 3,
+        "zoom": 2.5
+      },
+      "sheet": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
+    }
   }
 };
 
