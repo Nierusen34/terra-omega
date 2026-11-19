@@ -1109,6 +1109,12 @@ window.TerraOmegaData.characterMedia = {
         "zoom": 1
       }
     }
+  },
+  "Matteo Ferraro": {
+    "src": "",
+    "alt": "Matteo Ferraro",
+    "source": "local",
+    "credit": ""
   }
 };
 

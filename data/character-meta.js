@@ -859,6 +859,16 @@ window.TerraOmegaData.characterTaxonomy = {
       "status": "active",
       "tags": [],
       "visibility": "public"
+    },
+    "Matteo Ferraro": {
+      "featured": false,
+      "nuclei": [
+        "salvatierras"
+      ],
+      "type": "npc",
+      "status": "active",
+      "tags": [],
+      "visibility": "public"
     }
   }
 };

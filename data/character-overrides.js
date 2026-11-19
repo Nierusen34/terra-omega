@@ -2324,6 +2324,49 @@ window.TerraOmegaData.characterOverrides = {
       "origin": "",
       "status": ""
     }
+  },
+  "Matteo Ferraro": {
+    "eyebrow": "Braço Direito de Augusto",
+    "sections": [
+      {
+        "title": "📋 Ficha Básica",
+        "content": "<p><strong>Nome: Matteo Ferraro</strong><br><strong>Codinome: Nenhum</strong><br><strong>Idade:&nbsp;</strong><br><strong>Origem:&nbsp;</strong><br><strong>Status: Ativo</strong><br><strong>Local:&nbsp;</strong></p>",
+        "visibility": "public",
+        "position": 0
+      },
+      {
+        "title": "📖 História",
+        "content": "<p>Escreva aqui a história do personagem.</p>",
+        "visibility": "public",
+        "position": 1
+      },
+      {
+        "title": "🎯 Personalidade",
+        "content": "<p>Descreva a personalidade do personagem.</p>",
+        "visibility": "public",
+        "position": 2
+      },
+      {
+        "title": "⚔️ Habilidades",
+        "content": "<ul><li>Adicione uma habilidade.</li></ul>",
+        "visibility": "public",
+        "position": 3
+      },
+      {
+        "title": "🔗 Relações",
+        "content": "<ul><li>Adicione uma relação importante.</li></ul>",
+        "visibility": "public",
+        "position": 4
+      }
+    ],
+    "created": true,
+    "card": {
+      "icon": "👤",
+      "codename": "Nenhum",
+      "age": "",
+      "origin": "Humano",
+      "status": "Ativo"
+    }
   }
 };
 
