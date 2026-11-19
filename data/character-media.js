@@ -205,7 +205,7 @@ window.TerraOmegaData.characterMedia = {
         "zoom": 1.85
       },
       "sheet": {
-        "fit": "contain",
+        "fit": "cover",
         "x": 50,
         "y": 8,
         "zoom": 1
