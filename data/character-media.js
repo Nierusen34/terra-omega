@@ -1059,7 +1059,7 @@ window.TerraOmegaData.characterMedia = {
     }
   },
   "isabela Duarte": {
-    "src": "",
+    "src": "images/characters/isabela-duarte.jpg",
     "alt": "isabela Duarte",
     "source": "local",
     "credit": ""
