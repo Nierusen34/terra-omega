@@ -258,10 +258,10 @@ window.TerraOmegaData.characterMedia = {
         "zoom": 2.5
       },
       "sheet": {
-        "fit": "contain",
-        "x": 50,
-        "y": 8,
-        "zoom": 1
+        "fit": "cover",
+        "x": 47,
+        "y": 0,
+        "zoom": 2
       },
       "graph": {
         "fit": "cover",
