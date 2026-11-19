@@ -6,35 +6,36 @@
       "title": "O Quarto Ficou Frio",
       "subtitle": "",
       "collection": "Tristan Queen",
+      "arc": "Tristan & Misty",
+      "issueNumber": 1,
+      "publicationDate": "2026-11-19",
+      "storyDate": "",
       "description": "Tristan Queen · Tristan & Misty — Tristan se abre emocionalmente e declara seu amor por Misty, mas a conversa termina em honestidade dolorosa, ruptura e despedida.",
       "status": "published",
+      "cover": "images/comics/covers/tristan-queen-o-quarto-ficou-frio.webp",
       "pages": [
         {
           "order": 1,
           "label": "Página 1",
           "src": "images/comics/tristan-queen/o-quarto-ficou-frio-01.webp",
-          "alt": "O Quarto Ficou Frio — página 1: Tristan confessa seus sentimentos a Misty.",
-          "thumb": "images/comics/tristan-queen/o-quarto-ficou-frio-01-thumb.webp"
+          "thumb": "images/comics/tristan-queen/o-quarto-ficou-frio-01-thumb.webp",
+          "alt": "O Quarto Ficou Frio — página 1: Tristan confessa seus sentimentos a Misty."
         },
         {
           "order": 2,
           "label": "Página 2",
           "src": "images/comics/tristan-queen/o-quarto-ficou-frio-02.webp",
-          "alt": "O Quarto Ficou Frio — página 2: Tristan e Misty conversam sobre a diferença entre seus sentimentos.",
-          "thumb": "images/comics/tristan-queen/o-quarto-ficou-frio-02-thumb.webp"
+          "thumb": "images/comics/tristan-queen/o-quarto-ficou-frio-02-thumb.webp",
+          "alt": "O Quarto Ficou Frio — página 2: Tristan e Misty conversam sobre a diferença entre seus sentimentos."
         },
         {
           "order": 3,
           "label": "Página 3",
           "src": "images/comics/tristan-queen/o-quarto-ficou-frio-03.webp",
-          "alt": "O Quarto Ficou Frio — página 3: Tristan e Misty se despedem.",
-          "thumb": "images/comics/tristan-queen/o-quarto-ficou-frio-03-thumb.webp"
+          "thumb": "images/comics/tristan-queen/o-quarto-ficou-frio-03-thumb.webp",
+          "alt": "O Quarto Ficou Frio — página 3: Tristan e Misty se despedem."
         }
-      ],
-      "arc": "Tristan & Misty",
-      "issueNumber": 1,
-      "publicationDate": "2026-11-19",
-      "storyDate": ""
+      ]
     }
   ]
 }
