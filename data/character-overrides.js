@@ -865,7 +865,7 @@ window.TerraOmegaData.characterOverrides = {
     ],
     "created": true,
     "card": {
-      "icon": "👤",
+      "icon": "🔥",
       "codename": "Metamorpho",
       "age": "30",
       "origin": "Experimento Meta Humano",
