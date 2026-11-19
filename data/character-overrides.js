@@ -2060,7 +2060,7 @@ window.TerraOmegaData.characterOverrides = {
     ],
     "created": true,
     "card": {
-      "icon": "👤",
+      "icon": "💃",
       "codename": "",
       "age": "",
       "origin": "",
