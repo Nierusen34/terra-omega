@@ -958,7 +958,27 @@ window.TerraOmegaData.characterMedia = {
     "src": "images/characters/carmen-duarte.jpg",
     "alt": "Carmen Duarte",
     "source": "local",
-    "credit": ""
+    "credit": "",
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 50,
+        "y": 0,
+        "zoom": 2.5
+      },
+      "sheet": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
+    }
   },
   "Santiago Salvatierras": {
     "src": "images/characters/santiago-salvatierras.jpg",
