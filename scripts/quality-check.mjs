@@ -537,6 +537,7 @@ function checkComics(){
   const reader=read("js/comic-reader.js");
   const manager=read("js/comic-manager.js");
   const api=read("api/media.js");
+  const router=read("js/router.js");
   const html=read("index.html");
 
   for(const feature of ["single","spread","pair","continuous"]){
@@ -553,6 +554,11 @@ function checkComics(){
      !reader.includes("currentComicRoute") ||
      !reader.includes("root.scrollTo({left:")){
     fail("Etapa 3 do leitor está sem busca da biblioteca, foco acessível, deep-link ou filmstrip horizontal.");
+  }
+  if(!router.includes("kind:'comic'") ||
+     !router.includes("function comicRoute") ||
+     !router.includes("setComic:setComic")){
+    fail("Roteador não registra deep-links de edição/página de quadrinhos.");
   }
   if(!html.includes('id="comicCollectionSelect"') ||
      !html.includes('id="comicEditionSelect"') ||

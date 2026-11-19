@@ -8,7 +8,7 @@ if(!core)throw new Error("Terra Omega: núcleo não carregado antes de js/comic-
 var showToast=core.showToast;
 var showConfirm=core.showConfirm;
 var escapeHtml=core.escapeHtml;
-var catalog={version:2,series:[]};
+var catalog={version:3,series:[]};
 var selectedId="";
 var newDraft=false;
 var busy=false;
@@ -599,6 +599,10 @@ async function open(){
   var ensureStyles=window.TerraOmegaApp&&window.TerraOmegaApp.ensureComicStyles;
   if(ensureStyles){
     try{await ensureStyles();}catch(error){console.error("Terra Omega comic styles:",error);}
+  }else if(!document.getElementById("comicStylesheet")){
+    var link=document.createElement("link");
+    link.id="comicStylesheet";link.rel="stylesheet";link.href="css/comic-reader.css";
+    document.head.appendChild(link);
   }
   ensureModal();
   var b=backend();
