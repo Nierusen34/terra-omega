@@ -207,6 +207,26 @@ window.TerraOmegaData.characterMedia = {
       "provider": "external-url",
       "imageUrl": "https://i.pinimg.com/736x/7c/c8/3f/7cc83fd1736c5f0544a82fe2cb56eb2f.jpg",
       "sourceLabel": "Google Imagens · Dan Mora"
+    },
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      },
+      "sheet": {
+        "fit": "cover",
+        "x": 50,
+        "y": 29,
+        "zoom": 1.15
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
     }
   },
   "Connor Hawke": {
