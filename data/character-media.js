@@ -955,7 +955,7 @@ window.TerraOmegaData.characterMedia = {
     }
   },
   "Carmen Duarte": {
-    "src": "",
+    "src": "images/characters/carmen-duarte.jpg",
     "alt": "Carmen Duarte",
     "source": "local",
     "credit": ""
