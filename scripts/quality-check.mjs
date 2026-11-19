@@ -462,6 +462,103 @@ function checkTimeline(data,characters){
   pass(eventCount+" eventos canônicos da linha do tempo validados");
 }
 
+
+function checkComics(){
+  if(!exists("data/comics.json")){
+    fail("Catálogo de quadrinhos ausente: data/comics.json");
+    return;
+  }
+
+  let catalog;
+  try{
+    catalog=JSON.parse(read("data/comics.json"));
+  }catch(error){
+    fail("data/comics.json inválido: "+error.message);
+    return;
+  }
+
+  if(Number(catalog.version||0)<3) fail("Catálogo de quadrinhos precisa usar schema v3.");
+  const series=Array.isArray(catalog.series)?catalog.series:[];
+  const ids=new Set();
+  const allowedStatus=new Set(["published","draft"]);
+  let pageCount=0;
+  let thumbCount=0;
+
+  for(const edition of series){
+    const id=String(edition&&edition.id||"").trim();
+    if(!id){fail("Edição de quadrinhos sem ID.");continue;}
+    if(ids.has(id)) fail("ID de edição de quadrinhos duplicado: "+id);
+    ids.add(id);
+    if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) fail("ID de quadrinho inválido: "+id);
+    if(!String(edition.title||"").trim()) fail("Edição sem título: "+id);
+    if(!String(edition.collection||"").trim()) fail("Edição sem coleção: "+id);
+    if(!allowedStatus.has(String(edition.status||"published"))) fail("Status inválido em quadrinho: "+id);
+
+    if(edition.cover){
+      const cover=String(edition.cover);
+      if(!/^images\/comics\/[a-z0-9._/-]+\.webp$/i.test(cover)) fail("Capa de quadrinho inválida: "+id+" / "+cover);
+      else if(!exists(cover)) fail("Arquivo de capa inexistente: "+cover);
+    }
+
+    const pages=Array.isArray(edition.pages)?edition.pages:[];
+    const pagePaths=new Set();
+    pages.forEach((page,index)=>{
+      pageCount++;
+      const src=String(page&&page.src||"");
+      if(!/^images\/comics\/[a-z0-9._/-]+\.(?:png|jpe?g|webp)$/i.test(src)){
+        fail("Página de quadrinho com caminho inválido: "+id+" / "+src);
+      }else if(!exists(src)){
+        fail("Arquivo de página inexistente: "+src);
+      }
+      if(pagePaths.has(src)) fail("Página duplicada na edição "+id+": "+src);
+      pagePaths.add(src);
+      if(Number(page.order)!==index+1) fail("Ordem inconsistente na edição "+id+" na página "+(index+1));
+
+      if(page.thumb){
+        thumbCount++;
+        const thumb=String(page.thumb);
+        if(!/^images\/comics\/[a-z0-9._/-]+-thumb\.webp$/i.test(thumb)){
+          fail("Miniatura inválida em "+id+": "+thumb);
+        }else if(!exists(thumb)){
+          fail("Arquivo de miniatura inexistente: "+thumb);
+        }else if(fs.statSync(path.join(root,thumb)).size>600*1024){
+          fail("Miniatura de quadrinho acima de 600 KB: "+thumb);
+        }
+      }
+    });
+  }
+
+  const reader=read("js/comic-reader.js");
+  const manager=read("js/comic-manager.js");
+  const api=read("api/media.js");
+  const html=read("index.html");
+
+  for(const feature of ["single","spread","pair","continuous"]){
+    if(!reader.includes('"'+feature+'"')) fail("Leitor não registra modo de visualização: "+feature);
+  }
+  if(!reader.includes("terraOmega_comic_progress_v3") ||
+     !reader.includes("comic-reading-mode") ||
+     !reader.includes("IntersectionObserver") ||
+     !reader.includes("touchstart")){
+    fail("Leitor de quadrinhos v3 está sem progresso, leitura imersiva, lazy-load ou gestos.");
+  }
+  if(!html.includes('id="comicCollectionSelect"') ||
+     !html.includes('id="comicEditionSelect"') ||
+     !html.includes('id="comicReadingModeBtn"')){
+    fail("Interface do leitor v3 está incompleta.");
+  }
+  if(!manager.includes("comicManagerUploadCover") ||
+     !manager.includes("thumbnailBase64") ||
+     !manager.includes("comicManagerGenerateThumbs")){
+    fail("Editor de Quadrinhos não oferece capa e miniaturas otimizadas.");
+  }
+  for(const action of ["comic-save","comic-page-upload","comic-page-thumbnail","comic-cover-upload","comic-delete"]){
+    if(!api.includes('action === "'+action+'"')) fail("API de quadrinhos sem ação: "+action);
+  }
+
+  pass(series.length+" edição(ões), "+pageCount+" páginas e "+thumbCount+" miniaturas de quadrinhos validadas");
+}
+
 function checkMediaLibrary(data){
   const library=data.mediaLibrary || {};
   const assets=Array.isArray(library.assets) ? library.assets : [];
@@ -1415,6 +1512,7 @@ const data=loadTerraData();
 checkCanonRegressionGuards();
 const characters=checkCharacterData(data);
 checkMediaLibrary(data);
+checkComics();
 checkSessions(data,characters);
 checkTimeline(data,characters);
 checkGraph(data);

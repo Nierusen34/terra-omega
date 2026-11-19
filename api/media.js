@@ -714,6 +714,9 @@ export default async function handler(req,res){
 
         const main=decodeComicImage(requestBody.contentBase64,requestBody.mimeType,MAX_BYTES);
         const thumb=decodeComicImage(requestBody.thumbnailBase64 || requestBody.contentBase64,requestBody.thumbnailMimeType || requestBody.mimeType,600*1024);
+        if(thumb.mime!=="image/webp"){
+          return res.status(400).json({error:"invalid_comic_thumbnail",message:"Miniaturas de quadrinhos devem ser WebP."});
+        }
 
         const replaceSrc=String(requestBody.replaceSrc || "").trim();
         let pagePath="";
@@ -842,6 +845,9 @@ export default async function handler(req,res){
         const found=findComicEdition(catalog,requestBody.id);
         if(!found.edition) return res.status(404).json({error:"comic_not_found",message:"Edição não encontrada."});
         const image=decodeComicImage(requestBody.contentBase64,requestBody.mimeType,MAX_BYTES);
+        if(image.mime!=="image/webp"){
+          return res.status(400).json({error:"invalid_comic_cover",message:"Capas de quadrinhos devem ser WebP."});
+        }
         const coverPath=comicCoverPath(found.edition);
         const files=[];
         if(validComicPath(found.edition.cover) && found.edition.cover!==coverPath){

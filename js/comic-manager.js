@@ -151,7 +151,7 @@ async function load(){
   var response=await fetch("data/comics.json?bust="+Date.now(),{cache:"no-store"});
   if(!response.ok)throw new Error("Não foi possível carregar o catálogo de quadrinhos.");
   var data=await response.json();
-  catalog=data&&typeof data==="object"?data:{version:2,series:[]};
+  catalog=data&&typeof data==="object"?data:{version:3,series:[]};
   if(!Array.isArray(catalog.series))catalog.series=[];
   return catalog;
 }

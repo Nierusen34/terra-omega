@@ -276,7 +276,7 @@ function updateThumbs(){
 }
 function highlightThumbs(){
   var root=el("comicThumbs");if(!root)return;
-  var indices=pageRange();
+  var indices=viewMode==="continuous"?[pageIndex]:pageRange();
   root.querySelectorAll("[data-comic-page]").forEach(function(button){
     button.classList.toggle("active",indices.indexOf(Number(button.getAttribute("data-comic-page")))!==-1);
   });
@@ -312,7 +312,9 @@ function updateProgressUI(){
   if(text)text.textContent=list.length?("Página "+(pageIndex+1)+" de "+list.length+" · "+percent+"%"):"—";
 
   var atStart=pageIndex<=0;
-  var atEnd=!list.length||pageIndex>=list.length-1||indices.indexOf(list.length-1)!==-1;
+  var lastIndex=list.length-1;
+  var pairedEnd=(viewMode==="spread"||viewMode==="pair")&&indices.indexOf(lastIndex)!==-1;
+  var atEnd=!list.length||pageIndex>=lastIndex||pairedEnd;
   ["comicPrevBtn","comicFirstBtn","comicStagePrevBtn"].forEach(function(id){var b=el(id);if(b)b.disabled=atStart||!list.length;});
   ["comicNextBtn","comicLastBtn","comicStageNextBtn"].forEach(function(id){var b=el(id);if(b)b.disabled=atEnd;});
   var stagePrev=el("comicStagePrevBtn"),stageNext=el("comicStageNextBtn");
