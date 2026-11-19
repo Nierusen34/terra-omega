@@ -630,3 +630,20 @@ body.comic-reading-active{overflow:hidden!important}
   .comic-reader.comic-reading-mode .comic-reader-thumbs-wrap{transition:none!important}
   .comic-reader[data-view-mode="continuous"] .comic-page-lazy .comic-page-surface{animation:none!important}
 }
+
+
+/* Etapa 3 · acessibilidade e deep-links */
+.comic-library-modal[aria-hidden="true"],
+.comic-help-modal[aria-hidden="true"]{display:none!important}
+.comic-library-item:focus-visible,
+.comic-reader button:focus-visible,
+.comic-reader summary:focus-visible,
+.comic-library-tools input:focus-visible,
+.comic-library-tools select:focus-visible,
+.comic-manager-modal button:focus-visible,
+.comic-manager-modal input:focus-visible,
+.comic-manager-modal select:focus-visible,
+.comic-manager-modal textarea:focus-visible{
+  outline:2px solid var(--accent);outline-offset:2px
+}
+.comic-more-menu[open]{z-index:60}

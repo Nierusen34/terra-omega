@@ -22,6 +22,8 @@ var chromeTimer=null;
 var dragState=null;
 var touchState=null;
 var pinchState=null;
+var libraryReturnFocus=null;
+var helpReturnFocus=null;
 
 var VIEW_KEY="terraOmega_comic_view_v3";
 var FIT_KEY="terraOmega_comic_fit_v3";
@@ -45,6 +47,39 @@ function loadJson(key,fallback){
   try{var value=localStorage.getItem(key);return value?JSON.parse(value):fallback;}catch(error){return fallback;}
 }
 function saveJson(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch(error){}}
+
+function focusableNodes(root){
+  if(!root)return [];
+  return Array.from(root.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'))
+    .filter(function(node){return !node.hidden && node.offsetParent!==null;});
+}
+function trapFocus(event,root){
+  if(event.key!=="Tab"||!root)return false;
+  var nodes=focusableNodes(root);
+  if(!nodes.length){event.preventDefault();return true;}
+  var first=nodes[0],last=nodes[nodes.length-1];
+  if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();return true;}
+  if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();return true;}
+  return false;
+}
+function currentComicRoute(){
+  var edition=currentSeries(),list=pages();
+  if(!edition)return "/capa/quadrinhos";
+  var page=list.length?clamp(pageIndex+1,1,list.length):1;
+  return "/capa/quadrinhos/"+encodeURIComponent(edition.id)+"/"+page;
+}
+function syncComicRoute(options){
+  options=options||{};
+  var router=window.TerraOmegaApp&&window.TerraOmegaApp.router;
+  var edition=currentSeries();
+  if(!edition||!router)return;
+  if(router.setComic){
+    router.setComic(edition.id,pageIndex+1,{
+      replace:options.replace!==false,
+      title:edition.title
+    });
+  }
+}
 
 function hydratePreferences(){
   var savedView=loadValue(VIEW_KEY,"single");
@@ -281,7 +316,11 @@ function highlightThumbs(){
     button.classList.toggle("active",indices.indexOf(Number(button.getAttribute("data-comic-page")))!==-1);
   });
   var activeThumb=root.querySelector(".comic-thumb.active");
-  if(activeThumb&&thumbsVisible){try{activeThumb.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"});}catch(error){}}
+  if(activeThumb&&thumbsVisible){
+    var target=activeThumb.offsetLeft-(root.clientWidth-activeThumb.offsetWidth)/2;
+    try{root.scrollTo({left:Math.max(0,target),behavior:"smooth"});}
+    catch(error){root.scrollLeft=Math.max(0,target);}
+  }
 }
 function renderThumbs(){
   var root=el("comicThumbs"),list=pages();
@@ -372,10 +411,12 @@ function preloadAround(){
   });
 }
 
-function goTo(index,scroll){
+function goTo(index,scroll,options){
+  options=options||{};
   var list=pages();if(!list.length)return;
   pageIndex=normalizeIndexForView(index);
   render();
+  if(!options.silentRoute)syncComicRoute({replace:true});
   if(viewMode==="continuous"&&scroll){
     requestAnimationFrame(function(){
       var frame=document.querySelector('[data-comic-rendered-page="'+pageIndex+'"]');
@@ -429,53 +470,193 @@ function zoom(delta){
   saveValue(FIT_KEY,fitMode);saveValue(ZOOM_KEY,customZoom);applySizing();
 }
 
-function chooseEdition(index,restore){
+function chooseEdition(index,restore,options){
+  options=options||{};
   seriesIndex=clamp(Number(index)||0,0,Math.max(0,editions.length-1));
   var row=currentSeries();
   activeCollection=row?String(row.collection||"Terra Omega"):"";
   if(restore!==false)restoreProgressForCurrent();else pageIndex=0;
   render();
+  if(!options.silentRoute)syncComicRoute({replace:!!options.replace});
 }
-function chooseEditionById(id,restore){
+function chooseEditionById(id,restore,options){
   var found=editions.findIndex(function(row){return row&&row.id===id;});
-  if(found>=0)chooseEdition(found,restore);
+  if(found>=0){chooseEdition(found,restore,options);return true;}
+  return false;
+}
+function openRoute(id,page,options){
+  options=options||{};
+  var found=editions.findIndex(function(row){return row&&row.id===String(id||"");});
+  if(found<0)return false;
+  seriesIndex=found;
+  var row=currentSeries();
+  activeCollection=String(row.collection||"Terra Omega");
+  var list=pages();
+  if(Number.isFinite(Number(page))&&Number(page)>0)pageIndex=clamp(Number(page)-1,0,Math.max(0,list.length-1));
+  else restoreProgressForCurrent();
+  render();
+  if(!options.fromRouter)syncComicRoute({replace:!!options.replace});
+  else{
+    var router=window.TerraOmegaApp&&window.TerraOmegaApp.router;
+    if(router&&router.setComic)router.setComic(row.id,pageIndex+1,{replace:true,title:row.title});
+  }
+  return true;
 }
 
 function ensureLibrary(){
   if(el("comicLibraryModal"))return;
   document.body.insertAdjacentHTML("beforeend",
-    '<div id="comicLibraryModal" class="comic-library-modal" role="dialog" aria-modal="true" aria-labelledby="comicLibraryTitle">'+
+    '<div id="comicLibraryModal" class="comic-library-modal" role="dialog" aria-modal="true" aria-labelledby="comicLibraryTitle" aria-hidden="true">'+
       '<div class="comic-library-card">'+
-        '<header><div><span>UNIVERSO OBLÍVIO · ARQUIVO</span><h3 id="comicLibraryTitle">Biblioteca de Quadrinhos</h3></div><button id="comicLibraryClose" type="button">✕</button></header>'+
+        '<header><div><span>UNIVERSO OBLÍVIO · ARQUIVO</span><h3 id="comicLibraryTitle">Biblioteca de Quadrinhos</h3></div><button id="comicLibraryClose" type="button" aria-label="Fechar biblioteca">✕</button></header>'+
+        '<div class="comic-library-tools">'+
+          '<input id="comicLibrarySearch" type="search" placeholder="Buscar título, arco ou coleção…" aria-label="Buscar quadrinhos">'+
+          '<select id="comicLibraryCollection" aria-label="Filtrar por coleção"><option value="">Todas as coleções</option></select>'+
+          '<select id="comicLibrarySort" aria-label="Ordenar biblioteca">'+
+            '<option value="editorial">Ordem editorial</option>'+
+            '<option value="title">Título A–Z</option>'+
+            '<option value="recent">Mais recentes</option>'+
+          '</select>'+
+        '</div>'+
         '<div id="comicLibraryGrid" class="comic-library-grid"></div>'+
       '</div>'+
     '</div>'
   );
+  var modal=el("comicLibraryModal");
   el("comicLibraryClose").addEventListener("click",closeLibrary);
-  el("comicLibraryModal").addEventListener("click",function(event){if(event.target===event.currentTarget)closeLibrary();});
+  modal.addEventListener("click",function(event){if(event.target===event.currentTarget)closeLibrary();});
+  modal.addEventListener("keydown",function(event){
+    if(event.key==="Escape"){event.preventDefault();closeLibrary();return;}
+    trapFocus(event,modal);
+  });
+  ["comicLibrarySearch","comicLibraryCollection","comicLibrarySort"].forEach(function(id){
+    var node=el(id);if(node)node.addEventListener(id==="comicLibrarySearch"?"input":"change",renderLibrary);
+  });
 }
 function renderLibrary(){
   ensureLibrary();
   var grid=el("comicLibraryGrid"),progress=progressMap();
+  var search=String(el("comicLibrarySearch")&&el("comicLibrarySearch").value||"").trim().toLowerCase();
+  var collection=String(el("comicLibraryCollection")&&el("comicLibraryCollection").value||"");
+  var sort=String(el("comicLibrarySort")&&el("comicLibrarySort").value||"editorial");
+  var collectionSelect=el("comicLibraryCollection");
   if(!grid)return;
-  grid.innerHTML=editions.map(function(row){
+
+  var cols=collections();
+  if(collectionSelect){
+    var previous=collectionSelect.value;
+    collectionSelect.innerHTML='<option value="">Todas as coleções</option>'+cols.map(function(name){
+      return '<option value="'+esc(name)+'">'+esc(name)+'</option>';
+    }).join("");
+    if(cols.indexOf(previous)!==-1)collectionSelect.value=previous;
+    collection=collectionSelect.value;
+  }
+
+  var rows=editions.filter(function(row){
+    if(collection&&String(row.collection||"Terra Omega")!==collection)return false;
+    if(!search)return true;
+    var hay=[row.title,row.subtitle,row.arc,row.collection,row.description].join(" ").toLowerCase();
+    return hay.indexOf(search)!==-1;
+  }).slice();
+
+  if(sort==="title")rows.sort(function(a,b){return String(a.title||"").localeCompare(String(b.title||""),"pt-BR");});
+  if(sort==="recent")rows.sort(function(a,b){
+    return String(b.publicationDate||"").localeCompare(String(a.publicationDate||"")) ||
+      (Number(b.issueNumber)||0)-(Number(a.issueNumber)||0);
+  });
+
+  if(!rows.length){
+    grid.innerHTML='<div class="comic-library-empty">Nenhuma edição corresponde aos filtros.</div>';
+    return;
+  }
+
+  grid.innerHTML=rows.map(function(row){
     var cover=editionCover(row),p=progress[row.id]||{},count=(row.pages||[]).length;
-    var pct=count?Math.round((((Number(p.page)||0)+1)/count)*100):0;
+    var current=count?clamp((Number(p.page)||0)+1,1,count):0;
+    var pct=count?Math.round((current/count)*100):0;
+    var status=p.updatedAt
+      ? (p.finished?'Concluído · 100%':('Continuar na pág. '+current+' · '+pct+'%'))
+      : 'Começar leitura';
+    var dates=[];
+    if(row.storyDate)dates.push(esc(row.storyDate));
+    else if(row.publicationDate)dates.push(esc(row.publicationDate));
     return '<button type="button" class="comic-library-item" data-library-edition="'+esc(row.id)+'">'+
       '<span class="comic-library-cover">'+(cover?'<img src="'+esc(cover)+'" alt="" loading="lazy">':'<i>SEM CAPA</i>')+'</span>'+
       '<span class="comic-library-copy">'+
         '<small>'+esc(row.collection||"Terra Omega")+(row.arc?' · '+esc(row.arc):'')+'</small>'+
         '<strong>'+esc(editionLabel(row))+'</strong>'+
-        '<em>'+count+' página'+(count===1?'':'s')+(p.updatedAt?' · '+pct+'% lido':'')+'</em>'+
+        '<em>'+count+' página'+(count===1?'':'s')+(dates.length?' · '+dates.join(''):'')+'</em>'+
+        '<em class="comic-library-resume">'+status+'</em>'+
       '</span>'+
     '</button>';
   }).join("");
+
   grid.querySelectorAll("[data-library-edition]").forEach(function(button){
-    button.addEventListener("click",function(){chooseEditionById(button.getAttribute("data-library-edition"),true);closeLibrary();});
+    button.addEventListener("click",function(){
+      chooseEditionById(button.getAttribute("data-library-edition"),true,{replace:false});
+      closeLibrary();
+    });
   });
 }
-function openLibrary(){renderLibrary();var modal=el("comicLibraryModal");if(modal)modal.classList.add("show");}
-function closeLibrary(){var modal=el("comicLibraryModal");if(modal)modal.classList.remove("show");}
+function openLibrary(){
+  ensureLibrary();renderLibrary();
+  libraryReturnFocus=document.activeElement;
+  var modal=el("comicLibraryModal");
+  if(modal){modal.classList.add("show");modal.setAttribute("aria-hidden","false");}
+  setTimeout(function(){var search=el("comicLibrarySearch");if(search)search.focus();},0);
+}
+function closeLibrary(){
+  var modal=el("comicLibraryModal");
+  if(modal){modal.classList.remove("show");modal.setAttribute("aria-hidden","true");}
+  if(libraryReturnFocus&&libraryReturnFocus.focus)try{libraryReturnFocus.focus();}catch(error){}
+  libraryReturnFocus=null;
+}
+
+function ensureHelp(){
+  if(el("comicHelpModal"))return;
+  document.body.insertAdjacentHTML("beforeend",
+    '<div id="comicHelpModal" class="comic-help-modal" role="dialog" aria-modal="true" aria-labelledby="comicHelpTitle" aria-hidden="true">'+
+      '<div class="comic-help-card">'+
+        '<header><h3 id="comicHelpTitle">Atalhos e gestos</h3><button id="comicHelpClose" type="button" aria-label="Fechar ajuda">✕</button></header>'+
+        '<div class="comic-help-grid">'+
+          '<kbd>← / →</kbd><span>Página anterior / próxima</span>'+
+          '<kbd>Home / End</kbd><span>Primeira / última página</span>'+
+          '<kbd>+ / −</kbd><span>Aumentar / diminuir zoom</span>'+
+          '<kbd>F</kbd><span>Ajustar à tela</span>'+
+          '<kbd>W</kbd><span>Ajustar à largura</span>'+
+          '<kbd>1</kbd><span>Tamanho natural 1:1</span>'+
+          '<kbd>R</kbd><span>Ativar / sair do Modo leitura</span>'+
+          '<kbd>2 cliques</kbd><span>Focar uma página individual</span>'+
+          '<kbd>Ctrl + roda</kbd><span>Zoom com o mouse</span>'+
+          '<kbd>Swipe</kbd><span>Avançar / voltar no celular</span>'+
+          '<kbd>Pinça</kbd><span>Zoom em telas touch</span>'+
+        '</div>'+
+      '</div>'+
+    '</div>'
+  );
+  var modal=el("comicHelpModal");
+  el("comicHelpClose").addEventListener("click",closeHelp);
+  modal.addEventListener("click",function(event){if(event.target===event.currentTarget)closeHelp();});
+  modal.addEventListener("keydown",function(event){
+    if(event.key==="Escape"){event.preventDefault();closeHelp();return;}
+    trapFocus(event,modal);
+  });
+}
+function openHelp(){
+  ensureHelp();helpReturnFocus=document.activeElement;
+  var modal=el("comicHelpModal");modal.classList.add("show");modal.setAttribute("aria-hidden","false");
+  setTimeout(function(){el("comicHelpClose").focus();},0);
+}
+function closeHelp(){
+  var modal=el("comicHelpModal");
+  if(modal){modal.classList.remove("show");modal.setAttribute("aria-hidden","true");}
+  if(helpReturnFocus&&helpReturnFocus.focus)try{helpReturnFocus.focus();}catch(error){}
+  helpReturnFocus=null;
+}
+function copyComicLink(){
+  var router=window.TerraOmegaApp&&window.TerraOmegaApp.router;
+  if(router&&router.copyRoute)router.copyRoute(currentComicRoute(),"quadrinho");
+}
 
 function showChrome(){
   var reader=el("comicReader");if(!reader||!readingMode)return;
@@ -561,9 +742,9 @@ function bind(){
   if(collectionSelect)collectionSelect.addEventListener("change",function(){
     activeCollection=collectionSelect.value;
     var idx=editions.findIndex(function(row){return String(row.collection||"Terra Omega")===activeCollection;});
-    chooseEdition(idx>=0?idx:0,true);
+    chooseEdition(idx>=0?idx:0,true,{replace:false});
   });
-  if(editionSelect)editionSelect.addEventListener("change",function(){chooseEdition(Number(editionSelect.value)||0,true);});
+  if(editionSelect)editionSelect.addEventListener("change",function(){chooseEdition(Number(editionSelect.value)||0,true,{replace:false});});
 
   [["comicPrevBtn",-1],["comicStagePrevBtn",-1],["comicNextBtn",1],["comicStageNextBtn",1]].forEach(function(pair){
     var b=el(pair[0]);if(b)b.addEventListener("click",function(){move(pair[1]);});
@@ -586,7 +767,9 @@ function bind(){
   if(zoomOut)zoomOut.addEventListener("click",function(){zoom(-.1);});
   var thumbToggle=el("comicThumbToggleBtn");
   if(thumbToggle)thumbToggle.addEventListener("click",function(){thumbsVisible=!thumbsVisible;saveValue(THUMBS_KEY,thumbsVisible?"1":"0");updateThumbs();});
-  var fullscreen=el("comicFullscreenBtn");if(fullscreen)fullscreen.addEventListener("click",toggleFullscreen);
+  var fullscreen=el("comicFullscreenBtn");if(fullscreen)fullscreen.addEventListener("click",function(){toggleFullscreen();var menu=el("comicMoreMenu");if(menu)menu.open=false;});
+  var copyLink=el("comicCopyLinkBtn");if(copyLink)copyLink.addEventListener("click",function(){copyComicLink();var menu=el("comicMoreMenu");if(menu)menu.open=false;});
+  var help=el("comicHelpBtn");if(help)help.addEventListener("click",function(){var menu=el("comicMoreMenu");if(menu)menu.open=false;openHelp();});
   var library=el("comicLibraryBtn");if(library)library.addEventListener("click",openLibrary);
   var reading=el("comicReadingModeBtn");if(reading)reading.addEventListener("click",function(){setReadingMode(!readingMode);});
   var focusExit=el("comicFocusExitBtn");if(focusExit)focusExit.addEventListener("click",function(){if(focusReturn){cancelFocus();render();}});
@@ -650,12 +833,12 @@ async function reload(options){
   catalog=null;editions=[];loadingPromise=null;
   await load();
   var targetId=options&&options.editionId?options.editionId:currentId;
-  if(targetId)chooseEditionById(targetId,true);else render();
+  if(targetId)chooseEditionById(targetId,true,{silentRoute:true});else render();
 }
 
 window.TerraOmegaApp.comicReader={
   mount:mount,reload:reload,next:function(){move(1);},previous:function(){move(-1);},
-  goTo:goTo,setView:setView,setFit:setFit,openLibrary:openLibrary,
+  goTo:goTo,setView:setView,setFit:setFit,openLibrary:openLibrary,openRoute:openRoute,currentRoute:currentComicRoute,
   getState:function(){return {viewMode:viewMode,fitMode:fitMode,pageIndex:pageIndex,edition:currentSeries(),readingMode:readingMode};}
 };
 

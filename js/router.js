@@ -200,6 +200,17 @@ function parseRoute(route){
   var parts=route.split('/').filter(Boolean).map(decodePart);
   var first=parts[0] || '';
 
+  if(first === 'capa' && parts[1] === 'quadrinhos' && parts[2]){
+    var comicPage=parts[3] ? Math.max(1,Number.parseInt(parts[3],10)||1) : null;
+    return {
+      kind:'comic',
+      route:'/capa/quadrinhos/'+slugify(parts[2])+(comicPage?('/'+comicPage):''),
+      id:slugify(parts[2]),
+      page:comicPage,
+      title:'Quadrinhos'
+    };
+  }
+
   if(first === 'personagens' && parts[1]){
     return {kind:'character',route:'/personagens/'+slugify(parts[1]),slug:slugify(parts[1]),title:'Personagem'};
   }
@@ -335,6 +346,18 @@ function warnOnce(key,message){
   showToast(message,'warning',4500);
 }
 
+function openComicFromRoute(parsed,attempt){
+  attempt=attempt||0;
+  var reader=window.TerraOmegaApp&&window.TerraOmegaApp.comicReader;
+  if(reader&&reader.openRoute){
+    var opened=reader.openRoute(parsed.id,parsed.page,{fromRouter:true});
+    if(!opened)warnOnce('comic:'+parsed.id,'Edição de quadrinhos não encontrada neste link.');
+    return;
+  }
+  if(attempt<25)setTimeout(function(){openComicFromRoute(parsed,attempt+1);},80);
+  else warnOnce('comic-loader:'+parsed.id,'O leitor de quadrinhos não terminou de carregar.');
+}
+
 function closeCharacterFromRoute(){
   var modal=document.getElementById('fichaModal');
   if(modal && modal.classList.contains('show')){
@@ -356,6 +379,14 @@ function applyRoute(route,options){
       navigateSection(parsed.tab,parsed.sub);
       updateTitle(parsed.title);
       remember(parsed.route);
+      return parsed;
+    }
+
+    if(parsed.kind === 'comic'){
+      navigateSection('tab-home','sub-capa-quadrinhos');
+      updateTitle('Quadrinhos');
+      remember(parsed.route);
+      openComicFromRoute(parsed,0);
       return parsed;
     }
 
@@ -552,6 +583,19 @@ function clearCharacter(options){
   var route='/universo/personagens';
   writeRoute(route,{replace:options.replace !== false});
   updateTitle('Universo · Personagens');
+  return route;
+}
+
+function comicRoute(id,page){
+  var route='/capa/quadrinhos/'+slugify(id);
+  var parsedPage=Math.max(1,Number.parseInt(page,10)||1);
+  return route+'/'+parsedPage;
+}
+function setComic(id,page,options){
+  options=options||{};
+  var route=comicRoute(id,page);
+  writeRoute(route,{replace:options.replace!==false});
+  updateTitle(options.title ? (options.title+' · Quadrinhos') : 'Quadrinhos');
   return route;
 }
 
@@ -854,6 +898,8 @@ window.TerraOmegaApp.router = {
   setSection:setSection,
   setCharacter:setCharacter,
   clearCharacter:clearCharacter,
+  setComic:setComic,
+  comicRoute:comicRoute,
   openSession:openSession,
   openTeam:openTeam,
   openOrganization:openOrganization,
