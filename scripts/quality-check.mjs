@@ -575,8 +575,11 @@ function checkComics(){
      !manager.includes("trapFocus") ||
      !manager.includes("comicManagerQuickAddPages") ||
      !manager.includes("comicManagerRenameStory") ||
-     !manager.includes("openPagePicker")){
-    fail("Editor de Quadrinhos não oferece gestão simples de histórias/páginas, datas e acessibilidade esperadas.");
+     !manager.includes("openPagePicker") ||
+     !manager.includes("comicManagerCoverStatus") ||
+     !manager.includes("rawRepoPreviewUrl") ||
+     !manager.includes("coverPreviewOverride")){
+    fail("Editor de Quadrinhos não oferece gestão simples, preview seguro de capas, datas e acessibilidade esperadas.");
   }
   const globalCss=read("terra-omega.css");
   const comicCss=read("css/comic-reader.css");

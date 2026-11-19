@@ -679,3 +679,13 @@ body.comic-reading-active{overflow:hidden!important}
   .comic-manager-quick-actions .danger{margin-left:0}
   .comic-manager-page-actions{grid-column:2/-1;max-width:none}
 }
+
+
+/* Correção de preview de capas antes do checkpoint de produção */
+.comic-manager-cover-status{
+  min-height:16px;margin-top:2px;color:var(--ink3);
+  font:8px/1.35 'Share Tech Mono',monospace
+}
+.comic-manager-cover-status[data-state="working"]{color:var(--accent)}
+.comic-manager-cover-status[data-state="pending"]{color:#d6b979}
+.comic-manager-cover-status[data-state="error"]{color:#d06d6d}

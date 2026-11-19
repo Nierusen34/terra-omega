@@ -14,11 +14,25 @@ var newDraft=false;
 var busy=false;
 var pendingReplaceSrc="";
 var modalReturnFocus=null;
+var coverPreviewOverride={id:"",src:""};
 
 function el(id){return document.getElementById(id);}
 function backend(){return window.TerraOmegaApp&&window.TerraOmegaApp.backend;}
 function selected(){return (catalog.series||[]).find(function(row){return row&&row.id===selectedId;})||null;}
 function escapeAttr(value){return String(value||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function rawRepoPreviewUrl(path){
+  var cfg=window.TerraOmegaConfig&&window.TerraOmegaConfig.publishing;
+  var repo=cfg&&cfg.repository?String(cfg.repository):"";
+  var branch=cfg&&cfg.branch?String(cfg.branch):"main";
+  var clean=String(path||"").replace(/^\/+/, "");
+  if(!repo||!clean||!/^images\/comics\//i.test(clean))return "";
+  return "https://raw.githubusercontent.com/"+repo+"/"+encodeURIComponent(branch)+"/"+clean;
+}
+function setCoverStatus(message,state){
+  var node=el("comicManagerCoverStatus");if(!node)return;
+  node.textContent=message||"";
+  node.setAttribute("data-state",state||"idle");
+}
 function focusableNodes(root){
   if(!root)return [];
   return Array.from(root.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'))
@@ -98,6 +112,7 @@ function ensureModal(){
                 <button id="comicManagerUploadCover" type="button">🖼 Enviar capa</button>
                 <button id="comicManagerRemoveCover" type="button">Remover capa</button>
               </div>
+              <div id="comicManagerCoverStatus" class="comic-manager-cover-status" data-state="idle"></div>
             </div>
             <input id="comicManagerCoverInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
           </section>
@@ -474,10 +489,33 @@ function renderCover(row){
   var preview=el("comicManagerCoverPreview");
   var remove=el("comicManagerRemoveCover");
   if(!preview)return;
+
   var fallback=row&&row.pages&&row.pages[0]?(row.pages[0].thumb||row.pages[0].src):"";
-  var src=row&&row.cover?row.cover:fallback;
+  var hasOverride=!!(row&&coverPreviewOverride.id===row.id&&coverPreviewOverride.src);
+  var src=hasOverride?coverPreviewOverride.src:(row&&row.cover?row.cover:fallback);
+
   preview.innerHTML=src?'<img src="'+escapeAttr(src)+'" alt="" loading="lazy">':'<span>SEM CAPA</span>';
-  preview.classList.toggle("is-fallback",!!src&&!(row&&row.cover));
+  preview.classList.toggle("is-fallback",!!src&&!hasOverride&&!(row&&row.cover));
+
+  var image=preview.querySelector("img");
+  if(image&&!hasOverride&&row&&row.cover){
+    var raw=rawRepoPreviewUrl(row.cover);
+    if(raw){
+      image.addEventListener("error",function(){
+        if(image.dataset.repoFallback==="1")return;
+        image.dataset.repoFallback="1";
+        image.src=raw+"?v="+Date.now();
+        setCoverStatus("Capa salva no GitHub. A versão pública ainda aguarda um novo checkpoint.","pending");
+      },{once:true});
+    }
+  }
+
+  if(hasOverride){
+    setCoverStatus("Capa salva e pré-visualizada. Publique um checkpoint para atualizar a versão pública.","pending");
+  }else if(!(row&&row.cover)){
+    setCoverStatus("","idle");
+  }
+
   if(remove)remove.disabled=!selectedId||!row||!row.cover||busy;
 }
 
@@ -486,20 +524,41 @@ async function uploadCover(file){
   setBusy(true,"Otimizando capa…");
   try{
     var optimized=await optimizeCoverImage(file);
-    var result=await request({action:"comic-cover-upload",id:selectedId,mimeType:optimized.mimeType,contentBase64:optimized.contentBase64});
-    catalog=result.catalog||catalog;render();notifyReader(selectedId);
-    showToast("Capa atualizada.","success",3500);
-  }catch(error){console.error(error);showToast(error.message||"Falha ao atualizar a capa.","error",5500);}
-  finally{setBusy(false,"");}
+    coverPreviewOverride={id:selectedId,src:optimized.contentBase64};
+    renderCover(selected());
+    setCoverStatus("Enviando capa para o GitHub…","working");
+
+    var result=await request({
+      action:"comic-cover-upload",
+      id:selectedId,
+      mimeType:optimized.mimeType,
+      contentBase64:optimized.contentBase64
+    });
+
+    catalog=result.catalog||catalog;
+    render();
+    notifyReader(selectedId);
+    setCoverStatus("Capa salva e pré-visualizada. Publique um checkpoint para atualizar a versão pública.","pending");
+    showToast("Capa salva. O preview já foi atualizado.","success",4500);
+  }catch(error){
+    console.error(error);
+    coverPreviewOverride={id:"",src:""};
+    renderCover(selected());
+    setCoverStatus(error.message||"Falha ao atualizar a capa.","error");
+    showToast(error.message||"Falha ao atualizar a capa.","error",5500);
+  }finally{setBusy(false,"");}
 }
 
 function removeCover(){
   var row=selected();if(!row||!row.cover)return;
-  showConfirm("Remover capa","Remover a capa própria desta edição? A primeira página voltará a ser usada como fallback.",async function(){
+  showConfirm("Remover capa","Remover a capa própria desta história? A primeira página voltará a ser usada automaticamente.",async function(){
     setBusy(true,"Removendo capa…");
     try{
       var result=await request({action:"comic-cover-delete",id:selectedId});
-      catalog=result.catalog||catalog;render();notifyReader(selectedId);showToast("Capa removida.","success",3200);
+      coverPreviewOverride={id:"",src:""};
+      catalog=result.catalog||catalog;render();notifyReader(selectedId);
+      setCoverStatus("Capa removida. Publique um checkpoint para atualizar a versão pública.","pending");
+      showToast("Capa removida.","success",3200);
     }catch(error){showToast(error.message||"Falha ao remover capa.","error",5000);}
     finally{setBusy(false,"");}
   });
