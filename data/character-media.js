@@ -164,6 +164,26 @@ window.TerraOmegaData.characterMedia = {
     "auto": {
       "provider": "dc-fandom",
       "wikiTitle": "J'onn J'onzz (Prime Earth)"
+    },
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      },
+      "sheet": {
+        "fit": "cover",
+        "x": 50,
+        "y": 25,
+        "zoom": 1.65
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
     }
   },
   "Oliver Queen": {
