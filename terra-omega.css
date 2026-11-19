@@ -9240,3 +9240,253 @@ button,
   .comic-manager-page-actions{grid-column:2/-1;display:flex;justify-content:flex-end}
   .comic-manager-page-fields{grid-template-columns:1fr}
 }
+
+
+/* ===== QUADRINHOS 2.1 · POLIMENTO DO LEITOR ===== */
+/* hidden precisa vencer os displays explícitos do leitor */
+.comic-reader-empty[hidden],
+.comic-pages-viewport[hidden],
+.comic-reader-thumbs-wrap[hidden],
+.comic-stage-nav[hidden]{
+  display:none!important;
+}
+
+.comic-reader{
+  border-color:#4a4036;
+  background:#171419;
+  box-shadow:0 16px 48px rgba(0,0,0,.24);
+}
+.comic-reader-topbar{
+  grid-template-columns:minmax(320px,1fr) auto;
+  padding:10px 14px;
+  gap:14px;
+  align-items:center;
+}
+.comic-series-picker{min-width:0}
+.comic-series-picker select{
+  min-height:38px;
+  font-size:13px;
+  border-color:#5a4a3b;
+}
+.comic-view-controls{align-items:center}
+.comic-view-controls>span{
+  padding:0;
+  opacity:.72;
+}
+.comic-segmented button{
+  min-height:34px;
+  padding:7px 11px;
+}
+.comic-segmented button.active{
+  box-shadow:inset 0 -2px 0 var(--accent);
+}
+
+.comic-reader-toolbar{
+  display:grid;
+  grid-template-columns:minmax(340px,1fr) minmax(400px,auto);
+  gap:12px;
+  padding:9px 14px;
+  background:#1c181e;
+}
+.comic-nav-actions{justify-content:flex-start}
+.comic-fit-actions{justify-content:flex-end}
+.comic-reader-actions button{
+  min-height:31px;
+}
+.comic-page-counter{
+  min-width:54px;
+  padding:0 4px;
+}
+.comic-toolbar-divider{margin:0 4px}
+
+.comic-reader-stage{
+  position:relative;
+  min-height:610px;
+  padding:26px 42px 30px;
+  overflow:auto;
+  align-items:flex-start;
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(194,161,106,.075),transparent 34%),
+    linear-gradient(180deg,#0c0b0e,#050506 78%);
+}
+.comic-pages-viewport{
+  min-height:auto;
+  align-items:flex-start;
+  max-width:1180px;
+  margin:28px auto 8px;
+}
+
+/* visual de livro aberto nos modos de duas páginas */
+.comic-reader[data-view-mode="spread"] .comic-pages-viewport,
+.comic-reader[data-view-mode="pair"] .comic-pages-viewport{
+  gap:7px;
+  position:relative;
+}
+.comic-reader[data-view-mode="spread"] .comic-pages-viewport::after,
+.comic-reader[data-view-mode="pair"] .comic-pages-viewport::after{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:22px;
+  left:50%;
+  width:10px;
+  transform:translateX(-50%);
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(0,0,0,.42),rgba(255,255,255,.035),rgba(0,0,0,.42),transparent);
+  opacity:.85;
+  z-index:2;
+}
+.comic-reader[data-view-mode="spread"] .comic-page-frame,
+.comic-reader[data-view-mode="pair"] .comic-page-frame{
+  width:calc(50% - 4px);
+}
+.comic-reader[data-view-mode="spread"] .comic-page-frame:first-child,
+.comic-reader[data-view-mode="pair"] .comic-page-frame:first-child{
+  align-items:flex-end;
+}
+.comic-reader[data-view-mode="spread"] .comic-page-frame:last-child,
+.comic-reader[data-view-mode="pair"] .comic-page-frame:last-child{
+  align-items:flex-start;
+}
+
+.comic-page-frame{
+  transition:transform .15s ease;
+}
+.comic-page-image{
+  border:1px solid rgba(229,211,181,.18);
+  box-shadow:0 18px 52px rgba(0,0,0,.62);
+}
+.comic-page-frame figcaption{
+  margin-top:2px;
+  opacity:.72;
+}
+.comic-reader[data-fit-mode="screen"] .comic-page-image{
+  max-height:72vh;
+}
+.comic-reader[data-view-mode="spread"][data-fit-mode="screen"] .comic-page-image,
+.comic-reader[data-view-mode="pair"][data-fit-mode="screen"] .comic-page-image{
+  max-width:100%;
+  max-height:68vh;
+}
+.comic-reader[data-view-mode="spread"][data-fit-mode="width"] .comic-page-image,
+.comic-reader[data-view-mode="pair"][data-fit-mode="width"] .comic-page-image{
+  width:100%;
+}
+
+.comic-reader-empty{
+  min-height:520px;
+  width:100%;
+}
+
+/* setas discretas sobre a área de leitura */
+.comic-stage-nav{
+  position:sticky;
+  top:50%;
+  z-index:8;
+  width:38px;
+  height:72px;
+  margin-top:230px;
+  border:1px solid rgba(194,161,106,.28);
+  background:rgba(12,10,13,.70);
+  color:#d6c4a8;
+  font:300 34px/1 Georgia,serif;
+  cursor:pointer;
+  opacity:.35;
+  backdrop-filter:blur(4px);
+  transition:opacity .12s ease,border-color .12s ease,background .12s ease;
+}
+.comic-stage-nav:hover:not(:disabled){
+  opacity:1;
+  border-color:var(--accent);
+  background:rgba(18,14,18,.92);
+}
+.comic-stage-nav:disabled{
+  opacity:.08;
+  cursor:default;
+}
+.comic-stage-prev{
+  float:left;
+  left:7px;
+  margin-left:-30px;
+}
+.comic-stage-next{
+  float:right;
+  right:7px;
+  margin-right:-30px;
+}
+
+.comic-reader-meta{
+  padding:11px 15px;
+  min-height:56px;
+}
+.comic-reader-meta strong{
+  font-size:14px;
+}
+.comic-reader-thumbs{
+  padding:9px 12px;
+  min-height:66px;
+  background:#18151a;
+}
+.comic-thumb{
+  flex-basis:52px;
+  width:52px;
+  height:72px;
+}
+.comic-thumb.active{
+  transform:translateY(-1px);
+  box-shadow:0 0 0 1px var(--accent),0 5px 14px rgba(0,0,0,.35);
+}
+
+/* Em telas muito largas o leitor usa mais área, sem alongar o restante do dossiê */
+@media(min-width:1280px){
+  #sub-capa-quadrinhos{
+    padding-left:24px;
+    padding-right:24px;
+  }
+  .comic-pages-viewport{
+    max-width:1280px;
+  }
+}
+
+@media(max-width:1040px){
+  .comic-reader-toolbar{
+    grid-template-columns:1fr;
+  }
+  .comic-fit-actions{
+    justify-content:flex-start;
+  }
+  .comic-reader-stage{
+    padding-left:24px;
+    padding-right:24px;
+  }
+  .comic-stage-prev{margin-left:-18px}
+  .comic-stage-next{margin-right:-18px}
+}
+
+@media(max-width:780px){
+  .comic-reader-topbar{
+    grid-template-columns:1fr;
+    align-items:stretch;
+  }
+  .comic-view-controls{
+    justify-content:space-between;
+  }
+  .comic-reader-stage{
+    min-height:470px;
+    padding:14px 8px 22px;
+  }
+  .comic-pages-viewport{
+    margin-top:14px;
+  }
+  .comic-stage-nav{
+    display:none!important;
+  }
+  .comic-reader[data-view-mode="spread"] .comic-pages-viewport,
+  .comic-reader[data-view-mode="pair"] .comic-pages-viewport{
+    gap:4px;
+  }
+  .comic-reader[data-view-mode="spread"] .comic-pages-viewport::after,
+  .comic-reader[data-view-mode="pair"] .comic-pages-viewport::after{
+    width:5px;
+  }
+}

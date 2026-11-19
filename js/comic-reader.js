@@ -213,6 +213,8 @@ function render(){
   var next=el("comicNextBtn");
   var first=el("comicFirstBtn");
   var last=el("comicLastBtn");
+  var stagePrev=el("comicStagePrevBtn");
+  var stageNext=el("comicStageNextBtn");
   var viewport=el("comicPagesViewport");
   var empty=el("comicReaderEmpty");
 
@@ -226,7 +228,7 @@ function render(){
     if(label)label.textContent="Nenhuma página publicada";
     if(counter)counter.textContent="—";
     if(jump){jump.value="";jump.max="1";jump.disabled=true;}
-    [prev,next,first,last].forEach(function(button){if(button)button.disabled=true;});
+    [prev,next,first,last,stagePrev,stageNext].forEach(function(button){if(button)button.disabled=true;});
     var thumbs=el("comicThumbs");if(thumbs)thumbs.innerHTML="";
     updateViewButtons();updateThumbs();applySizing();
     return;
@@ -261,6 +263,8 @@ function render(){
   if(first)first.disabled=atStart;
   if(next)next.disabled=atEnd;
   if(last)last.disabled=atEnd;
+  if(stagePrev){stagePrev.disabled=atStart;stagePrev.hidden=viewMode==="continuous";}
+  if(stageNext){stageNext.disabled=atEnd;stageNext.hidden=viewMode==="continuous";}
 
   updateViewButtons();
   updateThumbs();
@@ -368,6 +372,8 @@ function bind(){
   var first=el("comicFirstBtn"),last=el("comicLastBtn");
   var jump=el("comicPageJump");
   var fullscreen=el("comicFullscreenBtn");
+  var stagePrev=el("comicStagePrevBtn");
+  var stageNext=el("comicStageNextBtn");
   var thumbToggle=el("comicThumbToggleBtn");
   var zoomIn=el("comicZoomInBtn"),zoomOut=el("comicZoomOutBtn");
 
@@ -379,6 +385,8 @@ function bind(){
   if(next)next.addEventListener("click",function(){move(1);});
   if(first)first.addEventListener("click",function(){goTo(0,true);});
   if(last)last.addEventListener("click",function(){goTo(Math.max(0,pages().length-1),true);});
+  if(stagePrev)stagePrev.addEventListener("click",function(){move(-1);});
+  if(stageNext)stageNext.addEventListener("click",function(){move(1);});
   if(jump){
     var jumpNow=function(){
       var value=Number(jump.value);
