@@ -1062,7 +1062,27 @@ window.TerraOmegaData.characterMedia = {
     "src": "images/characters/isabela-duarte.jpg",
     "alt": "isabela Duarte",
     "source": "local",
-    "credit": ""
+    "credit": "",
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 50,
+        "y": 5,
+        "zoom": 1.55
+      },
+      "sheet": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
+    }
   },
   "Carlo Duarte": {
     "src": "images/characters/carlo-duarte.jpg",
