@@ -415,9 +415,9 @@ window.TerraOmegaData.characterMedia = {
     }
   },
   "Verity Pennyworth": {
-    "src": "",
+    "src": "images/characters/verity-pennyworth.jpg",
     "alt": "Verity Pennyworth",
-    "source": "auto",
+    "source": "local",
     "credit": "",
     "auto": {
       "provider": "dc-fandom",
