@@ -871,11 +871,13 @@ function checkGraph(data){
 function checkModuleRegistry(){
   const html=read("index.html");
   const loader=read("js/admin-loader.js");
+  const publicLoader=read("js/navigation.js");
   const direct=[...html.matchAll(/<script[^>]+src=["']([^"']+)["']/g)]
     .map(match=>String(match[1]||"").replace(/^\.\//,""))
     .filter(path=>path.startsWith("js/"));
   const lazy=[...loader.matchAll(/["'](js\/[^"']+\.js)["']/g)].map(match=>match[1]);
-  const registered=direct.concat(lazy);
+  const publicLazy=[...publicLoader.matchAll(/script\.src\s*=\s*["'](js\/[^"']+\.js)["']/g)].map(match=>match[1]);
+  const registered=direct.concat(lazy,publicLazy);
   const duplicates=registered.filter((path,index)=>registered.indexOf(path)!==index);
 
   if(duplicates.length){
