@@ -1034,55 +1034,80 @@ UNIVERSO OBLÍVIO · TERRA OMEGA · DOSSIÊ CENTRAL · v2.0 · JAN 2027
     <div class="comic-library-badge">TERRA OMEGA · HQ</div>
   </section>
 
-  <div class="comic-reader" id="comicReader" aria-live="polite" data-view-mode="single" data-fit-mode="screen">
-    <div class="comic-reader-topbar">
-      <label class="comic-series-picker">
-        <span>Edição</span>
-        <select id="comicSeriesSelect" aria-label="Selecionar edição em quadrinhos">
-          <option>Carregando…</option>
-        </select>
-      </label>
+  <div class="comic-reader" id="comicReader" aria-live="polite" data-view-mode="single" data-fit-mode="auto" data-fit-effective="screen">
+    <div class="comic-reader-chrome">
+      <div class="comic-reader-topbar">
+        <div class="comic-publication-selectors">
+          <label>
+            <span>Coleção</span>
+            <select id="comicCollectionSelect" aria-label="Selecionar coleção de quadrinhos">
+              <option>Carregando…</option>
+            </select>
+          </label>
+          <label>
+            <span>Edição</span>
+            <select id="comicEditionSelect" aria-label="Selecionar edição em quadrinhos">
+              <option>Carregando…</option>
+            </select>
+          </label>
+        </div>
 
-      <div class="comic-view-controls" aria-label="Modo de visualização">
-        <span>Visualização</span>
-        <div class="comic-segmented" role="group" aria-label="Visualização das páginas">
-          <button type="button" data-comic-view="single" class="active" title="Uma página por vez">▯ <span>Singular</span></button>
-          <button type="button" data-comic-view="spread" title="Capa isolada e páginas internas em dupla">▯▯ <span>Dupla</span></button>
-          <button type="button" data-comic-view="pair" title="Sempre mostrar duas páginas lado a lado">▯▯ <span>2 páginas</span></button>
-          <button type="button" data-comic-view="continuous" title="Todas as páginas em rolagem vertical">☷ <span>Rolagem</span></button>
+        <div class="comic-reader-primary-actions">
+          <button id="comicLibraryBtn" type="button" title="Abrir biblioteca de edições">▦ Biblioteca</button>
+          <button id="comicReadingModeBtn" type="button" title="Leitura sem distrações">◧ Modo leitura</button>
         </div>
       </div>
-    </div>
 
-    <div class="comic-reader-toolbar">
-      <div class="comic-reader-actions comic-nav-actions">
-        <button id="comicFirstBtn" type="button" title="Primeira página">⇤</button>
-        <button id="comicPrevBtn" type="button">← Anterior</button>
-        <span id="comicPageCounter" class="comic-page-counter">—</span>
-        <label class="comic-page-jump" title="Ir diretamente para uma página">
-          <span>Pág.</span>
-          <input id="comicPageJump" type="number" inputmode="numeric" min="1" step="1" aria-label="Ir para página">
-        </label>
-        <button id="comicNextBtn" type="button">Próxima →</button>
-        <button id="comicLastBtn" type="button" title="Última página">⇥</button>
+      <div class="comic-reader-toolbar">
+        <div class="comic-reader-actions comic-nav-actions">
+          <button id="comicFirstBtn" type="button" title="Primeira página">⇤</button>
+          <button id="comicPrevBtn" type="button" title="Página anterior">←</button>
+          <span id="comicPageCounter" class="comic-page-counter">—</span>
+          <label class="comic-page-jump" title="Ir diretamente para uma página">
+            <span>Pág.</span>
+            <input id="comicPageJump" type="number" inputmode="numeric" min="1" step="1" aria-label="Ir para página">
+          </label>
+          <button id="comicNextBtn" type="button" title="Próxima página">→</button>
+          <button id="comicLastBtn" type="button" title="Última página">⇥</button>
+        </div>
+
+        <div class="comic-view-controls" aria-label="Modo de visualização">
+          <div class="comic-segmented" role="group" aria-label="Visualização das páginas">
+            <button type="button" data-comic-view="single" class="active" title="Uma página por vez">▯ <span>Página</span></button>
+            <button type="button" data-comic-view="spread" title="Capa isolada e páginas internas como livro">▯▯ <span>Livro</span></button>
+            <button type="button" data-comic-view="pair" title="Sempre duas páginas lado a lado">▯▯ <span>Lado a lado</span></button>
+            <button type="button" data-comic-view="continuous" title="Todas as páginas em rolagem vertical">☷ <span>Rolagem</span></button>
+          </div>
+        </div>
+
+        <div class="comic-reader-actions comic-fit-actions">
+          <label class="comic-fit-select">
+            <span>Ajuste</span>
+            <select id="comicFitSelect" aria-label="Ajuste da página">
+              <option value="auto">Auto</option>
+              <option value="screen">Tela</option>
+              <option value="width">Largura</option>
+              <option value="actual">1:1</option>
+            </select>
+          </label>
+          <button id="comicZoomOutBtn" type="button" title="Diminuir zoom">−</button>
+          <span id="comicZoomLabel" class="comic-zoom-label">Auto</span>
+          <button id="comicZoomInBtn" type="button" title="Aumentar zoom">＋</button>
+          <button id="comicThumbToggleBtn" type="button" class="active" title="Mostrar ou ocultar miniaturas">▦</button>
+          <button id="comicFullscreenBtn" type="button" title="Tela cheia do navegador">⛶</button>
+        </div>
       </div>
 
-      <div class="comic-reader-actions comic-fit-actions">
-        <button type="button" data-comic-fit="screen" class="active" title="Ajustar página inteira à tela">⊡ Tela</button>
-        <button type="button" data-comic-fit="width" title="Estender para ocupar a largura disponível">↔ Estender</button>
-        <button type="button" data-comic-fit="actual" title="Mostrar em tamanho natural">1:1</button>
-        <span class="comic-toolbar-divider"></span>
-        <button id="comicZoomOutBtn" type="button" title="Diminuir">−</button>
-        <span id="comicZoomLabel" class="comic-zoom-label">Tela</span>
-        <button id="comicZoomInBtn" type="button" title="Aumentar">＋</button>
-        <button id="comicThumbToggleBtn" type="button" class="active" title="Mostrar ou ocultar miniaturas">▦ Miniaturas</button>
-        <button id="comicFullscreenBtn" type="button" title="Abrir leitor em tela cheia">⛶ Tela cheia</button>
+      <div class="comic-progress-track" aria-hidden="true">
+        <div id="comicProgressFill" class="comic-progress-fill"></div>
       </div>
     </div>
 
     <div class="comic-reader-stage" id="comicReaderStage" tabindex="0" aria-label="Leitor de quadrinhos">
       <button id="comicStagePrevBtn" class="comic-stage-nav comic-stage-prev" type="button" aria-label="Página anterior" title="Página anterior">‹</button>
       <button id="comicStageNextBtn" class="comic-stage-nav comic-stage-next" type="button" aria-label="Próxima página" title="Próxima página">›</button>
+      <button id="comicFocusExitBtn" class="comic-focus-exit" type="button" hidden>↩ Voltar ao livro</button>
+
       <div id="comicReaderEmpty" class="comic-reader-empty">
         <div class="comic-empty-icon">▤</div>
         <strong>Leitor pronto</strong>
@@ -1099,7 +1124,7 @@ UNIVERSO OBLÍVIO · TERRA OMEGA · DOSSIÊ CENTRAL · v2.0 · JAN 2027
       </div>
       <div class="comic-meta-right">
         <span id="comicPageLabel">Nenhuma página publicada</span>
-        <small>← → navegar · F tela · W largura · 1 tamanho real</small>
+        <small id="comicProgressText">—</small>
       </div>
     </div>
 
