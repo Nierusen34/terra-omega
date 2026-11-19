@@ -540,7 +540,7 @@ function checkComics(){
   const router=read("js/router.js");
   const html=read("index.html");
 
-  for(const feature of ["single","spread","pair","continuous"]){
+  for(const feature of ["single","spread","continuous"]){
     if(!reader.includes('"'+feature+'"')) fail("Leitor não registra modo de visualização: "+feature);
   }
   if(!reader.includes("terraOmega_comic_progress_v3") ||
@@ -565,12 +565,18 @@ function checkComics(){
      !html.includes('id="comicReadingModeBtn"')){
     fail("Interface do leitor v3 está incompleta.");
   }
+  if(html.includes('data-comic-view="pair"')){
+    fail("Modo redundante “Lado a lado” voltou à interface pública.");
+  }
   if(!manager.includes("comicManagerUploadCover") ||
      !manager.includes("thumbnailBase64") ||
      !manager.includes("comicManagerGenerateThumbs") ||
      !manager.includes("comicManagerPublicationDate") ||
-     !manager.includes("trapFocus")){
-    fail("Editor de Quadrinhos não oferece capa, miniaturas, datas e acessibilidade esperadas.");
+     !manager.includes("trapFocus") ||
+     !manager.includes("comicManagerQuickAddPages") ||
+     !manager.includes("comicManagerRenameStory") ||
+     !manager.includes("openPagePicker")){
+    fail("Editor de Quadrinhos não oferece gestão simples de histórias/páginas, datas e acessibilidade esperadas.");
   }
   const globalCss=read("terra-omega.css");
   const comicCss=read("css/comic-reader.css");

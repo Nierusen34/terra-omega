@@ -49,24 +49,32 @@ function ensureModal(){
     <div class="comic-manager-body">
       <aside class="comic-manager-library">
         <div class="comic-manager-library-head">
-          <div><strong>Edições</strong><span id="comicManagerCount">0</span></div>
-          <button id="comicManagerNew" type="button">＋ Nova edição</button>
+          <div><strong>Histórias</strong><span id="comicManagerCount">0</span></div>
+          <button id="comicManagerNew" type="button">＋ Nova história</button>
         </div>
         <div id="comicManagerList" class="comic-manager-list"></div>
       </aside>
 
       <main class="comic-manager-editor">
         <div id="comicManagerBlank" class="comic-manager-blank">
-          <span>📚</span><strong>Selecione uma edição</strong>
-          <small>Ou crie uma nova para começar.</small>
+          <span>📚</span><strong>Selecione uma história</strong>
+          <small>Ou clique em “Nova história” para começar.</small>
         </div>
 
         <div id="comicManagerFormWrap" hidden>
+          <div class="comic-manager-quick-actions" aria-label="Ações rápidas da história">
+            <button id="comicManagerSaveEdition" class="primary" type="button">💾 Salvar alterações</button>
+            <button id="comicManagerRenameStory" type="button">✏ Renomear história</button>
+            <button id="comicManagerQuickAddPages" type="button">＋ Adicionar páginas</button>
+            <button id="comicManagerOpenReader" type="button">👁 Ver no leitor</button>
+            <button id="comicManagerDeleteEdition" class="danger" type="button">🗑 Excluir história</button>
+          </div>
+
           <div class="comic-manager-form-grid">
             <label>Coleção<input id="comicManagerCollection" type="text" maxlength="120" placeholder="Ex.: Tristan Queen"></label>
-            <label>Título<input id="comicManagerEditionTitle" type="text" maxlength="160" placeholder="Título da edição"></label>
+            <label>Título da história<input id="comicManagerEditionTitle" type="text" maxlength="160" placeholder="Nome da história"></label>
             <label>Arco<input id="comicManagerArc" type="text" maxlength="120" placeholder="Ex.: Tristan & Misty"></label>
-            <label>Nº da edição<input id="comicManagerIssueNumber" type="number" min="0" max="9999" step="1" placeholder="1"></label>
+            <label>Nº / ordem<input id="comicManagerIssueNumber" type="number" min="0" max="9999" step="1" placeholder="1"></label>
             <label>Subtítulo<input id="comicManagerSubtitle" type="text" maxlength="160" placeholder="Opcional e diferente do arco"></label>
             <label>Data editorial<input id="comicManagerPublicationDate" type="date"></label>
             <label>Data no universo<input id="comicManagerStoryDate" type="text" maxlength="80" placeholder="Opcional: data ou período narrativo"></label>
@@ -84,8 +92,8 @@ function ensureModal(){
               <span>SEM CAPA</span>
             </div>
             <div class="comic-manager-cover-copy">
-              <strong>Capa da edição</strong>
-              <small>Usada na Biblioteca. Se não houver capa própria, o leitor usa a primeira página como fallback.</small>
+              <strong>Capa da história</strong>
+              <small>Usada na Biblioteca. Se não houver uma capa própria, a primeira página será usada automaticamente.</small>
               <div>
                 <button id="comicManagerUploadCover" type="button">🖼 Enviar capa</button>
                 <button id="comicManagerRemoveCover" type="button">Remover capa</button>
@@ -94,19 +102,13 @@ function ensureModal(){
             <input id="comicManagerCoverInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
           </section>
 
-          <div class="comic-manager-edition-actions">
-            <button id="comicManagerSaveEdition" class="primary" type="button">💾 Salvar edição</button>
-            <button id="comicManagerOpenReader" type="button">👁 Abrir no leitor</button>
-            <button id="comicManagerDeleteEdition" class="danger" type="button">🗑 Excluir edição</button>
-          </div>
-
           <section class="comic-manager-pages">
             <div class="comic-manager-pages-head">
               <div><strong>Páginas</strong><span id="comicManagerPageCount">0 páginas</span></div>
               <div>
                 <button id="comicManagerAddPages" type="button">＋ Adicionar páginas</button>
                 <button id="comicManagerGenerateThumbs" type="button">▦ Otimizar miniaturas</button>
-                <button id="comicManagerSavePages" type="button">💾 Salvar ordem e textos</button>
+                <button id="comicManagerSavePages" type="button">💾 Salvar páginas</button>
               </div>
             </div>
             <div id="comicManagerUploadStatus" class="comic-manager-upload-status" data-state="idle"></div>
@@ -123,10 +125,12 @@ function ensureModal(){
   el("comicManagerModal").addEventListener("click",function(event){if(event.target===event.currentTarget)close();});
   el("comicManagerNew").addEventListener("click",startNew);
   el("comicManagerSaveEdition").addEventListener("click",saveEdition);
+  el("comicManagerRenameStory").addEventListener("click",focusRenameStory);
+  el("comicManagerQuickAddPages").addEventListener("click",openPagePicker);
   el("comicManagerDeleteEdition").addEventListener("click",deleteEdition);
   el("comicManagerOpenReader").addEventListener("click",openReader);
   el("comicManagerUploadCover").addEventListener("click",function(){
-    if(!selectedId){showToast("Salve a edição antes de enviar uma capa.","warning",4000);return;}
+    if(!selectedId){showToast("Salve a história antes de enviar uma capa.","warning",4000);return;}
     var input=el("comicManagerCoverInput");input.value="";input.click();
   });
   el("comicManagerRemoveCover").addEventListener("click",removeCover);
@@ -134,16 +138,15 @@ function ensureModal(){
     var file=this.files&&this.files[0];if(file)uploadCover(file);
   });
   el("comicManagerGenerateThumbs").addEventListener("click",generateMissingThumbnails);
-  el("comicManagerAddPages").addEventListener("click",function(){
-    if(!selectedId){showToast("Salve a edição antes de adicionar páginas.","warning",4000);return;}
-    pendingReplaceSrc="";
-    var input=el("comicManagerFileInput");input.multiple=true;input.value="";input.click();
-  });
+  el("comicManagerAddPages").addEventListener("click",openPagePicker);
   el("comicManagerFileInput").addEventListener("change",function(){
     var files=Array.from(this.files||[]);
     if(files.length)uploadFiles(files,pendingReplaceSrc);
   });
   el("comicManagerSavePages").addEventListener("click",savePages);
+  el("comicManagerEditionTitle").addEventListener("keydown",function(event){
+    if(event.key==="Enter"){event.preventDefault();saveEdition();}
+  });
 
   document.addEventListener("keydown",function(event){
     var modal=el("comicManagerModal");
@@ -159,7 +162,7 @@ function setBusy(value,message){
   if(modal)modal.classList.toggle("is-busy",busy);
   var status=el("comicManagerUploadStatus");
   if(status&&message){status.textContent=message;status.setAttribute("data-state",busy?"working":"idle");}
-  ["comicManagerSaveEdition","comicManagerDeleteEdition","comicManagerAddPages","comicManagerSavePages","comicManagerUploadCover","comicManagerRemoveCover","comicManagerGenerateThumbs"].forEach(function(id){
+  ["comicManagerSaveEdition","comicManagerRenameStory","comicManagerQuickAddPages","comicManagerDeleteEdition","comicManagerAddPages","comicManagerSavePages","comicManagerUploadCover","comicManagerRemoveCover","comicManagerGenerateThumbs"].forEach(function(id){
     var button=el(id);if(button)button.disabled=busy;
   });
 }
@@ -193,7 +196,7 @@ function renderList(){
         '<button type="button" data-comic-order="'+index+'" data-direction="1" '+(index===rows.length-1?"disabled":"")+' title="Mover para baixo">↓</button>'+
       '</div>'+
     '</article>';
-  }).join(""):'<div class="comic-manager-empty">Nenhuma edição cadastrada.</div>';
+  }).join(""):'<div class="comic-manager-empty">Nenhuma história cadastrada.</div>';
 
   root.querySelectorAll("[data-comic-select]").forEach(function(button){
     button.addEventListener("click",function(){
@@ -231,7 +234,11 @@ function renderForm(){
 
   var deleteBtn=el("comicManagerDeleteEdition");
   var readerBtn=el("comicManagerOpenReader");
+  var renameBtn=el("comicManagerRenameStory");
+  var quickPagesBtn=el("comicManagerQuickAddPages");
   if(deleteBtn)deleteBtn.disabled=!selectedId||busy;
+  if(renameBtn)renameBtn.disabled=!selectedId||busy;
+  if(quickPagesBtn)quickPagesBtn.disabled=!selectedId||busy;
   if(readerBtn)readerBtn.disabled=!selectedId||row.status==="draft";
 
   renderPages();
@@ -246,7 +253,7 @@ function renderPages(){
   if(!root)return;
 
   if(!selectedId){
-    root.innerHTML='<div class="comic-manager-empty">Salve a edição para liberar o upload de páginas.</div>';
+    root.innerHTML='<div class="comic-manager-empty">Salve a história para liberar o upload de páginas.</div>';
     return;
   }
 
@@ -256,14 +263,14 @@ function renderPages(){
       '<img src="'+escapeAttr(page.thumb||page.src)+'" alt="" loading="lazy" decoding="async">'+
       '<div class="comic-manager-page-fields">'+
         '<strong>Página '+(index+1)+'</strong>'+
-        '<input data-page-label type="text" maxlength="120" value="'+escapeAttr(page.label||("Página "+(index+1)))+'" placeholder="Rótulo">'+
-        '<input data-page-alt type="text" maxlength="240" value="'+escapeAttr(page.alt||"")+'" placeholder="Descrição acessível / alt">'+
+        '<label>Nome da página<input data-page-label type="text" maxlength="120" value="'+escapeAttr(page.label||("Página "+(index+1)))+'" placeholder="Ex.: Página 1"></label>'+
+        '<label>Descrição opcional<input data-page-alt type="text" maxlength="240" value="'+escapeAttr(page.alt||"")+'" placeholder="Descrição acessível da imagem"></label>'+
       '</div>'+
       '<div class="comic-manager-page-actions">'+
-        '<button type="button" data-page-up '+(index===0?"disabled":"")+' title="Mover para cima">↑</button>'+
-        '<button type="button" data-page-down '+(index===pages.length-1?"disabled":"")+' title="Mover para baixo">↓</button>'+
-        '<button type="button" data-page-replace title="Substituir imagem">↻</button>'+
-        '<button type="button" data-page-delete class="danger" title="Excluir página">🗑</button>'+
+        '<button type="button" data-page-up '+(index===0?"disabled":"")+' title="Mover para cima">↑ Acima</button>'+
+        '<button type="button" data-page-down '+(index===pages.length-1?"disabled":"")+' title="Mover para baixo">↓ Abaixo</button>'+
+        '<button type="button" data-page-replace title="Substituir imagem">↻ Substituir</button>'+
+        '<button type="button" data-page-delete class="danger" title="Excluir página">🗑 Excluir</button>'+
       '</div>'+
     '</article>';
   }).join(""):'<div class="comic-manager-empty">Nenhuma página ainda. Use “Adicionar páginas”.</div>';
@@ -312,6 +319,22 @@ function refreshPageRowNumbers(){
 
 function render(){renderList();renderForm();}
 
+function openPagePicker(){
+  if(!selectedId){showToast("Salve a história antes de adicionar páginas.","warning",4000);return;}
+  pendingReplaceSrc="";
+  var input=el("comicManagerFileInput");
+  if(!input)return;
+  input.multiple=true;input.value="";input.click();
+}
+
+function focusRenameStory(){
+  if(!selectedId){showToast("Selecione uma história para renomear.","warning",3500);return;}
+  var input=el("comicManagerEditionTitle");
+  if(!input)return;
+  input.focus();input.select();
+  showToast("Digite o novo nome e pressione Enter ou clique em “Salvar alterações”.","info",5000);
+}
+
 function startNew(){
   selectedId="";newDraft=true;render();
   setTimeout(function(){var input=el("comicManagerEditionTitle");if(input)input.focus();},0);
@@ -326,7 +349,7 @@ async function request(body){
 async function saveEdition(){
   var title=el("comicManagerEditionTitle").value.trim();
   if(!title){showToast("Informe o título da edição.","warning",3500);el("comicManagerEditionTitle").focus();return;}
-  setBusy(true,"Salvando edição…");
+  setBusy(true,"Salvando história…");
   try{
     var result=await request({
       action:"comic-save",
@@ -346,21 +369,21 @@ async function saveEdition(){
     newDraft=false;
     render();
     notifyReader(selectedId);
-    showToast("Edição salva no GitHub.","success",3500);
+    showToast("História salva.","success",3500);
   }catch(error){
     console.error("Terra Omega comic manager:",error);
-    showToast(error.message||"Falha ao salvar a edição.","error",5500);
+    showToast(error.message||"Falha ao salvar a história.","error",5500);
   }finally{setBusy(false,"");}
 }
 
 function deleteEdition(){
   var row=selected();if(!row)return;
-  showConfirm("Excluir edição","Excluir “"+row.title+"” e todas as páginas armazenadas no projeto? Esta ação será registrada em commit.",async function(){
+  showConfirm("Excluir história","Excluir “"+row.title+"” e todas as páginas armazenadas no projeto? Esta ação será registrada em commit.",async function(){
     setBusy(true,"Excluindo edição…");
     try{
       var result=await request({action:"comic-delete",id:row.id});
       catalog=result.catalog||catalog;selectedId="";newDraft=false;render();notifyReader();
-      showToast("Edição excluída.","success",3500);
+      showToast("História excluída.","success",3500);
     }catch(error){console.error(error);showToast(error.message||"Falha ao excluir a edição.","error",5500);}
     finally{setBusy(false,"");}
   });
@@ -370,11 +393,11 @@ async function reorderEdition(index,direction){
   var rows=(catalog.series||[]).slice();
   var target=index+direction;if(target<0||target>=rows.length)return;
   var moved=rows.splice(index,1)[0];rows.splice(target,0,moved);
-  setBusy(true,"Salvando ordem das edições…");
+  setBusy(true,"Salvando ordem das histórias…");
   try{
     var result=await request({action:"comic-editions-reorder",ids:rows.map(function(row){return row.id;})});
     catalog=result.catalog||catalog;renderList();notifyReader(selectedId);
-  }catch(error){showToast(error.message||"Falha ao reorganizar edições.","error",5000);}
+  }catch(error){showToast(error.message||"Falha ao reorganizar histórias.","error",5000);}
   finally{setBusy(false,"");}
 }
 

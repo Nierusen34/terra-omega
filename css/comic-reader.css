@@ -143,20 +143,15 @@
   box-shadow:0 18px 52px rgba(0,0,0,.62)
 }
 .comic-reader[data-view-mode="single"] .comic-page-frame{width:100%}
-.comic-reader[data-view-mode="spread"] .comic-pages-viewport,
-.comic-reader[data-view-mode="pair"] .comic-pages-viewport{position:relative;gap:7px}
-.comic-reader[data-view-mode="spread"] .comic-pages-viewport::after,
-.comic-reader[data-view-mode="pair"] .comic-pages-viewport::after{
+.comic-reader[data-view-mode="spread"] .comic-pages-viewport{position:relative;gap:7px}
+.comic-reader[data-view-mode="spread"] .comic-pages-viewport::after{
   content:"";position:absolute;top:0;bottom:22px;left:50%;z-index:2;
   width:10px;transform:translateX(-50%);pointer-events:none;opacity:.85;
   background:linear-gradient(90deg,transparent,rgba(0,0,0,.42),rgba(255,255,255,.035),rgba(0,0,0,.42),transparent)
 }
-.comic-reader[data-view-mode="spread"] .comic-page-frame,
-.comic-reader[data-view-mode="pair"] .comic-page-frame{width:calc(50% - 4px)}
-.comic-reader[data-view-mode="spread"] .comic-page-frame:first-child,
-.comic-reader[data-view-mode="pair"] .comic-page-frame:first-child{align-items:flex-end}
-.comic-reader[data-view-mode="spread"] .comic-page-frame:last-child,
-.comic-reader[data-view-mode="pair"] .comic-page-frame:last-child{align-items:flex-start}
+.comic-reader[data-view-mode="spread"] .comic-page-frame{width:calc(50% - 4px)}
+.comic-reader[data-view-mode="spread"] .comic-page-frame:first-child{align-items:flex-end}
+.comic-reader[data-view-mode="spread"] .comic-page-frame:last-child{align-items:flex-start}
 .comic-reader[data-view-mode="continuous"] .comic-pages-viewport{
   flex-direction:column;align-items:center;gap:26px;width:100%;max-width:1040px
 }
@@ -176,8 +171,7 @@
 .comic-reader[data-fit-effective="screen"] .comic-page-image{
   width:auto;height:auto;max-width:100%;max-height:72vh
 }
-.comic-reader[data-view-mode="spread"][data-fit-effective="screen"] .comic-page-image,
-.comic-reader[data-view-mode="pair"][data-fit-effective="screen"] .comic-page-image{max-height:69vh}
+.comic-reader[data-view-mode="spread"][data-fit-effective="screen"] .comic-page-image{max-height:69vh}
 .comic-reader[data-fit-effective="width"] .comic-page-image{
   width:100%;height:auto;max-width:none;max-height:none
 }
@@ -600,12 +594,11 @@ body.comic-reading-active{overflow:hidden!important}
 @media(max-width:700px){
   .comic-publication-selectors{grid-template-columns:1fr}
   .comic-reader-primary-actions{justify-content:flex-end}
-  .comic-segmented{display:grid;width:100%;grid-template-columns:repeat(4,1fr)}
+  .comic-segmented{display:grid;width:100%;grid-template-columns:repeat(3,1fr)}
   .comic-segmented button{padding:7px 4px}
   .comic-segmented button span{display:none}
   .comic-fit-actions{flex-wrap:wrap}
-  .comic-reader[data-view-mode="spread"] .comic-page-frame,
-  .comic-reader[data-view-mode="pair"] .comic-page-frame{width:calc(50% - 2px)}
+  .comic-reader[data-view-mode="spread"] .comic-page-frame{width:calc(50% - 2px)}
   .comic-library-modal{padding:0}
   .comic-library-card{width:100vw;height:100vh;max-height:none;border:0}
   .comic-library-grid{grid-template-columns:repeat(2,minmax(0,1fr));padding:10px;gap:9px}
@@ -649,3 +642,40 @@ body.comic-reading-active{overflow:hidden!important}
 .comic-more-menu[open]{z-index:60}
 
 .comic-manager-modal[aria-hidden="true"]{display:none!important}
+
+
+/* ===== QUADRINHOS · GESTÃO SIMPLIFICADA ===== */
+.comic-manager-quick-actions{
+  position:sticky;top:-18px;z-index:8;display:flex;gap:7px;flex-wrap:wrap;
+  margin:-18px -18px 16px;padding:11px 18px;border-bottom:1px solid var(--line);
+  background:rgba(28,24,30,.96);backdrop-filter:blur(8px)
+}
+.comic-manager-quick-actions button{
+  min-height:34px;padding:8px 10px;border:1px solid var(--line);
+  background:var(--paper);color:var(--ink2);cursor:pointer;
+  font:700 8px/1 'Share Tech Mono',monospace;text-transform:uppercase
+}
+.comic-manager-quick-actions button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.comic-manager-quick-actions .primary{border-color:var(--accent);color:var(--accent)}
+.comic-manager-quick-actions .danger{margin-left:auto;color:#d06d6d}
+.comic-manager-page-fields label{
+  display:flex;flex-direction:column;gap:3px;color:var(--ink3);
+  font:700 7px/1 'Share Tech Mono',monospace;text-transform:uppercase
+}
+.comic-manager-page-fields label input{
+  margin-top:2px;text-transform:none;font-family:var(--font-body)
+}
+.comic-manager-page-actions{
+  display:flex!important;flex-wrap:wrap!important;justify-content:flex-end;
+  gap:5px!important;max-width:220px
+}
+.comic-manager-page-actions button{
+  width:auto!important;min-width:64px!important;height:30px!important;padding:0 7px!important;
+  white-space:nowrap;font:700 7px/1 'Share Tech Mono',monospace;text-transform:uppercase
+}
+@media(max-width:760px){
+  .comic-manager-quick-actions{position:static;margin:-14px -14px 14px;padding:10px 14px}
+  .comic-manager-quick-actions button{flex:1 1 140px}
+  .comic-manager-quick-actions .danger{margin-left:0}
+  .comic-manager-page-actions{grid-column:2/-1;max-width:none}
+}

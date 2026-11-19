@@ -83,13 +83,13 @@ function syncComicRoute(options){
 
 function hydratePreferences(){
   var savedView=loadValue(VIEW_KEY,"single");
-  if(["single","spread","pair","continuous"].indexOf(savedView)!==-1)viewMode=savedView;
+  if(["single","spread","continuous"].indexOf(savedView)!==-1)viewMode=savedView;
   var savedFit=loadValue(FIT_KEY,"auto");
   if(["auto","screen","width","actual","custom"].indexOf(savedFit)!==-1)fitMode=savedFit;
   customZoom=clamp(Number(loadValue(ZOOM_KEY,"1"))||1,.5,3);
   thumbsVisible=loadValue(THUMBS_KEY,"1")!=="0";
 
-  if(window.innerWidth<720 && (viewMode==="spread"||viewMode==="pair")) viewMode="single";
+  if(window.innerWidth<720 && viewMode==="spread") viewMode="single";
 }
 
 function publishedEditions(data){
@@ -153,10 +153,6 @@ function pageRange(){
   if(!list.length)return [];
   pageIndex=clamp(pageIndex,0,list.length-1);
   if(viewMode==="continuous")return list.map(function(_,i){return i;});
-  if(viewMode==="pair"){
-    var pairStart=Math.floor(pageIndex/2)*2;
-    return [pairStart,pairStart+1].filter(function(i){return i<list.length;});
-  }
   if(viewMode==="spread"){
     if(pageIndex===0)return [0];
     var spreadStart=pageIndex%2===0?pageIndex-1:pageIndex;
@@ -167,7 +163,6 @@ function pageRange(){
 function normalizeIndexForView(index){
   var list=pages();
   index=clamp(index,0,Math.max(0,list.length-1));
-  if(viewMode==="pair")return Math.floor(index/2)*2;
   if(viewMode==="spread"&&index>0)return index%2===0?index-1:index;
   return index;
 }
@@ -352,7 +347,7 @@ function updateProgressUI(){
 
   var atStart=pageIndex<=0;
   var lastIndex=list.length-1;
-  var pairedEnd=(viewMode==="spread"||viewMode==="pair")&&indices.indexOf(lastIndex)!==-1;
+  var pairedEnd=viewMode==="spread"&&indices.indexOf(lastIndex)!==-1;
   var atEnd=!list.length||pageIndex>=lastIndex||pairedEnd;
   ["comicPrevBtn","comicFirstBtn","comicStagePrevBtn"].forEach(function(id){var b=el(id);if(b)b.disabled=atStart||!list.length;});
   ["comicNextBtn","comicLastBtn","comicStageNextBtn"].forEach(function(id){var b=el(id);if(b)b.disabled=atEnd;});
@@ -428,7 +423,7 @@ function goTo(index,scroll,options){
 }
 function move(direction){
   var list=pages();if(!list.length)return;
-  var step=viewMode==="pair"?2:1;
+  var step=1;
   if(viewMode==="spread"){
     if(direction>0){if(pageIndex===0)goTo(1,true);else goTo(pageIndex+2,true);}
     else{if(pageIndex<=1)goTo(0,true);else goTo(pageIndex-2,true);}
@@ -454,7 +449,7 @@ function togglePageFocus(index){
 }
 
 function setView(mode){
-  if(["single","spread","pair","continuous"].indexOf(mode)===-1)return;
+  if(["single","spread","continuous"].indexOf(mode)===-1)return;
   if(focusReturn)cancelFocus();
   viewMode=mode;pageIndex=normalizeIndexForView(pageIndex);
   saveValue(VIEW_KEY,viewMode);render();
