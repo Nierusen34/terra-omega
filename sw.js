@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION="terra-omega-pwa-v2.0.0-20261118-comics-v3-final";
+const VERSION="terra-omega-pwa-v2.0.0-20261119-comics-stage3-css";
 const CORE_CACHE=VERSION+"-core";
 const IMAGE_CACHE=VERSION+"-images";
 const TRANSLATION_CACHE=VERSION+"-translation";
@@ -13,6 +13,7 @@ const CORE_ASSETS=[
   "./manifest.webmanifest",
   "./images/brand/oblivio-emblem.svg",
   "./terra-omega.css",
+  "./css/comic-reader.css",
   "./terra-omega.js",
   "./config.js",
   "./images/pwa/terra-omega-192.webp",

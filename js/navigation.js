@@ -100,44 +100,76 @@ function toggleChangelog(){
 }
 
 
+var comicStylesPromise = null;
+function ensureComicStyles(){
+  if(document.getElementById('comicStylesheet')) return Promise.resolve(true);
+  if(comicStylesPromise) return comicStylesPromise;
+
+  comicStylesPromise=new Promise(function(resolve,reject){
+    var link=document.createElement('link');
+    link.id='comicStylesheet';
+    link.rel='stylesheet';
+    link.href='css/comic-reader.css';
+    link.addEventListener('load',function(){ resolve(true); },{once:true});
+    link.addEventListener('error',function(){
+      comicStylesPromise=null;
+      reject(new Error('Falha ao carregar os estilos de quadrinhos.'));
+    },{once:true});
+    document.head.appendChild(link);
+  });
+  return comicStylesPromise;
+}
+
 var comicReaderPromise = null;
 function ensureComicReader(){
+  var styles=ensureComicStyles();
+
   if(window.TerraOmegaApp && window.TerraOmegaApp.comicReader){
-    if(window.TerraOmegaApp.comicReader.mount) window.TerraOmegaApp.comicReader.mount();
-    return Promise.resolve(window.TerraOmegaApp.comicReader);
+    return styles.then(function(){
+      if(window.TerraOmegaApp.comicReader.mount) window.TerraOmegaApp.comicReader.mount();
+      return window.TerraOmegaApp.comicReader;
+    });
   }
   if(comicReaderPromise) return comicReaderPromise;
 
-  comicReaderPromise = new Promise(function(resolve,reject){
-    var existing=document.querySelector('script[data-comic-reader]');
-    if(existing){
-      existing.addEventListener('load',function(){
+  comicReaderPromise = styles.then(function(){
+    return new Promise(function(resolve,reject){
+      var existing=document.querySelector('script[data-comic-reader]');
+      if(existing){
+        existing.addEventListener('load',function(){
+          var reader=window.TerraOmegaApp && window.TerraOmegaApp.comicReader;
+          if(reader && reader.mount) reader.mount();
+          resolve(reader || null);
+        },{once:true});
+        existing.addEventListener('error',reject,{once:true});
+        return;
+      }
+
+      var script=document.createElement('script');
+      script.src='js/comic-reader.js';
+      script.defer=true;
+      script.setAttribute('data-comic-reader','1');
+      script.addEventListener('load',function(){
         var reader=window.TerraOmegaApp && window.TerraOmegaApp.comicReader;
         if(reader && reader.mount) reader.mount();
         resolve(reader || null);
       },{once:true});
-      existing.addEventListener('error',reject,{once:true});
-      return;
-    }
-
-    var script=document.createElement('script');
-    script.src='js/comic-reader.js';
-    script.defer=true;
-    script.setAttribute('data-comic-reader','1');
-    script.addEventListener('load',function(){
-      var reader=window.TerraOmegaApp && window.TerraOmegaApp.comicReader;
-      if(reader && reader.mount) reader.mount();
-      resolve(reader || null);
-    },{once:true});
-    script.addEventListener('error',function(){
-      comicReaderPromise=null;
-      reject(new Error('Falha ao carregar o leitor de quadrinhos.'));
-    },{once:true});
-    document.head.appendChild(script);
+      script.addEventListener('error',function(){
+        comicReaderPromise=null;
+        reject(new Error('Falha ao carregar o leitor de quadrinhos.'));
+      },{once:true});
+      document.head.appendChild(script);
+    });
+  }).catch(function(error){
+    comicReaderPromise=null;
+    throw error;
   });
 
   return comicReaderPromise;
 }
+
+window.TerraOmegaApp=window.TerraOmegaApp||{};
+window.TerraOmegaApp.ensureComicStyles=ensureComicStyles;
 
 document.querySelectorAll('.tab-btn').forEach(function(btn){
   btn.addEventListener('click', function(){

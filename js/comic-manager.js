@@ -574,6 +574,10 @@ function openReader(){
 }
 
 async function open(){
+  var ensureStyles=window.TerraOmegaApp&&window.TerraOmegaApp.ensureComicStyles;
+  if(ensureStyles){
+    try{await ensureStyles();}catch(error){console.error("Terra Omega comic styles:",error);}
+  }
   ensureModal();
   var b=backend();
   if(!b||!b.isAuthenticated||!b.isAuthenticated()){
