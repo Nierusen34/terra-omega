@@ -51,6 +51,8 @@ function ensureModal(){
           <div class="comic-manager-form-grid">
             <label>Coleção<input id="comicManagerCollection" type="text" maxlength="120" placeholder="Ex.: Tristan Queen"></label>
             <label>Título<input id="comicManagerEditionTitle" type="text" maxlength="160" placeholder="Título da edição"></label>
+            <label>Arco<input id="comicManagerArc" type="text" maxlength="120" placeholder="Ex.: Tristan & Misty"></label>
+            <label>Nº da edição<input id="comicManagerIssueNumber" type="number" min="0" max="9999" step="1" placeholder="1"></label>
             <label>Subtítulo<input id="comicManagerSubtitle" type="text" maxlength="160" placeholder="Opcional"></label>
             <label>Status
               <select id="comicManagerStatus">
@@ -60,6 +62,21 @@ function ensureModal(){
             </label>
             <label class="wide">Descrição<textarea id="comicManagerDescription" rows="3" maxlength="800" placeholder="Resumo da edição"></textarea></label>
           </div>
+
+          <section class="comic-manager-cover">
+            <div class="comic-manager-cover-preview" id="comicManagerCoverPreview">
+              <span>SEM CAPA</span>
+            </div>
+            <div class="comic-manager-cover-copy">
+              <strong>Capa da edição</strong>
+              <small>Usada na Biblioteca. Se não houver capa própria, o leitor usa a primeira página como fallback.</small>
+              <div>
+                <button id="comicManagerUploadCover" type="button">🖼 Enviar capa</button>
+                <button id="comicManagerRemoveCover" type="button">Remover capa</button>
+              </div>
+            </div>
+            <input id="comicManagerCoverInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+          </section>
 
           <div class="comic-manager-edition-actions">
             <button id="comicManagerSaveEdition" class="primary" type="button">💾 Salvar edição</button>
@@ -72,6 +89,7 @@ function ensureModal(){
               <div><strong>Páginas</strong><span id="comicManagerPageCount">0 páginas</span></div>
               <div>
                 <button id="comicManagerAddPages" type="button">＋ Adicionar páginas</button>
+                <button id="comicManagerGenerateThumbs" type="button">▦ Otimizar miniaturas</button>
                 <button id="comicManagerSavePages" type="button">💾 Salvar ordem e textos</button>
               </div>
             </div>
@@ -91,6 +109,15 @@ function ensureModal(){
   el("comicManagerSaveEdition").addEventListener("click",saveEdition);
   el("comicManagerDeleteEdition").addEventListener("click",deleteEdition);
   el("comicManagerOpenReader").addEventListener("click",openReader);
+  el("comicManagerUploadCover").addEventListener("click",function(){
+    if(!selectedId){showToast("Salve a edição antes de enviar uma capa.","warning",4000);return;}
+    var input=el("comicManagerCoverInput");input.value="";input.click();
+  });
+  el("comicManagerRemoveCover").addEventListener("click",removeCover);
+  el("comicManagerCoverInput").addEventListener("change",function(){
+    var file=this.files&&this.files[0];if(file)uploadCover(file);
+  });
+  el("comicManagerGenerateThumbs").addEventListener("click",generateMissingThumbnails);
   el("comicManagerAddPages").addEventListener("click",function(){
     if(!selectedId){showToast("Salve a edição antes de adicionar páginas.","warning",4000);return;}
     pendingReplaceSrc="";
@@ -115,7 +142,7 @@ function setBusy(value,message){
   if(modal)modal.classList.toggle("is-busy",busy);
   var status=el("comicManagerUploadStatus");
   if(status&&message){status.textContent=message;status.setAttribute("data-state",busy?"working":"idle");}
-  ["comicManagerSaveEdition","comicManagerDeleteEdition","comicManagerAddPages","comicManagerSavePages"].forEach(function(id){
+  ["comicManagerSaveEdition","comicManagerDeleteEdition","comicManagerAddPages","comicManagerSavePages","comicManagerUploadCover","comicManagerRemoveCover","comicManagerGenerateThumbs"].forEach(function(id){
     var button=el(id);if(button)button.disabled=busy;
   });
 }
@@ -173,12 +200,15 @@ function renderForm(){
   }
   if(blank)blank.hidden=true;if(wrap)wrap.hidden=false;
 
-  row=row||{id:"",title:"",subtitle:"",collection:"",description:"",status:"draft",pages:[]};
+  row=row||{id:"",title:"",subtitle:"",collection:"",arc:"",issueNumber:0,description:"",status:"draft",pages:[]};
   el("comicManagerCollection").value=row.collection||"";
   el("comicManagerEditionTitle").value=row.title||"";
+  el("comicManagerArc").value=row.arc||"";
+  el("comicManagerIssueNumber").value=row.issueNumber||"";
   el("comicManagerSubtitle").value=row.subtitle||"";
   el("comicManagerDescription").value=row.description||"";
   el("comicManagerStatus").value=row.status==="draft"?"draft":"published";
+  renderCover(row);
 
   var deleteBtn=el("comicManagerDeleteEdition");
   var readerBtn=el("comicManagerOpenReader");
@@ -204,7 +234,7 @@ function renderPages(){
   root.innerHTML=pages.length?pages.map(function(page,index){
     return '<article class="comic-manager-page-row" draggable="true" data-comic-page-row="'+escapeAttr(page.src)+'">'+
       '<div class="comic-manager-page-drag" title="Arraste para reordenar">⋮⋮</div>'+
-      '<img src="'+escapeAttr(page.src)+'" alt="" loading="lazy" decoding="async">'+
+      '<img src="'+escapeAttr(page.thumb||page.src)+'" alt="" loading="lazy" decoding="async">'+
       '<div class="comic-manager-page-fields">'+
         '<strong>Página '+(index+1)+'</strong>'+
         '<input data-page-label type="text" maxlength="120" value="'+escapeAttr(page.label||("Página "+(index+1)))+'" placeholder="Rótulo">'+
@@ -284,6 +314,8 @@ async function saveEdition(){
       id:selectedId,
       collection:el("comicManagerCollection").value.trim(),
       title:title,
+      arc:el("comicManagerArc").value.trim(),
+      issueNumber:Number(el("comicManagerIssueNumber").value)||0,
       subtitle:el("comicManagerSubtitle").value.trim(),
       description:el("comicManagerDescription").value.trim(),
       status:el("comicManagerStatus").value
@@ -331,33 +363,125 @@ function readAsDataUrl(blob){
   });
 }
 
-async function optimizeImage(file){
+async function bitmapFromFile(file){
   if(!file||!/^image\/(png|jpeg|webp)$/i.test(file.type))throw new Error("Use PNG, JPEG ou WebP.");
-  var bitmap=await createImageBitmap(file);
-  var maxWidth=1800,maxHeight=2600;
+  return createImageBitmap(file);
+}
+
+function canvasFromBitmap(bitmap,maxWidth,maxHeight){
   var scale=Math.min(1,maxWidth/bitmap.width,maxHeight/bitmap.height);
   var width=Math.max(1,Math.round(bitmap.width*scale));
   var height=Math.max(1,Math.round(bitmap.height*scale));
   var canvas=document.createElement("canvas");canvas.width=width;canvas.height=height;
-  var ctx=canvas.getContext("2d",{alpha:false});
-  ctx.fillStyle="#fff";ctx.fillRect(0,0,width,height);ctx.drawImage(bitmap,0,0,width,height);
+  var ctx=canvas.getContext("2d",{alpha:false});ctx.fillStyle="#fff";ctx.fillRect(0,0,width,height);ctx.drawImage(bitmap,0,0,width,height);
+  return canvas;
+}
+
+function encodeWebp(canvas,quality){
+  return new Promise(function(resolve){canvas.toBlob(resolve,"image/webp",quality);});
+}
+
+async function optimizePageImage(file){
+  var bitmap=await bitmapFromFile(file);
+  var mainCanvas=canvasFromBitmap(bitmap,1800,2600);
+  var thumbCanvas=canvasFromBitmap(bitmap,260,390);
   if(bitmap.close)bitmap.close();
 
-  async function encode(quality){
-    return new Promise(function(resolve){canvas.toBlob(resolve,"image/webp",quality);});
-  }
-  var blob=await encode(.9);
-  if(blob&&blob.size>1900000)blob=await encode(.78);
-  if(blob&&blob.size>1900000){
-    var ratio=Math.sqrt(1800000/blob.size);
+  var mainBlob=await encodeWebp(mainCanvas,.9);
+  if(mainBlob&&mainBlob.size>1900000)mainBlob=await encodeWebp(mainCanvas,.78);
+  if(mainBlob&&mainBlob.size>1900000){
+    var ratio=Math.sqrt(1800000/mainBlob.size);
     var smaller=document.createElement("canvas");
-    smaller.width=Math.max(1,Math.round(width*ratio));smaller.height=Math.max(1,Math.round(height*ratio));
-    smaller.getContext("2d",{alpha:false}).drawImage(canvas,0,0,smaller.width,smaller.height);
-    canvas=smaller;blob=await new Promise(function(resolve){canvas.toBlob(resolve,"image/webp",.82);});
+    smaller.width=Math.max(1,Math.round(mainCanvas.width*ratio));
+    smaller.height=Math.max(1,Math.round(mainCanvas.height*ratio));
+    smaller.getContext("2d",{alpha:false}).drawImage(mainCanvas,0,0,smaller.width,smaller.height);
+    mainCanvas=smaller;mainBlob=await encodeWebp(mainCanvas,.82);
   }
-  if(!blob)throw new Error("O navegador não conseguiu otimizar esta página.");
-  if(blob.size>2000000)throw new Error("Esta página ainda ficou acima de 2 MB após a otimização.");
-  return {blob:blob,mimeType:"image/webp",contentBase64:await readAsDataUrl(blob)};
+  var thumbBlob=await encodeWebp(thumbCanvas,.72);
+  if(!mainBlob||!thumbBlob)throw new Error("O navegador não conseguiu otimizar esta página.");
+  if(mainBlob.size>2000000)throw new Error("Esta página ainda ficou acima de 2 MB após a otimização.");
+
+  return {
+    mimeType:"image/webp",
+    contentBase64:await readAsDataUrl(mainBlob),
+    thumbnailMimeType:"image/webp",
+    thumbnailBase64:await readAsDataUrl(thumbBlob)
+  };
+}
+
+async function thumbnailFromBlob(blob){
+  var bitmap=await createImageBitmap(blob);
+  var canvas=canvasFromBitmap(bitmap,260,390);if(bitmap.close)bitmap.close();
+  var thumb=await encodeWebp(canvas,.72);
+  if(!thumb)throw new Error("Falha ao gerar miniatura.");
+  return readAsDataUrl(thumb);
+}
+
+async function optimizeCoverImage(file){
+  var bitmap=await bitmapFromFile(file);
+  var canvas=canvasFromBitmap(bitmap,1000,1500);if(bitmap.close)bitmap.close();
+  var blob=await encodeWebp(canvas,.86);
+  if(blob&&blob.size>1900000)blob=await encodeWebp(canvas,.74);
+  if(!blob||blob.size>2000000)throw new Error("A capa ficou grande demais após a otimização.");
+  return {mimeType:"image/webp",contentBase64:await readAsDataUrl(blob)};
+}
+
+function renderCover(row){
+  var preview=el("comicManagerCoverPreview");
+  var remove=el("comicManagerRemoveCover");
+  if(!preview)return;
+  var fallback=row&&row.pages&&row.pages[0]?(row.pages[0].thumb||row.pages[0].src):"";
+  var src=row&&row.cover?row.cover:fallback;
+  preview.innerHTML=src?'<img src="'+escapeAttr(src)+'" alt="" loading="lazy">':'<span>SEM CAPA</span>';
+  preview.classList.toggle("is-fallback",!!src&&!(row&&row.cover));
+  if(remove)remove.disabled=!selectedId||!row||!row.cover||busy;
+}
+
+async function uploadCover(file){
+  if(!selectedId)return;
+  setBusy(true,"Otimizando capa…");
+  try{
+    var optimized=await optimizeCoverImage(file);
+    var result=await request({action:"comic-cover-upload",id:selectedId,mimeType:optimized.mimeType,contentBase64:optimized.contentBase64});
+    catalog=result.catalog||catalog;render();notifyReader(selectedId);
+    showToast("Capa atualizada.","success",3500);
+  }catch(error){console.error(error);showToast(error.message||"Falha ao atualizar a capa.","error",5500);}
+  finally{setBusy(false,"");}
+}
+
+function removeCover(){
+  var row=selected();if(!row||!row.cover)return;
+  showConfirm("Remover capa","Remover a capa própria desta edição? A primeira página voltará a ser usada como fallback.",async function(){
+    setBusy(true,"Removendo capa…");
+    try{
+      var result=await request({action:"comic-cover-delete",id:selectedId});
+      catalog=result.catalog||catalog;render();notifyReader(selectedId);showToast("Capa removida.","success",3200);
+    }catch(error){showToast(error.message||"Falha ao remover capa.","error",5000);}
+    finally{setBusy(false,"");}
+  });
+}
+
+async function generateMissingThumbnails(){
+  var row=selected();
+  var missing=row&&Array.isArray(row.pages)?row.pages.filter(function(page){return !page.thumb;}):[];
+  if(!missing.length){showToast("Todas as páginas já possuem miniaturas leves.","info",3500);return;}
+  setBusy(true,"Gerando miniaturas leves…");
+  try{
+    for(var i=0;i<missing.length;i++){
+      var page=missing[i];
+      var status=el("comicManagerUploadStatus");
+      if(status){status.textContent="Miniatura "+(i+1)+" de "+missing.length+"…";status.setAttribute("data-state","working");}
+      var response=await fetch(page.src,{cache:"no-store"});
+      if(!response.ok)throw new Error("Não foi possível carregar "+(page.label||page.src)+".");
+      var thumbnailBase64=await thumbnailFromBlob(await response.blob());
+      var result=await request({action:"comic-page-thumbnail",id:selectedId,src:page.src,thumbnailBase64:thumbnailBase64});
+      catalog=result.catalog||catalog;
+    }
+    render();notifyReader(selectedId);
+    var done=el("comicManagerUploadStatus");if(done){done.textContent="Miniaturas otimizadas.";done.setAttribute("data-state","success");}
+    showToast("Miniaturas leves geradas.","success",3500);
+  }catch(error){console.error(error);showToast(error.message||"Falha ao gerar miniaturas.","error",5500);}
+  finally{setBusy(false,"");}
 }
 
 async function uploadFiles(files,replaceSrc){
@@ -367,7 +491,7 @@ async function uploadFiles(files,replaceSrc){
     var queue=replaceSrc?files.slice(0,1):files;
     for(var i=0;i<queue.length;i++){
       var file=queue[i];
-      var optimized=await optimizeImage(file);
+      var optimized=await optimizePageImage(file);
       var current=selected();
       var page=current&&replaceSrc?(current.pages||[]).find(function(row){return row.src===replaceSrc;}):null;
       var status=el("comicManagerUploadStatus");
@@ -378,6 +502,8 @@ async function uploadFiles(files,replaceSrc){
         replaceSrc:replaceSrc||"",
         mimeType:optimized.mimeType,
         contentBase64:optimized.contentBase64,
+        thumbnailMimeType:optimized.thumbnailMimeType,
+        thumbnailBase64:optimized.thumbnailBase64,
         label:page&&page.label?page.label:"",
         alt:page&&page.alt?page.alt:""
       });

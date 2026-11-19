@@ -765,6 +765,27 @@ export default async function handler(req,res){
         return res.status(200).json(comicResult(req,commit,catalog,{edition:found.edition,page:found.edition.pages[pageIndex]}));
       }
 
+      if(action === "comic-page-thumbnail"){
+        const found=findComicEdition(catalog,requestBody.id);
+        if(!found.edition) return res.status(404).json({error:"comic_not_found",message:"Edição não encontrada."});
+        const src=String(requestBody.src || "").trim();
+        const index=found.edition.pages.findIndex(page=>page && page.src===src);
+        if(index<0) return res.status(404).json({error:"comic_page_not_found",message:"Página não encontrada."});
+        const thumb=decodeComicImage(requestBody.thumbnailBase64,"image/webp",600*1024);
+        const base=src.replace(/\.[a-z0-9]+$/i,"").replace(/-thumb$/i,"");
+        const thumbPath=base+"-thumb.webp";
+        found.edition.pages[index]={...found.edition.pages[index],thumb:thumbPath};
+        const commit=await commitFiles(
+          [
+            {path:thumbPath,content:thumb.buffer.toString("base64"),encoding:"base64"},
+            {path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"}
+          ],
+          "comics: gerar miniatura de "+found.edition.title,
+          head
+        );
+        return res.status(200).json(comicResult(req,commit,catalog,{edition:found.edition}));
+      }
+
       if(action === "comic-page-delete"){
         const found=findComicEdition(catalog,requestBody.id);
         if(!found.edition) return res.status(404).json({error:"comic_not_found",message:"Edição não encontrada."});
