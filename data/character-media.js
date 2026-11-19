@@ -242,9 +242,9 @@ window.TerraOmegaData.characterMedia = {
     }
   },
   "Jason Todd": {
-    "src": "",
+    "src": "images/characters/jason-todd.jpg",
     "alt": "Jason Todd",
-    "source": "auto",
+    "source": "local",
     "credit": "",
     "auto": {
       "provider": "dc-fandom",
