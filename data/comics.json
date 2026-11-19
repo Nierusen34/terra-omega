@@ -2,11 +2,32 @@
   "version": 1,
   "series": [
     {
-      "id": "terra-omega",
-      "title": "Terra Omega",
-      "subtitle": "Arquivo sequencial",
-      "description": "Páginas de quadrinhos do Universo Oblívio organizadas em ordem narrativa.",
-      "pages": []
+      "id": "tristan-queen-o-quarto-ficou-frio",
+      "title": "O Quarto Ficou Frio",
+      "subtitle": "Tristan & Misty",
+      "collection": "Tristan Queen",
+      "description": "Tristan Queen · Tristan & Misty — Tristan se abre emocionalmente e declara seu amor por Misty, mas a conversa termina em honestidade dolorosa, ruptura e despedida.",
+      "status": "published",
+      "pages": [
+        {
+          "order": 1,
+          "label": "Página 1",
+          "src": "images/comics/tristan-queen/o-quarto-ficou-frio-01.webp",
+          "alt": "O Quarto Ficou Frio — página 1: Tristan confessa seus sentimentos a Misty."
+        },
+        {
+          "order": 2,
+          "label": "Página 2",
+          "src": "images/comics/tristan-queen/o-quarto-ficou-frio-02.webp",
+          "alt": "O Quarto Ficou Frio — página 2: Tristan e Misty conversam sobre a diferença entre seus sentimentos."
+        },
+        {
+          "order": 3,
+          "label": "Página 3",
+          "src": "images/comics/tristan-queen/o-quarto-ficou-frio-03.webp",
+          "alt": "O Quarto Ficou Frio — página 3: Tristan e Misty se despedem."
+        }
+      ]
     }
   ]
 }
