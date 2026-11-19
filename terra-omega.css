@@ -8832,3 +8832,219 @@ button,
     animation:none!important;
   }
 }
+
+
+/* ===== CAPA · QUADRINHOS ===== */
+.home-content-area{padding:0;overflow:visible}
+.home-with-sidebar>.sidebar{min-height:100%}
+#sub-capa-quadrinhos{padding:30px 36px 38px}
+
+.comic-library-intro{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:24px;
+  margin:8px 0 22px;
+  padding:20px 22px;
+  border:1px solid var(--line);
+  border-left:4px solid var(--accent);
+  background:linear-gradient(135deg,var(--paper),var(--paper2));
+}
+.comic-library-kicker{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;
+  letter-spacing:1.7px;
+  color:var(--ink3);
+  margin-bottom:5px;
+}
+.comic-library-intro h3{
+  font-family:var(--font-title);
+  font-size:22px;
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  margin-bottom:5px;
+}
+.comic-library-intro p{
+  max-width:720px;
+  font-size:12.5px;
+  color:var(--ink2);
+}
+.comic-library-badge{
+  flex:0 0 auto;
+  border:1px solid var(--accent);
+  color:var(--accent);
+  padding:7px 10px;
+  font:700 9px/1 'Share Tech Mono',monospace;
+  letter-spacing:1.4px;
+  white-space:nowrap;
+}
+
+.comic-reader{
+  border:1px solid var(--line);
+  background:var(--paper);
+  box-shadow:0 16px 42px rgba(0,0,0,.16);
+}
+.comic-reader-toolbar{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:14px;
+  padding:12px 14px;
+  border-bottom:1px solid var(--line);
+  background:var(--paper2);
+}
+.comic-series-picker{display:flex;flex-direction:column;gap:4px;min-width:min(360px,50%)}
+.comic-series-picker>span{
+  font:700 8px/1 'Share Tech Mono',monospace;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  color:var(--ink3);
+}
+.comic-series-picker select{
+  width:100%;
+  padding:8px 10px;
+  border:1px solid var(--line);
+  background:var(--paper);
+  color:var(--ink);
+  font:inherit;
+}
+.comic-reader-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.comic-reader-actions button{
+  border:1px solid var(--line);
+  background:var(--paper);
+  color:var(--ink2);
+  padding:7px 10px;
+  cursor:pointer;
+  font:700 9px/1 'Share Tech Mono',monospace;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+}
+.comic-reader-actions button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.comic-reader-actions button:disabled{opacity:.35;cursor:not-allowed}
+.comic-page-counter{
+  min-width:60px;
+  text-align:center;
+  color:var(--ink3);
+  font:700 9px/1 'Share Tech Mono',monospace;
+}
+
+.comic-reader-stage{
+  min-height:640px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:
+    radial-gradient(circle at 50% 20%,rgba(194,161,106,.08),transparent 34%),
+    #0b0a0c;
+  overflow:auto;
+  outline:none;
+}
+.comic-reader-stage:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
+.comic-reader-stage img{
+  display:block;
+  max-width:100%;
+  max-height:78vh;
+  height:auto;
+  width:auto;
+  box-shadow:0 14px 45px rgba(0,0,0,.58);
+  background:#fff;
+}
+.comic-reader-empty{
+  min-height:420px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  text-align:center;
+  color:#a79b8a;
+}
+.comic-reader-empty .comic-empty-icon{font-size:54px;line-height:1;color:#c2a16a}
+.comic-reader-empty strong{
+  font-family:var(--font-title);
+  font-size:24px;
+  color:#e8dfcc;
+  text-transform:uppercase;
+}
+.comic-reader-empty span{font-size:12px;max-width:360px}
+
+.comic-reader-meta{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  padding:13px 16px;
+  border-top:1px solid #1c181c;
+  border-bottom:1px solid var(--line);
+  background:var(--paper2);
+}
+.comic-reader-meta>div{display:flex;flex-direction:column;gap:2px}
+.comic-reader-meta strong{font-family:var(--font-title);font-size:15px;color:var(--ink)}
+.comic-reader-meta span{font-size:10.5px;color:var(--ink3)}
+#comicPageLabel{
+  align-self:center;
+  font-family:'Share Tech Mono',monospace;
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  white-space:nowrap;
+}
+
+.comic-reader-thumbs{
+  display:flex;
+  gap:9px;
+  overflow-x:auto;
+  padding:12px;
+  min-height:74px;
+  background:var(--paper);
+}
+.comic-thumb{
+  flex:0 0 60px;
+  width:60px;
+  height:84px;
+  border:1px solid var(--line);
+  padding:2px;
+  background:var(--paper2);
+  cursor:pointer;
+  position:relative;
+}
+.comic-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.comic-thumb.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.comic-thumb::after{
+  content:attr(data-page);
+  position:absolute;
+  right:3px;
+  bottom:3px;
+  min-width:16px;
+  padding:2px 4px;
+  background:rgba(0,0,0,.78);
+  color:#fff;
+  font:700 8px/1 'Share Tech Mono',monospace;
+  text-align:center;
+}
+
+.comic-reader-stage:fullscreen,
+.comic-reader-stage:-webkit-full-screen{
+  width:100vw;
+  height:100vh;
+  min-height:100vh;
+  padding:16px;
+  background:#050506;
+}
+.comic-reader-stage:fullscreen img,
+.comic-reader-stage:-webkit-full-screen img{
+  max-height:calc(100vh - 32px);
+  max-width:calc(100vw - 32px);
+}
+
+@media(max-width:780px){
+  .home-with-sidebar{display:block}
+  #sub-capa-quadrinhos{padding:22px 16px 30px}
+  .comic-library-intro{flex-direction:column}
+  .comic-reader-toolbar{align-items:stretch;flex-direction:column}
+  .comic-series-picker{min-width:0;width:100%}
+  .comic-reader-actions{justify-content:space-between}
+  .comic-reader-stage{min-height:460px;padding:10px}
+  .comic-reader-stage img{max-height:72vh}
+  .comic-reader-meta{flex-direction:column;gap:6px}
+  #comicPageLabel{align-self:flex-start}
+}

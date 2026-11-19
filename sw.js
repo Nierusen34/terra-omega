@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION="terra-omega-pwa-v2.0.0-20261118-taxonomy-nucleus-fix";
+const VERSION="terra-omega-pwa-v2.0.0-20261118-comic-reader";
 const CORE_CACHE=VERSION+"-core";
 const IMAGE_CACHE=VERSION+"-images";
 const TRANSLATION_CACHE=VERSION+"-translation";
@@ -18,6 +18,8 @@ const CORE_ASSETS=[
   "./images/pwa/terra-omega-192.webp",
   "./images/pwa/terra-omega-512.svg",
   "./images/pwa/terra-omega-maskable.svg",
+  "./data/comics.json",
+  "./js/comic-reader.js",
   "./data/characters.js",
   "./data/character-overrides.js",
   "./data/character-meta.js",

@@ -14,7 +14,8 @@ var lastTabNavigation = null;
 var lastWarning = {key:'',at:0};
 
 var SECTION_ROUTES = [
-  {route:'/capa',tab:'tab-home',sub:null,title:'Capa'},
+  {route:'/capa',tab:'tab-home',sub:'sub-capa-visao',title:'Capa · Visão Geral'},
+  {route:'/capa/quadrinhos',tab:'tab-home',sub:'sub-capa-quadrinhos',title:'Capa · Quadrinhos'},
   {route:'/cidade/visao-geral',tab:'tab-city',sub:'sub-visao',title:'Cidade · Visão Geral'},
   {route:'/cidade/distritos',tab:'tab-city',sub:'sub-distritos',title:'Cidade · Distritos'},
   {route:'/cidade/historia',tab:'tab-city',sub:'sub-historia',title:'Cidade · História'},

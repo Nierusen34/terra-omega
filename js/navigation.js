@@ -99,6 +99,46 @@ function toggleChangelog(){
   if(el) el.classList.toggle('open');
 }
 
+
+var comicReaderPromise = null;
+function ensureComicReader(){
+  if(window.TerraOmegaApp && window.TerraOmegaApp.comicReader){
+    if(window.TerraOmegaApp.comicReader.mount) window.TerraOmegaApp.comicReader.mount();
+    return Promise.resolve(window.TerraOmegaApp.comicReader);
+  }
+  if(comicReaderPromise) return comicReaderPromise;
+
+  comicReaderPromise = new Promise(function(resolve,reject){
+    var existing=document.querySelector('script[data-comic-reader]');
+    if(existing){
+      existing.addEventListener('load',function(){
+        var reader=window.TerraOmegaApp && window.TerraOmegaApp.comicReader;
+        if(reader && reader.mount) reader.mount();
+        resolve(reader || null);
+      },{once:true});
+      existing.addEventListener('error',reject,{once:true});
+      return;
+    }
+
+    var script=document.createElement('script');
+    script.src='js/comic-reader.js';
+    script.defer=true;
+    script.setAttribute('data-comic-reader','1');
+    script.addEventListener('load',function(){
+      var reader=window.TerraOmegaApp && window.TerraOmegaApp.comicReader;
+      if(reader && reader.mount) reader.mount();
+      resolve(reader || null);
+    },{once:true});
+    script.addEventListener('error',function(){
+      comicReaderPromise=null;
+      reject(new Error('Falha ao carregar o leitor de quadrinhos.'));
+    },{once:true});
+    document.head.appendChild(script);
+  });
+
+  return comicReaderPromise;
+}
+
 document.querySelectorAll('.tab-btn').forEach(function(btn){
   btn.addEventListener('click', function(){
     var t = btn.getAttribute('data-tab');
@@ -127,6 +167,7 @@ document.querySelectorAll('.sidebar-item').forEach(function(item){
     item.classList.add('active');
     var el = document.getElementById(t); if(el) el.classList.add('active');
     if(el && window.TerraOmegaApp && window.TerraOmegaApp.media) window.TerraOmegaApp.media.hydrate(el);
+    if(t === 'sub-capa-quadrinhos') ensureComicReader().catch(function(error){ console.error('Terra Omega Comics:',error); });
     var crumb = parent.querySelector('.breadcrumbs .current');
     if(crumb) crumb.textContent = item.textContent.replace(/[^\w\sÀ-ÿ]/g,'').trim();
     syncGlobalSidebar(parent.id, t);
@@ -137,7 +178,9 @@ document.querySelectorAll('.sidebar-item').forEach(function(item){
 });
 
 var globalStructure = [
-  { id:'tab-home', icon:'📰', label:'Capa', subs:[] },
+  { id:'tab-home', icon:'📰', label:'Capa', subs:[
+    {id:'sub-capa-visao', label:'Visão Geral'},{id:'sub-capa-quadrinhos', label:'Quadrinhos'}
+  ] },
   { id:'tab-city', icon:'🏛️', label:'Cidade', subs:[
     {id:'sub-visao', label:'Visão Geral'},{id:'sub-distritos', label:'Distritos'},
     {id:'sub-historia', label:'História'},{id:'sub-cultura', label:'Cultura'},{id:'sub-eventos', label:'Eventos'}

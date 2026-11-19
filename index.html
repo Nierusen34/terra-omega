@@ -932,6 +932,16 @@
 
 <!-- CAPA -->
 <div class="tab-content active" id="tab-home">
+<div class="breadcrumbs">Universo Oblívio › <span class="current">Visão Geral</span></div>
+<div class="with-sidebar home-with-sidebar">
+  <div class="sidebar">
+    <button class="sidebar-item active" data-sub="sub-capa-visao"><span class="ico">📰</span>Visão Geral</button>
+    <button class="sidebar-item" data-sub="sub-capa-quadrinhos"><span class="ico">📖</span>Quadrinhos</button>
+  </div>
+
+  <div class="content-area home-content-area">
+    <div class="sub-content active" id="sub-capa-visao">
+
 <div class="home-hero">
 <div class="home-badge">✦ Realidade Alternativa · Multiverso DC ✦</div>
 <h2 data-edit-id="tz-0003" data-legacy-edit-id="e_2">Bem-vindo à <span class="accent">Terra Omega</span></h2>
@@ -1003,6 +1013,59 @@
 <div class="page-footer home-footer">
 UNIVERSO OBLÍVIO · TERRA OMEGA · DOSSIÊ CENTRAL · v2.0 · JAN 2027
 <div class="seal">Arquivo Central</div>
+</div>
+    </div>
+
+<div class="sub-content" id="sub-capa-quadrinhos">
+  <div class="section-title">📖 Quadrinhos</div>
+
+  <section class="comic-library-intro">
+    <div>
+      <div class="comic-library-kicker">UNIVERSO OBLÍVIO · ARQUIVO SEQUENCIAL</div>
+      <h3>Leitor de Quadrinhos</h3>
+      <p>Uma área para reunir as páginas de HQ de Terra Omega em ordem narrativa, mantendo cada sequência organizada como uma história contínua.</p>
+    </div>
+    <div class="comic-library-badge">TERRA OMEGA · HQ</div>
+  </section>
+
+  <div class="comic-reader" id="comicReader" aria-live="polite">
+    <div class="comic-reader-toolbar">
+      <label class="comic-series-picker">
+        <span>História</span>
+        <select id="comicSeriesSelect" aria-label="Selecionar história em quadrinhos">
+          <option>Carregando…</option>
+        </select>
+      </label>
+
+      <div class="comic-reader-actions">
+        <button id="comicPrevBtn" type="button">← Anterior</button>
+        <span id="comicPageCounter" class="comic-page-counter">—</span>
+        <button id="comicNextBtn" type="button">Próxima →</button>
+        <button id="comicFullscreenBtn" type="button" title="Abrir leitor em tela cheia">⛶ Tela cheia</button>
+      </div>
+    </div>
+
+    <div class="comic-reader-stage" id="comicReaderStage" tabindex="0" aria-label="Página atual do quadrinho">
+      <div id="comicReaderEmpty" class="comic-reader-empty">
+        <div class="comic-empty-icon">▤</div>
+        <strong>Leitor pronto</strong>
+        <span>As páginas publicadas nesta coleção aparecerão aqui.</span>
+      </div>
+      <img id="comicPageImage" alt="" hidden>
+    </div>
+
+    <div class="comic-reader-meta">
+      <div>
+        <strong id="comicSeriesTitle">Terra Omega</strong>
+        <span id="comicSeriesDescription">Arquivo de páginas sequenciais do Universo Oblívio.</span>
+      </div>
+      <span id="comicPageLabel">Nenhuma página publicada</span>
+    </div>
+
+    <div class="comic-reader-thumbs" id="comicThumbs" aria-label="Miniaturas das páginas"></div>
+  </div>
+</div>
+  </div>
 </div>
 </div>
 
