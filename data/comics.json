@@ -4,7 +4,7 @@
     {
       "id": "tristan-queen-o-quarto-ficou-frio",
       "title": "O Quarto Ficou Frio",
-      "subtitle": "Tristan & Misty",
+      "subtitle": "",
       "collection": "Tristan Queen",
       "description": "Tristan Queen · Tristan & Misty — Tristan se abre emocionalmente e declara seu amor por Misty, mas a conversa termina em honestidade dolorosa, ruptura e despedida.",
       "status": "published",
@@ -32,7 +32,9 @@
         }
       ],
       "arc": "Tristan & Misty",
-      "issueNumber": 1
+      "issueNumber": 1,
+      "publicationDate": "2026-11-19",
+      "storyDate": ""
     }
   ]
 }

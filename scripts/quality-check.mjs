@@ -493,6 +493,12 @@ function checkComics(){
     if(!String(edition.title||"").trim()) fail("Edição sem título: "+id);
     if(!String(edition.collection||"").trim()) fail("Edição sem coleção: "+id);
     if(!allowedStatus.has(String(edition.status||"published"))) fail("Status inválido em quadrinho: "+id);
+    if(edition.publicationDate && !/^\d{4}-\d{2}-\d{2}$/.test(String(edition.publicationDate))){
+      fail("Data editorial inválida em quadrinho: "+id);
+    }
+    if(edition.subtitle && edition.arc && String(edition.subtitle).trim()===String(edition.arc).trim()){
+      warn("Subtítulo repete o arco na edição "+id+"; prefira deixar o subtítulo vazio ou usar informação distinta.");
+    }
 
     if(edition.cover){
       const cover=String(edition.cover);
@@ -542,6 +548,12 @@ function checkComics(){
      !reader.includes("touchstart")){
     fail("Leitor de quadrinhos v3 está sem progresso, leitura imersiva, lazy-load ou gestos.");
   }
+  if(!reader.includes("comicLibrarySearch") ||
+     !reader.includes("trapFocus") ||
+     !reader.includes("currentComicRoute") ||
+     !reader.includes("root.scrollTo({left:")){
+    fail("Etapa 3 do leitor está sem busca da biblioteca, foco acessível, deep-link ou filmstrip horizontal.");
+  }
   if(!html.includes('id="comicCollectionSelect"') ||
      !html.includes('id="comicEditionSelect"') ||
      !html.includes('id="comicReadingModeBtn"')){
@@ -549,8 +561,18 @@ function checkComics(){
   }
   if(!manager.includes("comicManagerUploadCover") ||
      !manager.includes("thumbnailBase64") ||
-     !manager.includes("comicManagerGenerateThumbs")){
-    fail("Editor de Quadrinhos não oferece capa e miniaturas otimizadas.");
+     !manager.includes("comicManagerGenerateThumbs") ||
+     !manager.includes("comicManagerPublicationDate") ||
+     !manager.includes("trapFocus")){
+    fail("Editor de Quadrinhos não oferece capa, miniaturas, datas e acessibilidade esperadas.");
+  }
+  const globalCss=read("terra-omega.css");
+  const comicCss=read("css/comic-reader.css");
+  if(globalCss.includes("CAPA · QUADRINHOS") || globalCss.includes("QUADRINHOS 2.0")){
+    fail("CSS legado de quadrinhos ainda está misturado ao terra-omega.css.");
+  }
+  if(comicCss.length<12000 || !comicCss.includes("comic-reader")){
+    fail("Stylesheet isolado de quadrinhos parece incompleto.");
   }
   for(const action of ["comic-save","comic-page-upload","comic-page-thumbnail","comic-cover-upload","comic-delete"]){
     if(!api.includes('action === "'+action+'"')) fail("API de quadrinhos sem ação: "+action);
