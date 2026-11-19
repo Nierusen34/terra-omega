@@ -1111,7 +1111,7 @@ window.TerraOmegaData.characterMedia = {
     }
   },
   "Matteo Ferraro": {
-    "src": "",
+    "src": "images/characters/matteo-ferraro.jpg",
     "alt": "Matteo Ferraro",
     "source": "local",
     "credit": ""
