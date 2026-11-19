@@ -466,7 +466,7 @@ function normalizeComicCatalog(data){
     });
   });
 
-  return {version:2,series};
+  return {version:3,series};
 }
 
 function renderComicCatalog(catalog){
@@ -793,10 +793,10 @@ export default async function handler(req,res){
         const index=found.edition.pages.findIndex(page=>page && page.src===src);
         if(index<0) return res.status(404).json({error:"comic_page_not_found",message:"Página não encontrada."});
 
+        const removed=found.edition.pages[index];
         found.edition.pages.splice(index,1);
         found.edition.pages=found.edition.pages.map((page,i)=>({...page,order:i+1,label:page.label||("Página "+(i+1))}));
         const files=[{path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"}];
-        const removed=found.edition.pages[index];
         for(const path of [src,removed && removed.thumb]){
           if(validComicPath(path)){
             try{await readBinaryFile(path);files.unshift({path,delete:true});}catch(error){if(!error||error.status!==404)throw error;}
