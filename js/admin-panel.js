@@ -442,6 +442,14 @@ function handleAction(action){
     return;
   }
 
+  if(action === 'comic-manager'){
+    requireEditorAction(function(){
+      close();
+      if(app.comicManager && app.comicManager.open) app.comicManager.open();
+    });
+    return;
+  }
+
   if(action === 'new-character'){
     requireEditorAction(function(){
       close();

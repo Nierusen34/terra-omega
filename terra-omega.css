@@ -9048,3 +9048,195 @@ button,
   .comic-reader-meta{flex-direction:column;gap:6px}
   #comicPageLabel{align-self:flex-start}
 }
+
+
+/* ===== QUADRINHOS 2.0 · LEITOR ===== */
+.comic-reader{--comic-gap:12px;--comic-paper:#f6efe3;overflow:hidden}
+.comic-reader-topbar{
+  display:grid;grid-template-columns:minmax(240px,1fr) auto;gap:18px;align-items:end;
+  padding:13px 14px;border-bottom:1px solid var(--line);background:var(--paper2)
+}
+.comic-view-controls{display:flex;align-items:flex-end;gap:9px;justify-content:flex-end}
+.comic-view-controls>span{font:700 8px/1 'Share Tech Mono',monospace;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink3);padding-bottom:9px}
+.comic-segmented{display:flex;border:1px solid var(--line);background:var(--paper)}
+.comic-segmented button{
+  border:0;border-right:1px solid var(--line);background:transparent;color:var(--ink3);
+  padding:8px 10px;cursor:pointer;font:700 9px/1 'Share Tech Mono',monospace;white-space:nowrap
+}
+.comic-segmented button:last-child{border-right:0}
+.comic-segmented button:hover,.comic-segmented button.active{color:var(--accent);background:var(--paper2)}
+.comic-reader-toolbar{align-items:center;flex-wrap:wrap}
+.comic-nav-actions,.comic-fit-actions{flex:1}
+.comic-fit-actions{justify-content:flex-end}
+.comic-reader-actions button.active{border-color:var(--accent);color:var(--accent);background:rgba(194,161,106,.08)}
+.comic-toolbar-divider{width:1px;height:22px;background:var(--line);margin:0 2px}
+.comic-page-jump{display:flex;align-items:center;gap:5px;color:var(--ink3);font:700 8px/1 'Share Tech Mono',monospace;text-transform:uppercase}
+.comic-page-jump input{
+  width:48px;padding:6px 5px;border:1px solid var(--line);background:var(--paper);color:var(--ink);
+  text-align:center;font:700 9px/1 'Share Tech Mono',monospace
+}
+.comic-zoom-label{min-width:52px;text-align:center;color:var(--ink3);font:700 9px/1 'Share Tech Mono',monospace}
+
+.comic-reader-stage{
+  min-height:680px;max-height:none;padding:24px;
+  background:
+    radial-gradient(circle at 50% 8%,rgba(194,161,106,.09),transparent 30%),
+    linear-gradient(180deg,#111014,#070708 70%);
+}
+.comic-pages-viewport{
+  width:100%;min-height:100%;display:flex;align-items:flex-start;justify-content:center;gap:var(--comic-gap);
+  margin:auto
+}
+.comic-page-frame{margin:0;display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0}
+.comic-page-frame figcaption{
+  color:#7e7468;font:700 8px/1 'Share Tech Mono',monospace;letter-spacing:.8px;text-transform:uppercase
+}
+.comic-page-image{
+  display:block;background:var(--comic-paper);box-shadow:0 14px 44px rgba(0,0,0,.64);
+  object-fit:contain;user-select:none;-webkit-user-drag:none
+}
+.comic-reader[data-view-mode="single"] .comic-page-frame{width:100%}
+.comic-reader[data-view-mode="spread"] .comic-page-frame,
+.comic-reader[data-view-mode="pair"] .comic-page-frame{width:calc(50% - (var(--comic-gap)/2))}
+.comic-reader[data-view-mode="continuous"] .comic-pages-viewport{flex-direction:column;align-items:center;gap:26px}
+.comic-reader[data-view-mode="continuous"] .comic-page-frame{width:min(100%,980px)}
+
+.comic-reader[data-fit-mode="screen"] .comic-page-image{max-width:100%;max-height:74vh;width:auto;height:auto}
+.comic-reader[data-view-mode="spread"][data-fit-mode="screen"] .comic-page-image,
+.comic-reader[data-view-mode="pair"][data-fit-mode="screen"] .comic-page-image{max-height:70vh}
+.comic-reader[data-fit-mode="width"] .comic-page-image{width:100%;height:auto;max-width:none;max-height:none}
+.comic-reader[data-fit-mode="actual"] .comic-page-image{width:auto;height:auto;max-width:none;max-height:none}
+.comic-reader[data-fit-mode="custom"] .comic-page-image{height:auto;max-width:none;max-height:none}
+.comic-reader[data-fit-mode="actual"] .comic-pages-viewport,
+.comic-reader[data-fit-mode="custom"] .comic-pages-viewport{width:max-content;max-width:none}
+.comic-reader[data-view-mode="continuous"][data-fit-mode="actual"] .comic-pages-viewport,
+.comic-reader[data-view-mode="continuous"][data-fit-mode="custom"] .comic-pages-viewport{width:100%}
+
+.comic-reader-meta{align-items:center}
+.comic-collection-label{
+  color:var(--accent)!important;font:700 8px/1 'Share Tech Mono',monospace!important;
+  letter-spacing:1.3px;text-transform:uppercase
+}
+.comic-meta-right{align-items:flex-end!important;text-align:right}
+.comic-meta-right small{color:var(--ink3);font:8px/1.25 'Share Tech Mono',monospace}
+.comic-reader-thumbs-wrap{border-top:1px solid var(--line)}
+.comic-reader-thumbs-wrap[hidden]{display:none!important}
+.comic-thumb{transition:transform .12s ease,border-color .12s ease,opacity .12s ease}
+.comic-thumb:hover{transform:translateY(-2px)}
+.comic-thumb.active{opacity:1}
+.comic-reader:fullscreen{
+  width:100vw;height:100vh;background:var(--paper);display:flex;flex-direction:column
+}
+.comic-reader:fullscreen .comic-reader-stage{flex:1;min-height:0;overflow:auto}
+.comic-reader:fullscreen .comic-reader-thumbs{max-height:110px}
+.comic-reader:fullscreen .comic-page-image{max-height:calc(100vh - 245px)}
+.comic-reader:fullscreen[data-fit-mode="width"] .comic-page-image,
+.comic-reader:fullscreen[data-fit-mode="actual"] .comic-page-image,
+.comic-reader:fullscreen[data-fit-mode="custom"] .comic-page-image{max-height:none}
+
+/* ===== QUADRINHOS 2.0 · EDITOR ===== */
+.comic-manager-modal{
+  position:fixed;inset:0;z-index:10080;display:none;align-items:center;justify-content:center;
+  padding:22px;background:rgba(5,5,7,.82);backdrop-filter:blur(8px)
+}
+.comic-manager-modal.show{display:flex}
+.comic-manager-card{
+  width:min(1240px,97vw);height:min(850px,94vh);display:flex;flex-direction:column;
+  background:var(--paper);border:1px solid var(--line);box-shadow:0 28px 80px rgba(0,0,0,.5);overflow:hidden
+}
+.comic-manager-head{
+  display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 18px;
+  border-bottom:1px solid var(--line);background:var(--paper2)
+}
+.comic-manager-eyebrow{font:700 8px/1 'Share Tech Mono',monospace;letter-spacing:1.4px;color:var(--accent)}
+.comic-manager-head h3{margin:4px 0 0;font-family:var(--font-title);font-size:22px;text-transform:uppercase}
+.comic-manager-head>button{border:1px solid var(--line);background:var(--paper);color:var(--ink);width:34px;height:34px;cursor:pointer}
+.comic-manager-body{display:grid;grid-template-columns:280px minmax(0,1fr);min-height:0;flex:1}
+.comic-manager-library{border-right:1px solid var(--line);background:var(--paper2);min-height:0;display:flex;flex-direction:column}
+.comic-manager-library-head{padding:12px;border-bottom:1px solid var(--line)}
+.comic-manager-library-head>div{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.comic-manager-library-head span{color:var(--ink3);font:700 9px/1 'Share Tech Mono',monospace}
+.comic-manager-library-head button,.comic-manager-pages-head button,.comic-manager-edition-actions button{
+  border:1px solid var(--line);background:var(--paper);color:var(--ink2);padding:8px 10px;cursor:pointer;font:700 9px/1 'Share Tech Mono',monospace
+}
+.comic-manager-library-head button{width:100%}
+.comic-manager-list{padding:8px;overflow:auto;display:flex;flex-direction:column;gap:7px}
+.comic-manager-edition-card{display:grid;grid-template-columns:1fr auto;border:1px solid var(--line);background:var(--paper)}
+.comic-manager-edition-card.active{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.comic-manager-edition-main{border:0;background:transparent;color:var(--ink);text-align:left;padding:10px;cursor:pointer;min-width:0}
+.comic-manager-edition-main span{display:block;color:var(--accent);font:700 7px/1 'Share Tech Mono',monospace;letter-spacing:1px;margin-bottom:4px}
+.comic-manager-edition-main strong{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.comic-manager-edition-main small{display:block;color:var(--ink3);font-size:9px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.comic-manager-order-actions{display:flex;flex-direction:column;border-left:1px solid var(--line)}
+.comic-manager-order-actions button{flex:1;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink3);cursor:pointer;width:28px}
+.comic-manager-order-actions button:last-child{border-bottom:0}
+.comic-manager-order-actions button:hover:not(:disabled){color:var(--accent);background:var(--paper2)}
+.comic-manager-editor{padding:18px;overflow:auto;min-width:0}
+.comic-manager-blank{height:100%;min-height:380px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--ink3);gap:5px}
+.comic-manager-blank>span{font-size:46px}.comic-manager-blank strong{font-family:var(--font-title);font-size:20px;color:var(--ink)}
+.comic-manager-form-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:12px}
+.comic-manager-form-grid label{display:flex;flex-direction:column;gap:5px;color:var(--ink3);font:700 8px/1 'Share Tech Mono',monospace;letter-spacing:.7px;text-transform:uppercase}
+.comic-manager-form-grid label.wide{grid-column:1/-1}
+.comic-manager-form-grid input,.comic-manager-form-grid select,.comic-manager-form-grid textarea{
+  width:100%;border:1px solid var(--line);background:var(--paper2);color:var(--ink);padding:9px 10px;font:12px/1.35 var(--font-body);text-transform:none;letter-spacing:0
+}
+.comic-manager-edition-actions{display:flex;gap:8px;flex-wrap:wrap;padding:14px 0 18px;border-bottom:1px solid var(--line)}
+.comic-manager-edition-actions .primary{border-color:var(--accent);color:var(--accent)}
+.comic-manager-edition-actions .danger,.comic-manager-page-actions .danger{color:#d06d6d}
+.comic-manager-pages{padding-top:17px}
+.comic-manager-pages-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.comic-manager-pages-head>div{display:flex;align-items:center;gap:8px}
+.comic-manager-pages-head span{color:var(--ink3);font:700 8px/1 'Share Tech Mono',monospace}
+.comic-manager-upload-status{min-height:18px;margin-bottom:8px;font:9px/1.4 'Share Tech Mono',monospace;color:var(--ink3)}
+.comic-manager-upload-status[data-state="working"]{color:var(--accent)}
+.comic-manager-upload-status[data-state="success"]{color:#69b98a}
+.comic-manager-upload-status[data-state="error"]{color:#d06d6d}
+.comic-manager-pages-list{display:flex;flex-direction:column;gap:8px}
+.comic-manager-page-row{
+  display:grid;grid-template-columns:24px 76px minmax(0,1fr) auto;gap:10px;align-items:center;
+  padding:8px;border:1px solid var(--line);background:var(--paper2)
+}
+.comic-manager-page-row.dragging{opacity:.45;border-color:var(--accent)}
+.comic-manager-page-drag{cursor:grab;color:var(--ink3);font-size:18px;text-align:center}
+.comic-manager-page-row>img{width:76px;height:104px;object-fit:cover;border:1px solid var(--line);background:#111}
+.comic-manager-page-fields{display:grid;grid-template-columns:110px 1fr;gap:6px;min-width:0}
+.comic-manager-page-fields strong{grid-column:1/-1;font-size:10px}
+.comic-manager-page-fields input{min-width:0;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:7px;font-size:10px}
+.comic-manager-page-actions{display:grid;grid-template-columns:repeat(2,30px);gap:5px}
+.comic-manager-page-actions button{width:30px;height:30px;border:1px solid var(--line);background:var(--paper);color:var(--ink2);cursor:pointer}
+.comic-manager-empty{padding:22px;text-align:center;border:1px dashed var(--line);color:var(--ink3);font-size:10px}
+.comic-manager-modal.is-busy .comic-manager-card{cursor:progress}
+.comic-manager-modal button:disabled{opacity:.4;cursor:not-allowed}
+
+@media(max-width:900px){
+  .comic-reader-topbar{grid-template-columns:1fr}
+  .comic-view-controls{justify-content:space-between;align-items:center}
+  .comic-reader-toolbar{align-items:stretch}
+  .comic-fit-actions{justify-content:flex-start}
+  .comic-segmented{overflow-x:auto}
+  .comic-segmented button span{display:none}
+  .comic-reader-stage{min-height:520px;padding:12px}
+  .comic-reader[data-view-mode="spread"] .comic-page-frame,
+  .comic-reader[data-view-mode="pair"] .comic-page-frame{width:calc(50% - 6px)}
+  .comic-manager-modal{padding:0}
+  .comic-manager-card{width:100vw;height:100vh;max-height:none;border:0}
+  .comic-manager-body{grid-template-columns:1fr}
+  .comic-manager-library{max-height:190px;border-right:0;border-bottom:1px solid var(--line)}
+  .comic-manager-editor{padding:14px}
+}
+@media(max-width:600px){
+  .comic-reader-actions{justify-content:flex-start}
+  .comic-reader-actions button{padding:7px}
+  .comic-page-jump{display:none}
+  .comic-meta-right small{display:none}
+  .comic-reader-stage{min-height:430px;padding:7px}
+  .comic-reader[data-view-mode="spread"] .comic-pages-viewport,
+  .comic-reader[data-view-mode="pair"] .comic-pages-viewport{gap:5px}
+  .comic-manager-form-grid{grid-template-columns:1fr}
+  .comic-manager-form-grid label.wide{grid-column:auto}
+  .comic-manager-pages-head{align-items:flex-start;flex-direction:column}
+  .comic-manager-page-row{grid-template-columns:22px 58px 1fr}
+  .comic-manager-page-row>img{width:58px;height:82px}
+  .comic-manager-page-actions{grid-column:2/-1;display:flex;justify-content:flex-end}
+  .comic-manager-page-fields{grid-template-columns:1fr}
+}

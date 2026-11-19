@@ -405,6 +405,110 @@ function resolveCharacterMediaTarget(mediaData,privateData,character,requestedTa
   throw error;
 }
 
+
+const COMIC_STATUSES=new Set(["published","draft"]);
+const COMIC_PATH_RE=/^images\/comics\/[a-z0-9._/-]+\.(png|jpe?g|webp)$/i;
+
+function safeComicText(value,max=500){
+  return String(value || "").trim().replace(/[\u0000-\u001f\u007f]/g,"").slice(0,max);
+}
+
+function normalizeComicPage(input,index){
+  const row=input && typeof input === "object" && !Array.isArray(input) ? input : {};
+  const src=String(row.src || "").trim();
+  if(!COMIC_PATH_RE.test(src)){
+    const error=new Error("Caminho de página de quadrinho inválido.");
+    error.status=400;
+    error.code="invalid_comic_page_path";
+    throw error;
+  }
+  return {
+    order:index+1,
+    label:safeComicText(row.label || ("Página "+(index+1)),120),
+    src,
+    alt:safeComicText(row.alt || "",240)
+  };
+}
+
+function normalizeComicCatalog(data){
+  const input=data && typeof data === "object" && !Array.isArray(data) ? data : {};
+  const source=Array.isArray(input.series) ? input.series : [];
+  const seen=new Set();
+  const series=[];
+
+  source.forEach((raw,index)=>{
+    if(!raw || typeof raw !== "object") return;
+    let id=slugify(raw.id || raw.title || ("edicao-"+(index+1)));
+    if(!id) id="edicao-"+(index+1);
+    let base=id,suffix=2;
+    while(seen.has(id)) id=base+"-"+suffix++;
+    seen.add(id);
+    const rawPages=Array.isArray(raw.pages) ? raw.pages : [];
+    const pages=rawPages.map((page,pageIndex)=>normalizeComicPage(page,pageIndex));
+    series.push({
+      id,
+      title:safeComicText(raw.title || "Sem título",160),
+      subtitle:safeComicText(raw.subtitle || "",160),
+      collection:safeComicText(raw.collection || "Terra Omega",120),
+      description:safeComicText(raw.description || "",800),
+      status:COMIC_STATUSES.has(raw.status) ? raw.status : "published",
+      pages
+    });
+  });
+
+  return {version:2,series};
+}
+
+function renderComicCatalog(catalog){
+  return JSON.stringify(normalizeComicCatalog(catalog),null,2)+"\n";
+}
+
+function findComicEdition(catalog,id){
+  const key=slugify(id || "");
+  const index=(catalog.series || []).findIndex(row=>row && row.id===key);
+  return {key,index,edition:index>=0?catalog.series[index]:null};
+}
+
+function uniqueComicId(title,collection,series){
+  const base=slugify([collection,title].filter(Boolean).join("-")) || "quadrinho";
+  const used=new Set((series || []).map(row=>String(row && row.id || "")));
+  if(!used.has(base)) return base;
+  let suffix=2;
+  while(used.has(base+"-"+suffix)) suffix++;
+  return base+"-"+suffix;
+}
+
+async function readComicCatalog(){
+  const file=await readTextFile("data/comics.json");
+  let parsed={series:[]};
+  try{parsed=JSON.parse(file.content);}catch(error){
+    const err=new Error("O catálogo de quadrinhos está inválido.");
+    err.status=500;err.code="invalid_comics_catalog";throw err;
+  }
+  return normalizeComicCatalog(parsed);
+}
+
+function nextComicPagePath(edition,extension){
+  const folder=slugify(edition.collection || "quadrinhos") || "quadrinhos";
+  let highest=0;
+  (edition.pages || []).forEach(page=>{
+    const match=String(page.src || "").match(/-(\d+)\.[a-z0-9]+$/i);
+    if(match) highest=Math.max(highest,Number(match[1])||0);
+  });
+  const number=String(highest+1).padStart(2,"0");
+  return "images/comics/"+folder+"/"+edition.id+"-"+number+"."+extension;
+}
+
+function comicResult(req,commit,catalog,extra={}){
+  return {
+    ok:true,
+    sha:commit.sha,
+    catalog,
+    status_url:statusUrl(req,commit.sha),
+    ...extra
+  };
+}
+
 const LIBRARY_CATEGORIES=new Set(["portrait","graph","map","editorial","team","other"]);
 
 function normalizeLibraryAsset(input,existing,id){
@@ -505,6 +609,184 @@ export default async function handler(req,res){
 
   try {
     const requestBody = req.body || {};
+
+    if(req.method === "POST" && String(requestBody.action || "").startsWith("comic-")){
+      const action=String(requestBody.action || "");
+      const head=await getHead();
+      const catalog=await readComicCatalog();
+
+      if(action === "comic-save"){
+        const requested=slugify(requestBody.id || "");
+        const found=findComicEdition(catalog,requested);
+        const title=safeComicText(requestBody.title,160);
+        if(!title) return res.status(400).json({error:"missing_comic_title",message:"Informe o título da edição."});
+
+        const collection=safeComicText(requestBody.collection || "Terra Omega",120) || "Terra Omega";
+        const id=found.edition ? found.edition.id : uniqueComicId(title,collection,catalog.series);
+        const edition={
+          id,
+          title,
+          subtitle:safeComicText(requestBody.subtitle,160),
+          collection,
+          description:safeComicText(requestBody.description,800),
+          status:COMIC_STATUSES.has(requestBody.status) ? requestBody.status : "draft",
+          pages:found.edition ? found.edition.pages : []
+        };
+
+        if(found.index>=0) catalog.series[found.index]=edition;
+        else catalog.series.push(edition);
+
+        const commit=await commitFiles(
+          [{path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"}],
+          found.edition ? ("comics: atualizar "+edition.title) : ("comics: criar "+edition.title),
+          head
+        );
+        return res.status(200).json(comicResult(req,commit,catalog,{edition}));
+      }
+
+      if(action === "comic-delete"){
+        const found=findComicEdition(catalog,requestBody.id);
+        if(!found.edition) return res.status(404).json({error:"comic_not_found",message:"Edição não encontrada."});
+
+        const files=[];
+        for(const page of found.edition.pages || []){
+          if(!COMIC_PATH_RE.test(page.src)) continue;
+          try{
+            await readBinaryFile(page.src);
+            files.push({path:page.src,delete:true});
+          }catch(error){
+            if(!error || error.status!==404) throw error;
+          }
+        }
+        catalog.series.splice(found.index,1);
+        files.push({path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"});
+        const commit=await commitFiles(files,"comics: excluir "+found.edition.title,head);
+        return res.status(200).json(comicResult(req,commit,catalog,{deleted:found.edition.id}));
+      }
+
+      if(action === "comic-page-upload"){
+        const found=findComicEdition(catalog,requestBody.id);
+        if(!found.edition) return res.status(404).json({error:"comic_not_found",message:"Salve a edição antes de adicionar páginas."});
+
+        const mime=String(requestBody.mimeType || "").toLowerCase();
+        const extension=EXTENSIONS[mime];
+        if(!extension) return res.status(400).json({error:"invalid_media",message:"Use PNG, JPEG ou WebP."});
+
+        let encoded=String(requestBody.contentBase64 || "");
+        const comma=encoded.indexOf(",");
+        if(encoded.startsWith("data:") && comma>=0) encoded=encoded.slice(comma+1);
+        encoded=encoded.replace(/\s+/g,"");
+        const buffer=Buffer.from(encoded,"base64");
+        if(!buffer.length || buffer.length>MAX_BYTES){
+          return res.status(413).json({error:"image_too_large",message:"A página otimizada deve ter no máximo 2 MB."});
+        }
+        if(!validMagic(buffer,mime)){
+          return res.status(400).json({error:"invalid_image",message:"O conteúdo da página não corresponde ao formato informado."});
+        }
+
+        const replaceSrc=String(requestBody.replaceSrc || "").trim();
+        let pagePath="";
+        let pageIndex=-1;
+        const files=[];
+
+        if(replaceSrc){
+          pageIndex=found.edition.pages.findIndex(page=>page && page.src===replaceSrc);
+          if(pageIndex<0) return res.status(404).json({error:"comic_page_not_found",message:"Página a substituir não encontrada."});
+          const old=found.edition.pages[pageIndex];
+          const base=old.src.replace(/\.[a-z0-9]+$/i,"");
+          pagePath=base+"."+extension;
+          if(old.src!==pagePath && COMIC_PATH_RE.test(old.src)){
+            try{await readBinaryFile(old.src);files.push({path:old.src,delete:true});}catch(error){if(!error||error.status!==404)throw error;}
+          }
+          found.edition.pages[pageIndex]={
+            order:pageIndex+1,
+            label:safeComicText(requestBody.label || old.label || ("Página "+(pageIndex+1)),120),
+            src:pagePath,
+            alt:safeComicText(requestBody.alt || old.alt || "",240)
+          };
+        }else{
+          pagePath=nextComicPagePath(found.edition,extension);
+          pageIndex=found.edition.pages.length;
+          found.edition.pages.push({
+            order:pageIndex+1,
+            label:safeComicText(requestBody.label || ("Página "+(pageIndex+1)),120),
+            src:pagePath,
+            alt:safeComicText(requestBody.alt || "",240)
+          });
+        }
+
+        files.push({path:pagePath,content:buffer.toString("base64"),encoding:"base64"});
+        files.push({path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"});
+        const commit=await commitFiles(
+          files,
+          replaceSrc ? ("comics: substituir página de "+found.edition.title) : ("comics: adicionar página a "+found.edition.title),
+          head
+        );
+        return res.status(200).json(comicResult(req,commit,catalog,{edition:found.edition,page:found.edition.pages[pageIndex]}));
+      }
+
+      if(action === "comic-page-delete"){
+        const found=findComicEdition(catalog,requestBody.id);
+        if(!found.edition) return res.status(404).json({error:"comic_not_found",message:"Edição não encontrada."});
+        const src=String(requestBody.src || "").trim();
+        const index=found.edition.pages.findIndex(page=>page && page.src===src);
+        if(index<0) return res.status(404).json({error:"comic_page_not_found",message:"Página não encontrada."});
+
+        found.edition.pages.splice(index,1);
+        found.edition.pages=found.edition.pages.map((page,i)=>({...page,order:i+1,label:page.label||("Página "+(i+1))}));
+        const files=[{path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"}];
+        if(COMIC_PATH_RE.test(src)){
+          try{await readBinaryFile(src);files.unshift({path:src,delete:true});}catch(error){if(!error||error.status!==404)throw error;}
+        }
+        const commit=await commitFiles(files,"comics: remover página de "+found.edition.title,head);
+        return res.status(200).json(comicResult(req,commit,catalog,{edition:found.edition}));
+      }
+
+      if(action === "comic-pages-update"){
+        const found=findComicEdition(catalog,requestBody.id);
+        if(!found.edition) return res.status(404).json({error:"comic_not_found",message:"Edição não encontrada."});
+        const incoming=Array.isArray(requestBody.pages)?requestBody.pages:[];
+        const existing=new Set(found.edition.pages.map(page=>page.src));
+        if(incoming.length!==found.edition.pages.length || incoming.some(page=>!page||!existing.has(String(page.src||"")))){
+          return res.status(400).json({error:"invalid_comic_pages",message:"A lista de páginas não corresponde à edição atual."});
+        }
+        const unique=new Set(incoming.map(page=>String(page.src||"")));
+        if(unique.size!==incoming.length){
+          return res.status(400).json({error:"duplicate_comic_pages",message:"Uma página foi repetida na ordenação."});
+        }
+
+        found.edition.pages=incoming.map((page,index)=>normalizeComicPage({
+          src:page.src,
+          label:page.label || ("Página "+(index+1)),
+          alt:page.alt || ""
+        },index));
+
+        const commit=await commitFiles(
+          [{path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"}],
+          "comics: reorganizar páginas de "+found.edition.title,
+          head
+        );
+        return res.status(200).json(comicResult(req,commit,catalog,{edition:found.edition}));
+      }
+
+      if(action === "comic-editions-reorder"){
+        const ids=Array.isArray(requestBody.ids)?requestBody.ids.map(slugify):[];
+        const existing=catalog.series.map(row=>row.id);
+        if(ids.length!==existing.length || new Set(ids).size!==ids.length || ids.some(id=>existing.indexOf(id)===-1)){
+          return res.status(400).json({error:"invalid_comic_order",message:"A ordenação das edições está incompleta."});
+        }
+        const byId=new Map(catalog.series.map(row=>[row.id,row]));
+        catalog.series=ids.map(id=>byId.get(id));
+        const commit=await commitFiles(
+          [{path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"}],
+          "comics: reorganizar edições",
+          head
+        );
+        return res.status(200).json(comicResult(req,commit,catalog));
+      }
+
+      return res.status(400).json({error:"unknown_comic_action",message:"Ação de quadrinhos desconhecida."});
+    }
 
     if(req.method === "POST" && (
       requestBody.action === "library-upsert" ||

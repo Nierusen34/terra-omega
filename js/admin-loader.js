@@ -11,6 +11,7 @@ var scripts=[
   "js/master-migration.js",
   "js/media-manager.js",
   "js/media-library.js",
+  "js/comic-manager.js",
   "js/portrait-browser.js",
   "js/master-workspace.js",
   "js/character-editor.js",

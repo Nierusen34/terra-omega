@@ -162,6 +162,7 @@
         <button type="button" data-admin-action="new-character">＋ Personagem</button>
         <button type="button" data-admin-action="new-session">＋ Sessão</button>
         <button type="button" data-admin-action="organizations">🏢 Organizações</button>
+        <button type="button" data-admin-action="comic-manager">📖 Quadrinhos</button>
         <button type="button" data-admin-action="graph">🔗 Grafo</button>
         <button type="button" data-admin-action="publish">🚀 Publicar</button>
       </div>
@@ -256,6 +257,11 @@
             <span class="admin-action-icon">🖼️</span>
             <strong>Biblioteca de Mídia</strong>
             <small>Gerenciar imagens reutilizáveis, retratos e ativos usados no grafo.</small>
+          </button>
+          <button class="admin-action" data-admin-action="comic-manager">
+            <span class="admin-action-icon">📖</span>
+            <strong>Editor de Quadrinhos</strong>
+            <small>Criar edições, subir, substituir, reordenar e remover páginas.</small>
           </button>
         </div>
       </div>
@@ -1028,41 +1034,76 @@ UNIVERSO OBLÍVIO · TERRA OMEGA · DOSSIÊ CENTRAL · v2.0 · JAN 2027
     <div class="comic-library-badge">TERRA OMEGA · HQ</div>
   </section>
 
-  <div class="comic-reader" id="comicReader" aria-live="polite">
-    <div class="comic-reader-toolbar">
+  <div class="comic-reader" id="comicReader" aria-live="polite" data-view-mode="single" data-fit-mode="screen">
+    <div class="comic-reader-topbar">
       <label class="comic-series-picker">
-        <span>História</span>
-        <select id="comicSeriesSelect" aria-label="Selecionar história em quadrinhos">
+        <span>Edição</span>
+        <select id="comicSeriesSelect" aria-label="Selecionar edição em quadrinhos">
           <option>Carregando…</option>
         </select>
       </label>
 
-      <div class="comic-reader-actions">
+      <div class="comic-view-controls" aria-label="Modo de visualização">
+        <span>Visualização</span>
+        <div class="comic-segmented" role="group" aria-label="Visualização das páginas">
+          <button type="button" data-comic-view="single" class="active" title="Uma página por vez">▯ <span>Singular</span></button>
+          <button type="button" data-comic-view="spread" title="Capa isolada e páginas internas em dupla">▯▯ <span>Dupla</span></button>
+          <button type="button" data-comic-view="pair" title="Sempre mostrar duas páginas lado a lado">▯▯ <span>2 páginas</span></button>
+          <button type="button" data-comic-view="continuous" title="Todas as páginas em rolagem vertical">☷ <span>Rolagem</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="comic-reader-toolbar">
+      <div class="comic-reader-actions comic-nav-actions">
+        <button id="comicFirstBtn" type="button" title="Primeira página">⇤</button>
         <button id="comicPrevBtn" type="button">← Anterior</button>
         <span id="comicPageCounter" class="comic-page-counter">—</span>
+        <label class="comic-page-jump" title="Ir diretamente para uma página">
+          <span>Pág.</span>
+          <input id="comicPageJump" type="number" inputmode="numeric" min="1" step="1" aria-label="Ir para página">
+        </label>
         <button id="comicNextBtn" type="button">Próxima →</button>
+        <button id="comicLastBtn" type="button" title="Última página">⇥</button>
+      </div>
+
+      <div class="comic-reader-actions comic-fit-actions">
+        <button type="button" data-comic-fit="screen" class="active" title="Ajustar página inteira à tela">⊡ Tela</button>
+        <button type="button" data-comic-fit="width" title="Estender para ocupar a largura disponível">↔ Estender</button>
+        <button type="button" data-comic-fit="actual" title="Mostrar em tamanho natural">1:1</button>
+        <span class="comic-toolbar-divider"></span>
+        <button id="comicZoomOutBtn" type="button" title="Diminuir">−</button>
+        <span id="comicZoomLabel" class="comic-zoom-label">Tela</span>
+        <button id="comicZoomInBtn" type="button" title="Aumentar">＋</button>
+        <button id="comicThumbToggleBtn" type="button" class="active" title="Mostrar ou ocultar miniaturas">▦ Miniaturas</button>
         <button id="comicFullscreenBtn" type="button" title="Abrir leitor em tela cheia">⛶ Tela cheia</button>
       </div>
     </div>
 
-    <div class="comic-reader-stage" id="comicReaderStage" tabindex="0" aria-label="Página atual do quadrinho">
+    <div class="comic-reader-stage" id="comicReaderStage" tabindex="0" aria-label="Leitor de quadrinhos">
       <div id="comicReaderEmpty" class="comic-reader-empty">
         <div class="comic-empty-icon">▤</div>
         <strong>Leitor pronto</strong>
         <span>As páginas publicadas nesta coleção aparecerão aqui.</span>
       </div>
-      <img id="comicPageImage" alt="" hidden>
+      <div id="comicPagesViewport" class="comic-pages-viewport" hidden></div>
     </div>
 
     <div class="comic-reader-meta">
       <div>
+        <span id="comicCollectionLabel" class="comic-collection-label">Terra Omega</span>
         <strong id="comicSeriesTitle">Terra Omega</strong>
         <span id="comicSeriesDescription">Arquivo de páginas sequenciais do Universo Oblívio.</span>
       </div>
-      <span id="comicPageLabel">Nenhuma página publicada</span>
+      <div class="comic-meta-right">
+        <span id="comicPageLabel">Nenhuma página publicada</span>
+        <small>← → navegar · F tela · W largura · 1 tamanho real</small>
+      </div>
     </div>
 
-    <div class="comic-reader-thumbs" id="comicThumbs" aria-label="Miniaturas das páginas"></div>
+    <div class="comic-reader-thumbs-wrap" id="comicThumbsWrap">
+      <div class="comic-reader-thumbs" id="comicThumbs" aria-label="Miniaturas das páginas"></div>
+    </div>
   </div>
 </div>
   </div>
