@@ -409,6 +409,10 @@ function resolveCharacterMediaTarget(mediaData,privateData,character,requestedTa
 const COMIC_STATUSES=new Set(["published","draft"]);
 const COMIC_PATH_RE=/^images\/comics\/[a-z0-9._/-]+\.(png|jpe?g|webp)$/i;
 
+function validComicPath(value){
+  return COMIC_PATH_RE.test(String(value || "").trim());
+}
+
 function safeComicText(value,max=500){
   return String(value || "").trim().replace(/[\u0000-\u001f\u007f]/g,"").slice(0,max);
 }
@@ -422,10 +426,12 @@ function normalizeComicPage(input,index){
     error.code="invalid_comic_page_path";
     throw error;
   }
+  const thumb=String(row.thumb || "").trim();
   return {
     order:index+1,
     label:safeComicText(row.label || ("Página "+(index+1)),120),
     src,
+    ...(validComicPath(thumb) ? {thumb} : {}),
     alt:safeComicText(row.alt || "",240)
   };
 }
@@ -445,13 +451,17 @@ function normalizeComicCatalog(data){
     seen.add(id);
     const rawPages=Array.isArray(raw.pages) ? raw.pages : [];
     const pages=rawPages.map((page,pageIndex)=>normalizeComicPage(page,pageIndex));
+    const cover=String(raw.cover || "").trim();
     series.push({
       id,
       title:safeComicText(raw.title || "Sem título",160),
       subtitle:safeComicText(raw.subtitle || "",160),
       collection:safeComicText(raw.collection || "Terra Omega",120),
+      arc:safeComicText(raw.arc || "",120),
+      issueNumber:Math.max(0,Math.min(9999,Number.parseInt(raw.issueNumber,10)||0)),
       description:safeComicText(raw.description || "",800),
       status:COMIC_STATUSES.has(raw.status) ? raw.status : "published",
+      ...(validComicPath(cover) ? {cover} : {}),
       pages
     });
   });
@@ -488,7 +498,7 @@ async function readComicCatalog(){
   return normalizeComicCatalog(parsed);
 }
 
-function nextComicPagePath(edition,extension){
+function nextComicPagePaths(edition,extension){
   const folder=slugify(edition.collection || "quadrinhos") || "quadrinhos";
   let highest=0;
   (edition.pages || []).forEach(page=>{
@@ -496,7 +506,34 @@ function nextComicPagePath(edition,extension){
     if(match) highest=Math.max(highest,Number(match[1])||0);
   });
   const number=String(highest+1).padStart(2,"0");
-  return "images/comics/"+folder+"/"+edition.id+"-"+number+"."+extension;
+  const base="images/comics/"+folder+"/"+edition.id+"-"+number;
+  return {page:base+"."+extension,thumb:base+"-thumb.webp"};
+}
+
+function comicCoverPath(edition){
+  return "images/comics/covers/"+edition.id+".webp";
+}
+
+function decodeComicImage(value,mime,maxBytes=MAX_BYTES){
+  const normalizedMime=String(mime || "").toLowerCase();
+  if(!EXTENSIONS[normalizedMime]){
+    const error=new Error("Use PNG, JPEG ou WebP.");
+    error.status=400;error.code="invalid_media";throw error;
+  }
+  let encoded=String(value || "");
+  const comma=encoded.indexOf(",");
+  if(encoded.startsWith("data:") && comma>=0) encoded=encoded.slice(comma+1);
+  encoded=encoded.replace(/\s+/g,"");
+  const buffer=Buffer.from(encoded,"base64");
+  if(!buffer.length || buffer.length>maxBytes){
+    const error=new Error("A imagem otimizada excede o limite permitido.");
+    error.status=413;error.code="image_too_large";throw error;
+  }
+  if(!validMagic(buffer,normalizedMime)){
+    const error=new Error("O conteúdo da imagem não corresponde ao formato informado.");
+    error.status=400;error.code="invalid_image";throw error;
+  }
+  return {buffer,mime:normalizedMime,extension:EXTENSIONS[normalizedMime]};
 }
 
 function comicResult(req,commit,catalog,extra={}){
@@ -628,8 +665,11 @@ export default async function handler(req,res){
           title,
           subtitle:safeComicText(requestBody.subtitle,160),
           collection,
+          arc:safeComicText(requestBody.arc,120),
+          issueNumber:Math.max(0,Math.min(9999,Number.parseInt(requestBody.issueNumber,10)||0)),
           description:safeComicText(requestBody.description,800),
           status:COMIC_STATUSES.has(requestBody.status) ? requestBody.status : "draft",
+          ...(found.edition && found.edition.cover ? {cover:found.edition.cover} : {}),
           pages:found.edition ? found.edition.pages : []
         };
 
@@ -649,11 +689,15 @@ export default async function handler(req,res){
         if(!found.edition) return res.status(404).json({error:"comic_not_found",message:"Edição não encontrada."});
 
         const files=[];
+        const managedPaths=new Set();
         for(const page of found.edition.pages || []){
-          if(!COMIC_PATH_RE.test(page.src)) continue;
+          [page.src,page.thumb].filter(validComicPath).forEach(path=>managedPaths.add(path));
+        }
+        if(validComicPath(found.edition.cover)) managedPaths.add(found.edition.cover);
+        for(const path of managedPaths){
           try{
-            await readBinaryFile(page.src);
-            files.push({path:page.src,delete:true});
+            await readBinaryFile(path);
+            files.push({path,delete:true});
           }catch(error){
             if(!error || error.status!==404) throw error;
           }
@@ -668,24 +712,12 @@ export default async function handler(req,res){
         const found=findComicEdition(catalog,requestBody.id);
         if(!found.edition) return res.status(404).json({error:"comic_not_found",message:"Salve a edição antes de adicionar páginas."});
 
-        const mime=String(requestBody.mimeType || "").toLowerCase();
-        const extension=EXTENSIONS[mime];
-        if(!extension) return res.status(400).json({error:"invalid_media",message:"Use PNG, JPEG ou WebP."});
-
-        let encoded=String(requestBody.contentBase64 || "");
-        const comma=encoded.indexOf(",");
-        if(encoded.startsWith("data:") && comma>=0) encoded=encoded.slice(comma+1);
-        encoded=encoded.replace(/\s+/g,"");
-        const buffer=Buffer.from(encoded,"base64");
-        if(!buffer.length || buffer.length>MAX_BYTES){
-          return res.status(413).json({error:"image_too_large",message:"A página otimizada deve ter no máximo 2 MB."});
-        }
-        if(!validMagic(buffer,mime)){
-          return res.status(400).json({error:"invalid_image",message:"O conteúdo da página não corresponde ao formato informado."});
-        }
+        const main=decodeComicImage(requestBody.contentBase64,requestBody.mimeType,MAX_BYTES);
+        const thumb=decodeComicImage(requestBody.thumbnailBase64 || requestBody.contentBase64,requestBody.thumbnailMimeType || requestBody.mimeType,600*1024);
 
         const replaceSrc=String(requestBody.replaceSrc || "").trim();
         let pagePath="";
+        let thumbPath="";
         let pageIndex=-1;
         const files=[];
 
@@ -693,29 +725,37 @@ export default async function handler(req,res){
           pageIndex=found.edition.pages.findIndex(page=>page && page.src===replaceSrc);
           if(pageIndex<0) return res.status(404).json({error:"comic_page_not_found",message:"Página a substituir não encontrada."});
           const old=found.edition.pages[pageIndex];
-          const base=old.src.replace(/\.[a-z0-9]+$/i,"");
-          pagePath=base+"."+extension;
-          if(old.src!==pagePath && COMIC_PATH_RE.test(old.src)){
-            try{await readBinaryFile(old.src);files.push({path:old.src,delete:true});}catch(error){if(!error||error.status!==404)throw error;}
+          const base=old.src.replace(/\.[a-z0-9]+$/i,"").replace(/-thumb$/i,"");
+          pagePath=base+"."+main.extension;
+          thumbPath=base+"-thumb.webp";
+          for(const oldPath of [old.src,old.thumb]){
+            if(validComicPath(oldPath) && oldPath!==pagePath && oldPath!==thumbPath){
+              try{await readBinaryFile(oldPath);files.push({path:oldPath,delete:true});}catch(error){if(!error||error.status!==404)throw error;}
+            }
           }
           found.edition.pages[pageIndex]={
             order:pageIndex+1,
             label:safeComicText(requestBody.label || old.label || ("Página "+(pageIndex+1)),120),
             src:pagePath,
+            thumb:thumbPath,
             alt:safeComicText(requestBody.alt || old.alt || "",240)
           };
         }else{
-          pagePath=nextComicPagePath(found.edition,extension);
+          const paths=nextComicPagePaths(found.edition,main.extension);
+          pagePath=paths.page;
+          thumbPath=paths.thumb;
           pageIndex=found.edition.pages.length;
           found.edition.pages.push({
             order:pageIndex+1,
             label:safeComicText(requestBody.label || ("Página "+(pageIndex+1)),120),
             src:pagePath,
+            thumb:thumbPath,
             alt:safeComicText(requestBody.alt || "",240)
           });
         }
 
-        files.push({path:pagePath,content:buffer.toString("base64"),encoding:"base64"});
+        files.push({path:pagePath,content:main.buffer.toString("base64"),encoding:"base64"});
+        files.push({path:thumbPath,content:thumb.buffer.toString("base64"),encoding:"base64"});
         files.push({path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"});
         const commit=await commitFiles(
           files,
@@ -735,8 +775,11 @@ export default async function handler(req,res){
         found.edition.pages.splice(index,1);
         found.edition.pages=found.edition.pages.map((page,i)=>({...page,order:i+1,label:page.label||("Página "+(i+1))}));
         const files=[{path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"}];
-        if(COMIC_PATH_RE.test(src)){
-          try{await readBinaryFile(src);files.unshift({path:src,delete:true});}catch(error){if(!error||error.status!==404)throw error;}
+        const removed=found.edition.pages[index];
+        for(const path of [src,removed && removed.thumb]){
+          if(validComicPath(path)){
+            try{await readBinaryFile(path);files.unshift({path,delete:true});}catch(error){if(!error||error.status!==404)throw error;}
+          }
         }
         const commit=await commitFiles(files,"comics: remover página de "+found.edition.title,head);
         return res.status(200).json(comicResult(req,commit,catalog,{edition:found.edition}));
@@ -755,17 +798,51 @@ export default async function handler(req,res){
           return res.status(400).json({error:"duplicate_comic_pages",message:"Uma página foi repetida na ordenação."});
         }
 
-        found.edition.pages=incoming.map((page,index)=>normalizeComicPage({
-          src:page.src,
-          label:page.label || ("Página "+(index+1)),
-          alt:page.alt || ""
-        },index));
+        const existingBySrc=new Map(found.edition.pages.map(page=>[page.src,page]));
+        found.edition.pages=incoming.map((page,index)=>{
+          const existingPage=existingBySrc.get(String(page.src || "")) || {};
+          return normalizeComicPage({
+            src:page.src,
+            thumb:existingPage.thumb || "",
+            label:page.label || ("Página "+(index+1)),
+            alt:page.alt || ""
+          },index);
+        });
 
         const commit=await commitFiles(
           [{path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"}],
           "comics: reorganizar páginas de "+found.edition.title,
           head
         );
+        return res.status(200).json(comicResult(req,commit,catalog,{edition:found.edition}));
+      }
+
+      if(action === "comic-cover-upload"){
+        const found=findComicEdition(catalog,requestBody.id);
+        if(!found.edition) return res.status(404).json({error:"comic_not_found",message:"Edição não encontrada."});
+        const image=decodeComicImage(requestBody.contentBase64,requestBody.mimeType,MAX_BYTES);
+        const coverPath=comicCoverPath(found.edition);
+        const files=[];
+        if(validComicPath(found.edition.cover) && found.edition.cover!==coverPath){
+          try{await readBinaryFile(found.edition.cover);files.push({path:found.edition.cover,delete:true});}catch(error){if(!error||error.status!==404)throw error;}
+        }
+        found.edition.cover=coverPath;
+        files.push({path:coverPath,content:image.buffer.toString("base64"),encoding:"base64"});
+        files.push({path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"});
+        const commit=await commitFiles(files,"comics: atualizar capa de "+found.edition.title,head);
+        return res.status(200).json(comicResult(req,commit,catalog,{edition:found.edition}));
+      }
+
+      if(action === "comic-cover-delete"){
+        const found=findComicEdition(catalog,requestBody.id);
+        if(!found.edition) return res.status(404).json({error:"comic_not_found",message:"Edição não encontrada."});
+        const cover=found.edition.cover;
+        delete found.edition.cover;
+        const files=[{path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"}];
+        if(validComicPath(cover)){
+          try{await readBinaryFile(cover);files.unshift({path:cover,delete:true});}catch(error){if(!error||error.status!==404)throw error;}
+        }
+        const commit=await commitFiles(files,"comics: remover capa de "+found.edition.title,head);
         return res.status(200).json(comicResult(req,commit,catalog,{edition:found.edition}));
       }
 
