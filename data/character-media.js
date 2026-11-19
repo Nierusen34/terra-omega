@@ -1065,7 +1065,7 @@ window.TerraOmegaData.characterMedia = {
     "credit": ""
   },
   "Carlo Duarte": {
-    "src": "",
+    "src": "images/characters/carlo-duarte.jpg",
     "alt": "Carlo Duarte",
     "source": "local",
     "credit": ""
