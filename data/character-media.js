@@ -1068,7 +1068,27 @@ window.TerraOmegaData.characterMedia = {
     "src": "images/characters/carlo-duarte.jpg",
     "alt": "Carlo Duarte",
     "source": "local",
-    "credit": ""
+    "credit": "",
+    "framing": {
+      "card": {
+        "fit": "cover",
+        "x": 50,
+        "y": 12,
+        "zoom": 2.5
+      },
+      "sheet": {
+        "fit": "cover",
+        "x": 50,
+        "y": 50,
+        "zoom": 1
+      },
+      "graph": {
+        "fit": "cover",
+        "x": 50,
+        "y": 24,
+        "zoom": 1
+      }
+    }
   }
 };
 
