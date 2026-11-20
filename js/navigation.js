@@ -124,7 +124,7 @@ function ensureComicStyles(){
 }
 
 function ensureComicPhysics(){
-  if(window.OpenPageFlip && typeof window.OpenPageFlip.createBook==="function"){
+  if(window.__TerraOmegaOpenPageFlipReady&&window.OpenPageFlip&&typeof window.OpenPageFlip.createBook==="function"){
     return Promise.resolve(window.OpenPageFlip);
   }
   if(comicPhysicsPromise) return comicPhysicsPromise;
@@ -177,8 +177,10 @@ function ensureComicPhysics(){
   });
 
   comicPhysicsPromise=Promise.all([cssPromise,scriptPromise]).then(function(){
+    window.__TerraOmegaOpenPageFlipReady=true;
     return window.OpenPageFlip;
   }).catch(function(error){
+    window.__TerraOmegaOpenPageFlipReady=false;
     comicPhysicsPromise=null;
     throw error;
   });
@@ -194,7 +196,7 @@ function ensureComicReader(){
   var styles=ensureComicStyles();
 
   if(window.TerraOmegaApp && window.TerraOmegaApp.comicReader){
-    return styles.then(function(){
+    return Promise.all([styles,physics]).then(function(){
       if(window.TerraOmegaApp.comicReader.mount) window.TerraOmegaApp.comicReader.mount();
       return window.TerraOmegaApp.comicReader;
     });
