@@ -1511,6 +1511,7 @@ function handleComicArrowKey(event){
     reader.setAttribute("data-keyboard-ready","true");
     reader.setAttribute("data-keyboard-context","site");
     reader.setAttribute("data-keyboard-key",direction<0?"left":"right");
+    reader.setAttribute("data-keyboard-target",target&&target.id?target.id:(target&&target.tagName?target.tagName.toLowerCase():"unknown"));
   }
   event.preventDefault();
   event.stopImmediatePropagation();
@@ -1527,6 +1528,21 @@ function bind(){
   mounted=true;hydratePreferences();ensureLibrary();
 
   window.addEventListener("keydown",handleComicArrowKey,true);
+
+  var keyboardStage=el("comicReaderStage");
+  if(keyboardStage){
+    keyboardStage.addEventListener("keydown",handleComicArrowKey,true);
+    keyboardStage.addEventListener("pointerdown",function(event){
+      if(event.target&&event.target.closest&&event.target.closest("button,input,select,textarea,summary,a"))return;
+      try{keyboardStage.focus({preventScroll:true});}
+      catch(error){try{keyboardStage.focus();}catch(innerError){}}
+    },true);
+    keyboardStage.addEventListener("click",function(event){
+      if(event.target&&event.target.closest&&event.target.closest("button,input,select,textarea,summary,a"))return;
+      try{keyboardStage.focus({preventScroll:true});}
+      catch(error){try{keyboardStage.focus();}catch(innerError){}}
+    },true);
+  }
 
   var collectionSelect=el("comicCollectionSelect"),editionSelect=el("comicEditionSelect");
   if(collectionSelect)collectionSelect.addEventListener("change",function(){
