@@ -453,6 +453,7 @@ function normalizeComicCatalog(data){
     const rawPages=Array.isArray(raw.pages) ? raw.pages : [];
     const pages=rawPages.map((page,pageIndex)=>normalizeComicPage(page,pageIndex));
     const cover=String(raw.cover || "").trim();
+    const endCover=String(raw.endCover || "").trim();
     series.push({
       id,
       title:safeComicText(raw.title || "Sem título",160),
@@ -465,11 +466,12 @@ function normalizeComicCatalog(data){
       description:safeComicText(raw.description || "",800),
       status:COMIC_STATUSES.has(raw.status) ? raw.status : "published",
       ...(validComicPath(cover) ? {cover} : {}),
+      ...(validComicPath(endCover) ? {endCover} : {}),
       pages
     });
   });
 
-  return {version:3,series};
+  return {version:4,series};
 }
 
 function renderComicCatalog(catalog){
@@ -515,6 +517,10 @@ function nextComicPagePaths(edition,extension){
 
 function comicCoverPath(edition){
   return "images/comics/covers/"+edition.id+".webp";
+}
+
+function comicEndCoverPath(edition){
+  return "images/comics/covers/"+edition.id+"-end.webp";
 }
 
 async function findDuplicateComicPage(edition,buffer,ignoreSrc=""){
@@ -695,6 +701,7 @@ export default async function handler(req,res){
           description:safeComicText(requestBody.description,800),
           status:COMIC_STATUSES.has(requestBody.status) ? requestBody.status : "draft",
           ...(found.edition && found.edition.cover ? {cover:found.edition.cover} : {}),
+          ...(found.edition && found.edition.endCover ? {endCover:found.edition.endCover} : {}),
           pages:found.edition ? found.edition.pages : []
         };
 
@@ -719,6 +726,7 @@ export default async function handler(req,res){
           [page.src,page.thumb].filter(validComicPath).forEach(path=>managedPaths.add(path));
         }
         if(validComicPath(found.edition.cover)) managedPaths.add(found.edition.cover);
+        if(validComicPath(found.edition.endCover)) managedPaths.add(found.edition.endCover);
         for(const path of managedPaths){
           try{
             await readBinaryFile(path);
@@ -905,6 +913,38 @@ export default async function handler(req,res){
           try{await readBinaryFile(cover);files.unshift({path:cover,delete:true});}catch(error){if(!error||error.status!==404)throw error;}
         }
         const commit=await commitFiles(files,"comics: remover capa de "+found.edition.title,head);
+        return res.status(200).json(comicResult(req,commit,catalog,{edition:found.edition}));
+      }
+
+      if(action === "comic-end-cover-upload"){
+        const found=findComicEdition(catalog,requestBody.id);
+        if(!found.edition) return res.status(404).json({error:"comic_not_found",message:"Edição não encontrada."});
+        const image=decodeComicImage(requestBody.contentBase64,requestBody.mimeType,MAX_BYTES);
+        if(image.mime!=="image/webp"){
+          return res.status(400).json({error:"invalid_comic_end_cover",message:"Capas finais de quadrinhos devem ser WebP."});
+        }
+        const coverPath=comicEndCoverPath(found.edition);
+        const files=[];
+        if(validComicPath(found.edition.endCover) && found.edition.endCover!==coverPath){
+          try{await readBinaryFile(found.edition.endCover);files.push({path:found.edition.endCover,delete:true});}catch(error){if(!error||error.status!==404)throw error;}
+        }
+        found.edition.endCover=coverPath;
+        files.push({path:coverPath,content:image.buffer.toString("base64"),encoding:"base64"});
+        files.push({path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"});
+        const commit=await commitFiles(files,"comics: atualizar capa final de "+found.edition.title,head);
+        return res.status(200).json(comicResult(req,commit,catalog,{edition:found.edition}));
+      }
+
+      if(action === "comic-end-cover-delete"){
+        const found=findComicEdition(catalog,requestBody.id);
+        if(!found.edition) return res.status(404).json({error:"comic_not_found",message:"Edição não encontrada."});
+        const cover=found.edition.endCover;
+        delete found.edition.endCover;
+        const files=[{path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"}];
+        if(validComicPath(cover)){
+          try{await readBinaryFile(cover);files.unshift({path:cover,delete:true});}catch(error){if(!error||error.status!==404)throw error;}
+        }
+        const commit=await commitFiles(files,"comics: remover capa final de "+found.edition.title,head);
         return res.status(200).json(comicResult(req,commit,catalog,{edition:found.edition}));
       }
 
