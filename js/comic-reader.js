@@ -645,6 +645,7 @@ function animateSpreadTurn(direction,targetIndex){
 
   var list=pages();
   var centeredCoverTurn=!compact&&sourceIndex===0&&currentIndices.length===1&&list[sourceIndex]&&list[sourceIndex].isCover;
+  var centeredCoverArrival=!compact&&targetIndex===0&&list[0]&&list[0].isCover;
   var physicalRect=imageRect;
   var targetIndices=compact?[targetIndex]:spreadIndicesFor(targetIndex,list.length);
   var backIndex=compact?targetIndex:(direction>0
@@ -657,7 +658,9 @@ function animateSpreadTurn(direction,targetIndex){
 
   pageTurnAnimating=true;
   var layer=document.createElement("div");
-  layer.className="comic-page-turn-layer "+(direction>0?"is-forward":"is-backward")+(centeredCoverTurn?" is-centered-cover":"");
+  layer.className="comic-page-turn-layer "+(direction>0?"is-forward":"is-backward")+
+    (centeredCoverTurn?" is-centered-cover":"")+
+    (centeredCoverArrival?" is-centered-cover-arrival":"");
   layer.setAttribute("aria-hidden","true");
   layer.style.left=(physicalRect.left-stageRect.left+stage.scrollLeft)+"px";
   layer.style.top=(physicalRect.top-stageRect.top+stage.scrollTop)+"px";
