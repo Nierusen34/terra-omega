@@ -324,6 +324,8 @@ function renderPages(){
         '<button type="button" data-page-up '+(index===0?"disabled":"")+' title="Mover para cima">↑ Acima</button>'+
         '<button type="button" data-page-down '+(index===pages.length-1?"disabled":"")+' title="Mover para baixo">↓ Abaixo</button>'+
         '<button type="button" data-page-replace title="Substituir imagem">↻ Substituir</button>'+
+        '<button type="button" data-page-promote="start" title="Transformar em capa inicial">C↑</button>'+
+        '<button type="button" data-page-promote="end" title="Transformar em capa final">C↓</button>'+
         '<button type="button" data-page-delete class="danger" title="Excluir página">🗑 Excluir</button>'+
       '</div>'+
     '</article>';
@@ -351,6 +353,8 @@ function bindPageRows(){
     var up=row.querySelector("[data-page-up]");
     var down=row.querySelector("[data-page-down]");
     var replace=row.querySelector("[data-page-replace]");
+    var promoteStart=row.querySelector('[data-page-promote="start"]');
+    var promoteEnd=row.querySelector('[data-page-promote="end"]');
     var del=row.querySelector("[data-page-delete]");
     if(up)up.addEventListener("click",function(){if(busy)return;var prev=row.previousElementSibling;if(prev){root.insertBefore(row,prev);refreshPageRowNumbers();}});
     if(down)down.addEventListener("click",function(){if(busy)return;var next=row.nextElementSibling;if(next){root.insertBefore(next,row);refreshPageRowNumbers();}});
@@ -359,6 +363,8 @@ function bindPageRows(){
       pendingReplaceSrc=row.getAttribute("data-comic-page-row")||"";
       var input=el("comicManagerFileInput");input.multiple=false;input.value="";input.click();
     });
+    if(promoteStart)promoteStart.addEventListener("click",function(){promotePageToCover(row.getAttribute("data-comic-page-row")||"","start");});
+    if(promoteEnd)promoteEnd.addEventListener("click",function(){promotePageToCover(row.getAttribute("data-comic-page-row")||"","end");});
     if(del)del.addEventListener("click",function(){deletePage(row.getAttribute("data-comic-page-row")||"");});
   });
 }
@@ -782,6 +788,32 @@ async function savePages(){
     showToast("Ordem e textos das páginas salvos.","success",3500);
   }catch(error){console.error(error);showToast(error.message||"Falha ao salvar páginas.","error",5500);}
   finally{setBusy(false,"");}
+}
+
+function promotePageToCover(src,role){
+  if(busy||!selectedId||!src)return;
+  var row=selected();if(!row)return;
+  var page=(row.pages||[]).find(function(item){return item&&item.src===src;});
+  if(!page)return;
+  var isEnd=role==="end";
+  var title=isEnd?"Usar como capa final":"Usar como capa inicial";
+  var message=isEnd
+    ?"Esta imagem sairá da lista de páginas narrativas e passará a encerrar o capítulo como capa final centralizada."
+    :"Esta imagem sairá da lista de páginas narrativas e passará a abrir o capítulo como capa inicial.";
+  showConfirm(title,message,async function(){
+    setBusy(true,isEnd?"Definindo capa final…":"Definindo capa inicial…");
+    try{
+      var result=await request({action:"comic-page-promote-cover",id:selectedId,src:src,role:isEnd?"end":"start"});
+      catalog=result.catalog||catalog;
+      refreshPagePreviewRevision();
+      if(isEnd)endCoverPreviewOverride={id:"",src:""};else coverPreviewOverride={id:"",src:""};
+      render();notifyReader(selectedId);
+      showToast(isEnd?"Página transformada em capa final.":"Página transformada em capa inicial.","success",4200);
+    }catch(error){
+      console.error(error);
+      showToast(error.message||"Falha ao transformar a página em capa.","error",5500);
+    }finally{setBusy(false,"");}
+  });
 }
 
 function deletePage(src){
