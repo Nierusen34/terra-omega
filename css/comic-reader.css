@@ -701,7 +701,7 @@ body.comic-reading-active{overflow:hidden!important}
 .comic-manager-page-fields input{
   min-width:0;padding:7px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-size:10px
 }
-.comic-manager-page-actions{display:grid;grid-template-columns:repeat(2,30px);gap:5px}
+.comic-manager-page-actions{display:grid;grid-template-columns:repeat(3,30px);gap:5px}
 .comic-manager-page-actions button{
   width:30px;height:30px;border:1px solid var(--line);background:var(--paper);color:var(--ink2);cursor:pointer
 }
@@ -737,6 +737,11 @@ body.comic-reading-active{overflow:hidden!important}
   cursor:pointer;font:700 8px/1 'Share Tech Mono',monospace
 }
 .comic-manager-cover-copy button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.comic-manager-end-cover{border-color:rgba(194,161,106,.36)}
+.comic-manager-end-cover .comic-manager-cover-copy>strong::after{
+  content:" · ENCERRAMENTO";margin-left:5px;color:var(--accent);
+  font:700 7px/1 'Share Tech Mono',monospace;letter-spacing:.6px
+}
 
 /* ===== RESPONSIVO ===== */
 @media(min-width:1280px){
