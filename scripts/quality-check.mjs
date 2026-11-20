@@ -570,9 +570,9 @@ function checkComics(){
      !reader.includes("root.scrollTo({left:")){
     fail("Etapa 3 do leitor está sem busca da biblioteca, foco acessível, deep-link ou filmstrip horizontal.");
   }
-  if(!html.includes("js/navigation.js?v=20261120-reader-v4j") ||
-     !read("js/navigation.js").includes("COMIC_ASSET_VERSION=\"20261120-reader-v4j\"") ||
-     !html.includes("Leitor 20261120-reader-v4j")){
+  if(!html.includes("js/navigation.js?v=20261120-reader-v4k") ||
+     !read("js/navigation.js").includes("COMIC_ASSET_VERSION=\"20261120-reader-v4k\"") ||
+     !html.includes("Leitor 20261120-reader-v4k")){
     fail("Leitor de quadrinhos está sem cache bust explícito ou identificação de build.");
   }
   if(!reader.includes('viewMode==="spread"&&(fitMode==="actual"||fitMode==="custom")') ||
@@ -584,6 +584,12 @@ function checkComics(){
     fail("Deep-link de quadrinhos não aguarda o catálogo do leitor antes de validar a edição.");
   }
   const navigation=read("js/navigation.js");
+  const serviceWorker=read("sw.js");
+  if(!serviceWorker.includes("comicImageCacheFirst") ||
+     serviceWorker.includes("comicImageNetworkFirst") ||
+     serviceWorker.includes('cache:"no-store"')){
+    fail("PWA de quadrinhos está sem cache-first ou ainda força no-store nas imagens.");
+  }
   if(!reader.includes("animateSpreadTurn") ||
      !reader.includes("PAGE_TURN_KEY") ||
      !reader.includes("prefers-reduced-motion") ||
@@ -591,6 +597,10 @@ function checkComics(){
      !reader.includes("renderSpreadTurnUnderlay") ||
      !reader.includes("physicalEngineAvailable") ||
      !reader.includes("renderPhysicalBook") ||
+     !reader.includes("hydratePhysicalAround") ||
+     !reader.includes("PHYSICAL_PIXEL") ||
+     reader.includes("assetRevision=Date.now()") ||
+     !reader.includes("comicAssetVersion") ||
      !reader.includes("endCover") ||
      !reader.includes("isEndCover") ||
      !reader.includes("coverShiftForReaderIndex") ||
