@@ -246,6 +246,11 @@ async function refreshRuntime(sha){
 
   var sessions=app().sessions;
   if(sessions && sessions.reloadPrivate) await sessions.reloadPrivate();
+
+  var comicReader=app().comicReader;
+  if(comicReader && comicReader.reload){
+    try{ await comicReader.reload(); }catch(error){ console.warn('Terra Omega comics refresh:',error); }
+  }
 }
 
 function requestRestore(targetSha){
@@ -329,19 +334,45 @@ async function waitForVercel(statusUrl,sha){
   throw new Error('O checkpoint excedeu o tempo de validação.');
 }
 
-function requestDeploy(){
-  if(!overview || busy || (overview.sync && overview.sync.state === 'synced')) return;
+async function requestDeploy(){
+  if(!overview || busy) return;
 
-  var ahead=Number(overview.sync && overview.sync.ahead_by || 0);
-  showConfirm(
-    'Publicar checkpoint na Vercel',
-    'Publicar '+ahead+' commit'+(ahead === 1 ? '' : 's')+' acumulado'+(ahead === 1 ? '' : 's')+'? O Quality Gate será executado antes do deploy e o SHA será validado depois.',
-    performDeploy,
-    'Publicar checkpoint'
-  );
+  var b=backend();
+  if(!b) return;
+
+  setBusy(true);
+  setOperation('Atualizando o estado do repositório antes do checkpoint…','working');
+
+  try{
+    overview=await b.request('/api/publish?limit=60',{method:'GET'});
+    render();
+
+    if(overview.sync && overview.sync.state === 'synced'){
+      setOperation('Produção já está sincronizada com o GitHub.','success');
+      return;
+    }
+
+    var expectedHead=overview.head_sha;
+    var ahead=Number(overview.sync && overview.sync.ahead_by || 0);
+    setOperation('Estado atualizado. Confirme a publicação do checkpoint.','success');
+
+    showConfirm(
+      'Publicar checkpoint na Vercel',
+      'Publicar '+ahead+' commit'+(ahead === 1 ? '' : 's')+' acumulado'+(ahead === 1 ? '' : 's')+'? O Quality Gate será executado antes do deploy e o SHA será validado depois.',
+      function(){ performDeploy(expectedHead); },
+      'Publicar checkpoint'
+    );
+  }catch(error){
+    console.error('Terra Omega checkpoint refresh:',error);
+    setOperation(error.message || 'Não foi possível atualizar o estado antes da publicação.','error');
+    showToast(error.message || 'Não foi possível atualizar o estado antes da publicação.','error',6500);
+  }finally{
+    setBusy(false);
+    renderOverview();
+  }
 }
 
-async function performDeploy(){
+async function performDeploy(expectedHead){
   var b=backend();
   if(!b || !overview) return;
 
@@ -353,21 +384,29 @@ async function performDeploy(){
       method:'POST',
       body:{
         action:'deploy-checkpoint',
-        expected_head:overview.head_sha,
+        expected_head:expectedHead || overview.head_sha,
         label:'publicação segura pelo painel'
       }
     });
 
     setOperation('Checkpoint criado. GitHub Actions executa Quality Gate → Deploy Hook → validação da Vercel…','working');
     await waitForVercel(result.vercel_status_url,result.sha);
+    await refreshRuntime(result.sha);
 
     setOperation('Produção validada no SHA '+shortSha(result.sha)+'.','success');
-    showToast('Checkpoint publicado e validado na Vercel.','success',6000);
+    showToast('Checkpoint publicado e leitor atualizado.','success',6000);
     await load();
   }catch(error){
     console.error('Terra Omega deploy checkpoint:',error);
-    setOperation(error.message || 'Falha ao publicar checkpoint.','error');
-    showToast(error.message || 'Falha ao publicar checkpoint.','error',7000);
+    if(error && (error.status === 409 || (error.payload && error.payload.error === 'head_conflict'))){
+      await load();
+      var conflictMessage='O conteúdo mudou enquanto o checkpoint era confirmado. O estado foi atualizado; confirme a publicação novamente.';
+      setOperation(conflictMessage,'error');
+      showToast(conflictMessage,'warning',7500);
+    }else{
+      setOperation(error.message || 'Falha ao publicar checkpoint.','error');
+      showToast(error.message || 'Falha ao publicar checkpoint.','error',7000);
+    }
   }finally{
     setBusy(false);
     renderOverview();
