@@ -556,9 +556,9 @@ function checkComics(){
      !reader.includes("root.scrollTo({left:")){
     fail("Etapa 3 do leitor está sem busca da biblioteca, foco acessível, deep-link ou filmstrip horizontal.");
   }
-  if(!html.includes("js/navigation.js?v=20261120-reader-v3e") ||
-     !read("js/navigation.js").includes("COMIC_ASSET_VERSION=\"20261120-reader-v3e\"") ||
-     !html.includes("comicReaderBuild")){
+  if(!html.includes("js/navigation.js?v=20261120-reader-v4a") ||
+     !read("js/navigation.js").includes("COMIC_ASSET_VERSION=\"20261120-reader-v4a\"") ||
+     !html.includes("Leitor 20261120-reader-v4a")){
     fail("Leitor de quadrinhos está sem cache bust explícito ou identificação de build.");
   }
   if(!reader.includes('viewMode==="spread"&&(fitMode==="actual"||fitMode==="custom")') ||
@@ -569,33 +569,30 @@ function checkComics(){
      !router.includes("reader.ready?reader.ready():Promise.resolve()")){
     fail("Deep-link de quadrinhos não aguarda o catálogo do leitor antes de validar a edição.");
   }
+  const navigation=read("js/navigation.js");
   if(!reader.includes("animateSpreadTurn") ||
      !reader.includes("PAGE_TURN_KEY") ||
      !reader.includes("prefers-reduced-motion") ||
-     !reader.includes("comic-page-turn-bend") ||
      !reader.includes("preloadedPageImages") ||
      !reader.includes("renderSpreadTurnUnderlay") ||
-     !reader.includes('spreadSideIndex(targetIndices,"left")') ||
-     !reader.includes('spreadSideIndex(targetIndices,"right")') ||
-     !reader.includes("comic-spread-single-right") ||
-     !comicCss.includes("overflow:visible;contain:layout style") ||
-     !comicCss.includes("comic-page-turn-edge") ||
-     !comicCss.includes("comic-page-turn-hinge") ||
-     !comicCss.includes("comic-page-turn-curl") ||
-     !comicCss.includes("has-embedded-margin") ||
+     !reader.includes("physicalEngineAvailable") ||
+     !reader.includes("renderPhysicalBook") ||
+     !reader.includes("window.OpenPageFlip.createBook") ||
+     !reader.includes('flipDuration:620') ||
+     !reader.includes('physicalBook.on("flipProgress"') ||
+     !reader.includes('data-density="hard"') ||
      !reader.includes("embeddedMarginCache") ||
      !reader.includes("analyzeEmbeddedMargins") ||
-     !reader.includes("comic-page-turn-hinge") ||
-     !reader.includes("comic-page-turn-curl") ||
-     comicCss.includes("rotateY(-94deg) translateZ") ||
-     comicCss.includes("rotateY(94deg) translateZ") ||
      !reader.includes("compactBookMode") ||
      !reader.includes('return viewMode==="spread"&&window.innerWidth<=700') ||
-     !comicCss.includes('data-compact-book="true"') ||
-     !comicCss.includes("rotateY(-180deg)") ||
-     !comicCss.includes("rotateY(180deg)") ||
+     !comicCss.includes("comic-opf-book") ||
+     !comicCss.includes("comic-opf-page") ||
+     !comicCss.includes("has-embedded-margin") ||
+     !navigation.includes('OPEN_PAGE_FLIP_VERSION="0.7.0"') ||
+     !navigation.includes("@openpageflip/core@") ||
+     !navigation.includes("motor físico indisponível, usando fallback") ||
      !html.includes('id="comicPageTurnToggleBtn"')){
-    fail("Modo Livro está sem geometria estável, preloading, virada física completa ou respeito a movimento reduzido.");
+    fail("Modo Livro está sem motor geométrico, fallback, capa rígida, preloading ou respeito a movimento reduzido.");
   }
   if(!router.includes("kind:'comic'") ||
      !router.includes("function comicRoute") ||
