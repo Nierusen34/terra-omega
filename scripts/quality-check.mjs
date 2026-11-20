@@ -477,7 +477,7 @@ function checkComics(){
     return;
   }
 
-  if(Number(catalog.version||0)<3) fail("Catálogo de quadrinhos precisa usar schema v3.");
+  if(Number(catalog.version||0)<4) fail("Catálogo de quadrinhos precisa usar schema v4 com suporte a capa final.");
   const series=Array.isArray(catalog.series)?catalog.series:[];
   const ids=new Set();
   const allowedStatus=new Set(["published","draft"]);
@@ -504,6 +504,13 @@ function checkComics(){
       const cover=String(edition.cover);
       if(!/^images\/comics\/[a-z0-9._/-]+\.webp$/i.test(cover)) fail("Capa de quadrinho inválida: "+id+" / "+cover);
       else if(!exists(cover)) fail("Arquivo de capa inexistente: "+cover);
+    }
+
+    if(edition.endCover){
+      const endCover=String(edition.endCover);
+      if(!/^images\/comics\/[a-z0-9._/-]+\.webp$/i.test(endCover)) fail("Capa final de quadrinho inválida: "+id+" / "+endCover);
+      else if(!exists(endCover)) fail("Arquivo de capa final inexistente: "+endCover);
+      if((edition.pages||[]).some(page=>page&&page.src===endCover)) fail("Capa final não pode permanecer registrada também como página: "+id);
     }
 
     const pages=Array.isArray(edition.pages)?edition.pages:[];
@@ -537,6 +544,13 @@ function checkComics(){
   const reader=read("js/comic-reader.js");
   const manager=read("js/comic-manager.js");
   const api=read("api/media.js");
+  if(!manager.includes("comicManagerUploadEndCover") ||
+     !manager.includes("comicManagerRemoveEndCover") ||
+     !manager.includes("promotePageToCover") ||
+     !api.includes("comicEndCoverPath") ||
+     !api.includes("comic-end-cover-delete")){
+    fail("Editor/API de quadrinhos está sem controles completos de capa inicial/final.");
+  }
   const router=read("js/router.js");
   const comicCss=read("css/comic-reader.css");
   const html=read("index.html");
@@ -556,9 +570,9 @@ function checkComics(){
      !reader.includes("root.scrollTo({left:")){
     fail("Etapa 3 do leitor está sem busca da biblioteca, foco acessível, deep-link ou filmstrip horizontal.");
   }
-  if(!html.includes("js/navigation.js?v=20261120-reader-v4i") ||
-     !read("js/navigation.js").includes("COMIC_ASSET_VERSION=\"20261120-reader-v4i\"") ||
-     !html.includes("Leitor 20261120-reader-v4i")){
+  if(!html.includes("js/navigation.js?v=20261120-reader-v4j") ||
+     !read("js/navigation.js").includes("COMIC_ASSET_VERSION=\"20261120-reader-v4j\"") ||
+     !html.includes("Leitor 20261120-reader-v4j")){
     fail("Leitor de quadrinhos está sem cache bust explícito ou identificação de build.");
   }
   if(!reader.includes('viewMode==="spread"&&(fitMode==="actual"||fitMode==="custom")') ||
@@ -577,6 +591,11 @@ function checkComics(){
      !reader.includes("renderSpreadTurnUnderlay") ||
      !reader.includes("physicalEngineAvailable") ||
      !reader.includes("renderPhysicalBook") ||
+     !reader.includes("endCover") ||
+     !reader.includes("isEndCover") ||
+     !reader.includes("coverShiftForReaderIndex") ||
+     !reader.includes("physicalIndexForReader") ||
+     !reader.includes("readerIndexForPhysical") ||
      !reader.includes("window.OpenPageFlip.createBook") ||
      !reader.includes('flipDuration:620') ||
      !reader.includes('physicalBook.on("flipProgress"') ||
@@ -654,7 +673,7 @@ function checkComics(){
   if(comicCss.length<12000 || !comicCss.includes("comic-reader")){
     fail("Stylesheet isolado de quadrinhos parece incompleto.");
   }
-  for(const action of ["comic-save","comic-page-upload","comic-page-thumbnail","comic-cover-upload","comic-delete"]){
+  for(const action of ["comic-save","comic-page-upload","comic-page-thumbnail","comic-cover-upload","comic-end-cover-upload","comic-page-promote-cover","comic-delete"]){
     if(!api.includes('action === "'+action+'"')) fail("API de quadrinhos sem ação: "+action);
   }
 
