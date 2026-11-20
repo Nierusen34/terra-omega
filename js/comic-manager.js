@@ -8,13 +8,14 @@ if(!core)throw new Error("Terra Omega: núcleo não carregado antes de js/comic-
 var showToast=core.showToast;
 var showConfirm=core.showConfirm;
 var escapeHtml=core.escapeHtml;
-var catalog={version:3,series:[]};
+var catalog={version:4,series:[]};
 var selectedId="";
 var newDraft=false;
 var busy=false;
 var pendingReplaceSrc="";
 var modalReturnFocus=null;
 var coverPreviewOverride={id:"",src:""};
+var endCoverPreviewOverride={id:"",src:""};
 var pagePreviewRevision=Date.now();
 
 function el(id){return document.getElementById(id);}
@@ -37,6 +38,11 @@ function pagePreviewUrl(path){
 function refreshPagePreviewRevision(){pagePreviewRevision=Date.now();}
 function setCoverStatus(message,state){
   var node=el("comicManagerCoverStatus");if(!node)return;
+  node.textContent=message||"";
+  node.setAttribute("data-state",state||"idle");
+}
+function setEndCoverStatus(message,state){
+  var node=el("comicManagerEndCoverStatus");if(!node)return;
   node.textContent=message||"";
   node.setAttribute("data-state",state||"idle");
 }
@@ -124,6 +130,22 @@ function ensureModal(){
             <input id="comicManagerCoverInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
           </section>
 
+          <section class="comic-manager-cover comic-manager-end-cover">
+            <div class="comic-manager-cover-preview" id="comicManagerEndCoverPreview">
+              <span>SEM CAPA FINAL</span>
+            </div>
+            <div class="comic-manager-cover-copy">
+              <strong>Capa final do capítulo</strong>
+              <small>Folha rígida de encerramento. Não entra na numeração das páginas narrativas e aparece sozinha, centralizada, ao fim da leitura.</small>
+              <div>
+                <button id="comicManagerUploadEndCover" type="button">🖼 Enviar capa final</button>
+                <button id="comicManagerRemoveEndCover" type="button">Remover capa final</button>
+              </div>
+              <div id="comicManagerEndCoverStatus" class="comic-manager-cover-status" data-state="idle"></div>
+            </div>
+            <input id="comicManagerEndCoverInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+          </section>
+
           <section class="comic-manager-pages">
             <div class="comic-manager-pages-head">
               <div><strong>Páginas</strong><span id="comicManagerPageCount">0 páginas</span></div>
@@ -159,6 +181,14 @@ function ensureModal(){
   el("comicManagerCoverInput").addEventListener("change",function(){
     var file=this.files&&this.files[0];if(file)uploadCover(file);
   });
+  el("comicManagerUploadEndCover").addEventListener("click",function(){
+    if(!selectedId){showToast("Salve a história antes de enviar uma capa final.","warning",4000);return;}
+    var input=el("comicManagerEndCoverInput");input.value="";input.click();
+  });
+  el("comicManagerRemoveEndCover").addEventListener("click",removeEndCover);
+  el("comicManagerEndCoverInput").addEventListener("change",function(){
+    var file=this.files&&this.files[0];if(file)uploadEndCover(file);
+  });
   el("comicManagerGenerateThumbs").addEventListener("click",generateMissingThumbnails);
   el("comicManagerAddPages").addEventListener("click",openPagePicker);
   el("comicManagerFileInput").addEventListener("change",function(){
@@ -184,7 +214,7 @@ function setBusy(value,message){
   if(modal){modal.classList.toggle("is-busy",busy);modal.setAttribute("aria-busy",busy?"true":"false");}
   var status=el("comicManagerUploadStatus");
   if(status&&message){status.textContent=message;status.setAttribute("data-state",busy?"working":"idle");}
-  ["comicManagerSaveEdition","comicManagerRenameStory","comicManagerQuickAddPages","comicManagerDeleteEdition","comicManagerAddPages","comicManagerSavePages","comicManagerUploadCover","comicManagerRemoveCover","comicManagerGenerateThumbs"].forEach(function(id){
+  ["comicManagerSaveEdition","comicManagerRenameStory","comicManagerQuickAddPages","comicManagerDeleteEdition","comicManagerAddPages","comicManagerSavePages","comicManagerUploadCover","comicManagerRemoveCover","comicManagerUploadEndCover","comicManagerRemoveEndCover","comicManagerGenerateThumbs"].forEach(function(id){
     var button=el(id);if(button)button.disabled=busy;
   });
 }
@@ -194,7 +224,7 @@ async function load(){
   if(!response.ok)throw new Error("Não foi possível carregar o catálogo de quadrinhos.");
   var data=await response.json();
   refreshPagePreviewRevision();
-  catalog=data&&typeof data==="object"?data:{version:3,series:[]};
+  catalog=data&&typeof data==="object"?data:{version:4,series:[]};
   if(!Array.isArray(catalog.series))catalog.series=[];
   return catalog;
 }
@@ -254,6 +284,7 @@ function renderForm(){
   el("comicManagerDescription").value=row.description||"";
   el("comicManagerStatus").value=row.status==="draft"?"draft":"published";
   renderCover(row);
+  renderEndCover(row);
 
   var deleteBtn=el("comicManagerDeleteEdition");
   var readerBtn=el("comicManagerOpenReader");
@@ -580,6 +611,71 @@ function removeCover(){
       setCoverStatus("Capa removida. Publique um checkpoint para atualizar a versão pública.","pending");
       showToast("Capa removida.","success",3200);
     }catch(error){showToast(error.message||"Falha ao remover capa.","error",5000);}
+    finally{setBusy(false,"");}
+  });
+}
+
+function renderEndCover(row){
+  var preview=el("comicManagerEndCoverPreview");
+  var remove=el("comicManagerRemoveEndCover");
+  if(!preview)return;
+
+  var hasOverride=!!(row&&endCoverPreviewOverride.id===row.id&&endCoverPreviewOverride.src);
+  var src=hasOverride?endCoverPreviewOverride.src:(row&&row.endCover?row.endCover:"");
+
+  preview.innerHTML=src?'<img src="'+escapeAttr(pagePreviewUrl(src))+'" alt="" loading="lazy">':'<span>SEM CAPA FINAL</span>';
+
+  if(hasOverride){
+    preview.innerHTML='<img src="'+escapeAttr(src)+'" alt="" loading="lazy">';
+    setEndCoverStatus("Capa final salva e pré-visualizada. Publique um checkpoint para atualizar a versão pública.","pending");
+  }else if(!(row&&row.endCover)){
+    setEndCoverStatus("","idle");
+  }
+
+  if(remove)remove.disabled=!selectedId||!row||!row.endCover||busy;
+}
+
+async function uploadEndCover(file){
+  if(!selectedId)return;
+  setBusy(true,"Otimizando capa final…");
+  try{
+    var optimized=await optimizeCoverImage(file);
+    endCoverPreviewOverride={id:selectedId,src:optimized.contentBase64};
+    renderEndCover(selected());
+    setEndCoverStatus("Enviando capa final para o GitHub…","working");
+
+    var result=await request({
+      action:"comic-end-cover-upload",
+      id:selectedId,
+      mimeType:optimized.mimeType,
+      contentBase64:optimized.contentBase64
+    });
+
+    catalog=result.catalog||catalog;
+    render();
+    notifyReader(selectedId);
+    setEndCoverStatus("Capa final salva e pré-visualizada. Publique um checkpoint para atualizar a versão pública.","pending");
+    showToast("Capa final salva. O preview já foi atualizado.","success",4500);
+  }catch(error){
+    console.error(error);
+    endCoverPreviewOverride={id:"",src:""};
+    renderEndCover(selected());
+    setEndCoverStatus(error.message||"Falha ao atualizar a capa final.","error");
+    showToast(error.message||"Falha ao atualizar a capa final.","error",5500);
+  }finally{setBusy(false,"");}
+}
+
+function removeEndCover(){
+  var row=selected();if(!row||!row.endCover)return;
+  showConfirm("Remover capa final","Remover a capa final desta história? As páginas narrativas permanecerão inalteradas.",async function(){
+    setBusy(true,"Removendo capa final…");
+    try{
+      var result=await request({action:"comic-end-cover-delete",id:selectedId});
+      endCoverPreviewOverride={id:"",src:""};
+      catalog=result.catalog||catalog;render();notifyReader(selectedId);
+      setEndCoverStatus("Capa final removida. Publique um checkpoint para atualizar a versão pública.","pending");
+      showToast("Capa final removida.","success",3200);
+    }catch(error){showToast(error.message||"Falha ao remover capa final.","error",5000);}
     finally{setBusy(false,"");}
   });
 }
