@@ -100,7 +100,8 @@ function toggleChangelog(){
 }
 
 
-var COMIC_ASSET_VERSION="20261120-reader-v4j";
+var COMIC_ASSET_VERSION="20261120-reader-v4k";
+window.TerraOmegaApp.comicAssetVersion=COMIC_ASSET_VERSION;
 var OPEN_PAGE_FLIP_VERSION="0.7.0";
 var comicStylesPromise = null;
 var comicPhysicsPromise = null;
