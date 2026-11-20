@@ -556,9 +556,9 @@ function checkComics(){
      !reader.includes("root.scrollTo({left:")){
     fail("Etapa 3 do leitor está sem busca da biblioteca, foco acessível, deep-link ou filmstrip horizontal.");
   }
-  if(!html.includes("js/navigation.js?v=20261120-reader-v4f") ||
-     !read("js/navigation.js").includes("COMIC_ASSET_VERSION=\"20261120-reader-v4f\"") ||
-     !html.includes("Leitor 20261120-reader-v4f")){
+  if(!html.includes("js/navigation.js?v=20261120-reader-v4g") ||
+     !read("js/navigation.js").includes("COMIC_ASSET_VERSION=\"20261120-reader-v4g\"") ||
+     !html.includes("Leitor 20261120-reader-v4g")){
     fail("Leitor de quadrinhos está sem cache bust explícito ou identificação de build.");
   }
   if(!reader.includes('viewMode==="spread"&&(fitMode==="actual"||fitMode==="custom")') ||
@@ -587,6 +587,10 @@ function checkComics(){
      !reader.includes("queuedTurnDirection") ||
      !reader.includes("flushQueuedTurn") ||
      !reader.includes("function keyboardTurn") ||
+     !reader.includes("function comicKeyboardContextActive") ||
+     !reader.includes('route.indexOf("/capa/quadrinhos")===0') ||
+     !reader.includes("physicalBook.update()") ||
+     !reader.includes('physicalBook.flipTo(target,"bottom")') ||
      !reader.includes("function handleComicArrowKey") ||
      !reader.includes("function active(){") ||
      !reader.includes("getBoundingClientRect()") ||
