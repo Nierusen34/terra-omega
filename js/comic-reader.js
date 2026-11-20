@@ -579,8 +579,9 @@ function renderPhysicalBook(){
 
   if(physicalBook&&physicalBookKey===key&&physicalBookHost){
     var target=clamp(pageIndex,0,list.length-1);
-    if(physicalBook.state==="read"&&physicalBook.page!==target){
-      try{physicalBook.turnTo(target);}catch(error){}
+    var targetPhysical=physicalIndexForReader(items,target);
+    if(physicalBook.state==="read"&&physicalBook.page!==targetPhysical){
+      try{physicalBook.turnTo(targetPhysical);}catch(error){}
     }
     updatePhysicalCoverShift(target);
     preparePageMargins(physicalBookHost);
@@ -601,6 +602,7 @@ function renderPhysicalBook(){
 
   var compact=compactBookMode();
   var start=clamp(pageIndex,0,list.length-1);
+  var startPhysical=physicalIndexForReader(items,start);
   var easing=function(t){
     return t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
   };
@@ -615,7 +617,7 @@ function renderPhysicalBook(){
       layout:compact?"single":"spread",
       binding:"left",
       cover:!!edition.cover,
-      startPage:start,
+      startPage:startPhysical,
       flipDuration:620,
       easing:easing,
       shadows:true,
@@ -638,7 +640,8 @@ function renderPhysicalBook(){
   bindPhysicalPageFocus(host);
 
   physicalBookUnsubs.push(physicalBook.on("flip",function(event){
-    var next=clamp(Number(event.page)||0,0,list.length-1);
+    var mapped=readerIndexForPhysical(items,Number(event.page),pageIndex);
+    var next=clamp(mapped,0,list.length-1);
     pageIndex=normalizeIndexForView(next);
     updatePhysicalCoverShift(pageIndex);
     updateViewButtons();
@@ -650,15 +653,13 @@ function renderPhysicalBook(){
     syncComicRoute({replace:true});
   }));
   physicalBookUnsubs.push(physicalBook.on("flipProgress",function(event){
-    if(!edition.cover||compactBookMode())return;
+    if(compactBookMode())return;
     var progress=clamp(Number(event.progress)||0,0,1);
-    if(Number(event.from)===0){
-      setPhysicalCoverShift(-25*(1-progress));
-    }else if(Number(event.to)===0){
-      setPhysicalCoverShift(-25*progress);
-    }else{
-      setPhysicalCoverShift(0);
-    }
+    var fromReader=readerIndexForPhysical(items,Number(event.from),pageIndex);
+    var toReader=readerIndexForPhysical(items,Number(event.to),pageIndex);
+    var fromShift=coverShiftForReaderIndex(fromReader);
+    var toShift=coverShiftForReaderIndex(toReader);
+    setPhysicalCoverShift(fromShift+((toShift-fromShift)*progress));
   }));
   physicalBookUnsubs.push(physicalBook.on("changeState",function(event){
     var state=event&&event.state||"read";
