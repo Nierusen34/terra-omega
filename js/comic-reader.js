@@ -25,6 +25,7 @@ var pinchState=null;
 var pageTurnAnimating=false;
 var pageTurnEnabled=true;
 var preloadedPageImages=new Map();
+var assetRevision=Date.now();
 var libraryReturnFocus=null;
 var helpReturnFocus=null;
 
@@ -38,6 +39,11 @@ var PAGE_TURN_KEY="terraOmega_comic_page_turn_v1";
 
 function el(id){return document.getElementById(id);}
 function clamp(value,min,max){return Math.max(min,Math.min(max,value));}
+function versionedPageSrc(value){
+  var src=String(value||"");
+  if(!/^images\/comics\//i.test(src))return src;
+  return src+(src.indexOf("?")>=0?"&":"?")+"rev="+encodeURIComponent(String(assetRevision));
+}
 function esc(value){
   return String(value||"")
     .replace(/&/g,"&amp;").replace(/</g,"&lt;")
@@ -224,8 +230,9 @@ function setEmpty(message){
 function imageMarkup(item,index){
   var alt=item.alt||((currentSeries()&&currentSeries().title||"Quadrinho")+" — página "+(index+1));
   var continuous=viewMode==="continuous";
-  var src=continuous?'data:image/gif;base64,R0lGODlhAQABAAAAACw=':esc(item.src);
-  var dataSrc=continuous?' data-src="'+esc(item.src)+'"':"";
+  var freshSrc=versionedPageSrc(item.src);
+  var src=continuous?'data:image/gif;base64,R0lGODlhAQABAAAAACw=':esc(freshSrc);
+  var dataSrc=continuous?' data-src="'+esc(freshSrc)+'"':"";
   return '<figure class="comic-page-frame'+(continuous?' comic-page-lazy':'')+'" data-comic-rendered-page="'+index+'">'+
     '<div class="comic-page-surface">'+
       '<img class="comic-page-image" src="'+src+'"'+dataSrc+' alt="'+esc(alt)+'" draggable="false" decoding="async">'+
@@ -460,15 +467,16 @@ function render(){
 function preloadPage(index,priority){
   var list=pages(),row=list[index];
   if(!row||!row.src)return null;
-  if(preloadedPageImages.has(row.src))return preloadedPageImages.get(row.src);
+  var freshSrc=versionedPageSrc(row.src);
+  if(preloadedPageImages.has(freshSrc))return preloadedPageImages.get(freshSrc);
   var img=new Image();
   var entry={img:img,ready:false,promise:null};
   img.decoding="async";
   try{img.fetchPriority=priority||"low";}catch(error){}
   img.addEventListener("load",function(){entry.ready=true;},{once:true});
-  img.src=row.src;
+  img.src=freshSrc;
   entry.promise=img.decode?img.decode().then(function(){entry.ready=true;}).catch(function(){}):Promise.resolve();
-  preloadedPageImages.set(row.src,entry);
+  preloadedPageImages.set(freshSrc,entry);
   while(preloadedPageImages.size>14){
     var first=preloadedPageImages.keys().next().value;
     if(!first)break;
@@ -533,7 +541,7 @@ function animateSpreadTurn(direction,targetIndex){
   var list=pages();
   var backIndex=direction>0?targetIndex:(targetIndex===0?0:Math.min(targetIndex+1,list.length-1));
   var backPage=list[backIndex]||null;
-  var backSrc=backPage&&backPage.src?backPage.src:"";
+  var backSrc=backPage&&backPage.src?versionedPageSrc(backPage.src):"";
   preloadPage(backIndex,"high");
 
   pageTurnAnimating=true;
@@ -1001,6 +1009,8 @@ async function load(){
   loadingPromise=fetch("data/comics.json?bust="+Date.now(),{cache:"no-store"})
     .then(function(response){if(!response.ok)throw new Error("Catálogo de quadrinhos indisponível.");return response.json();})
     .then(function(data){
+      assetRevision=Date.now();
+      preloadedPageImages.clear();
       catalog=data&&typeof data==="object"?data:{series:[]};
       editions=publishedEditions(catalog);
       var lastId=loadValue(LAST_EDITION_KEY,"");
