@@ -538,6 +538,7 @@ function checkComics(){
   const manager=read("js/comic-manager.js");
   const api=read("api/media.js");
   const router=read("js/router.js");
+  const comicCss=read("css/comic-reader.css");
   const html=read("index.html");
 
   for(const feature of ["single","spread","continuous"]){
@@ -573,10 +574,16 @@ function checkComics(){
      !reader.includes("prefers-reduced-motion") ||
      !reader.includes("comic-page-turn-bend") ||
      !reader.includes("preloadedPageImages") ||
-     !reader.includes("backIndex=direction>0?targetIndex") ||
+     !reader.includes("renderSpreadTurnUnderlay") ||
+     !reader.includes('spreadSideIndex(targetIndices,"left")') ||
+     !reader.includes('spreadSideIndex(targetIndices,"right")') ||
      !reader.includes("comic-spread-single-right") ||
+     !comicCss.includes("overflow:visible;contain:none") ||
+     !comicCss.includes("comic-page-turn-edge") ||
+     !comicCss.includes("rotateY(-180deg)") ||
+     !comicCss.includes("rotateY(180deg)") ||
      !html.includes('id="comicPageTurnToggleBtn"')){
-    fail("Modo Livro está sem geometria estável, preloading, animação fluida ou respeito a movimento reduzido.");
+    fail("Modo Livro está sem geometria estável, preloading, virada física completa ou respeito a movimento reduzido.");
   }
   if(!router.includes("kind:'comic'") ||
      !router.includes("function comicRoute") ||
