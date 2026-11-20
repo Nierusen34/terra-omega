@@ -24,6 +24,8 @@ var touchState=null;
 var pinchState=null;
 var pageTurnAnimating=false;
 var pageTurnEnabled=true;
+var queuedTurnDirection=0;
+var queuedTurnSource="";
 var physicalBook=null;
 var physicalBookKey="";
 var physicalBookHost=null;
@@ -431,6 +433,7 @@ function teardownPhysicalBook(clear){
   physicalBookKey="";
   physicalBookHost=null;
   pageTurnAnimating=false;
+  clearQueuedTurn();
   var viewport=el("comicPagesViewport");
   if(viewport){
     viewport.classList.remove("comic-opf-shell");
@@ -566,7 +569,10 @@ function renderPhysicalBook(){
     var state=event&&event.state||"read";
     pageTurnAnimating=state==="flipping"||state==="user_fold";
     reader.classList.toggle("comic-page-turning",pageTurnAnimating);
-    if(state==="read")updatePhysicalCoverShift(pageIndex);
+    if(state==="read"){
+      updatePhysicalCoverShift(pageIndex);
+      flushQueuedTurn();
+    }
   }));
   physicalBookUnsubs.push(physicalBook.on("changeOrientation",function(){
     updateViewButtons();
@@ -1032,6 +1038,7 @@ function animateSpreadTurn(direction,targetIndex){
     if(readerNode)readerNode.classList.remove("comic-page-turning");
     render();
     syncComicRoute({replace:true});
+    flushQueuedTurn();
     stage.scrollTo({top:0,left:0,behavior:"auto"});
   }
   var sheet=layer.querySelector(".comic-page-turn-sheet");
@@ -1045,8 +1052,31 @@ function animateSpreadTurn(direction,targetIndex){
   cleanupTimer=setTimeout(cleanup,1800);
 }
 
-function move(direction){
-  var list=pages();if(!list.length||pageTurnAnimating)return;
+function queueTurn(direction,source){
+  queuedTurnDirection=direction<0?-1:1;
+  queuedTurnSource=source||"";
+}
+function clearQueuedTurn(){
+  queuedTurnDirection=0;
+  queuedTurnSource="";
+}
+function flushQueuedTurn(){
+  if(!queuedTurnDirection||pageTurnAnimating)return;
+  var direction=queuedTurnDirection;
+  clearQueuedTurn();
+  requestAnimationFrame(function(){
+    if(!pageTurnAnimating)move(direction,{source:"queued"});
+  });
+}
+
+function move(direction,options){
+  options=options||{};
+  var list=pages();if(!list.length)return;
+  direction=direction<0?-1:1;
+  if(pageTurnAnimating){
+    if(options.queue!==false)queueTurn(direction,options.source||"");
+    return;
+  }
   var step=1;
   if(viewMode==="spread"){
     if(physicalBook&&physicalEngineEnabled()){
@@ -1055,7 +1085,10 @@ function move(direction){
       Promise.resolve(action).catch(function(error){
         console.warn("Terra Omega Comics: virada física falhou.",error);
       }).finally(function(){
-        if(physicalBook&&physicalBook.state==="read")pageTurnAnimating=false;
+        if(physicalBook&&physicalBook.state==="read"){
+          pageTurnAnimating=false;
+          flushQueuedTurn();
+        }
       });
       return;
     }
@@ -1391,7 +1424,7 @@ function bind(){
   if(editionSelect)editionSelect.addEventListener("change",function(){chooseEdition(Number(editionSelect.value)||0,true,{replace:false});});
 
   [["comicPrevBtn",-1],["comicStagePrevBtn",-1],["comicNextBtn",1],["comicStageNextBtn",1]].forEach(function(pair){
-    var b=el(pair[0]);if(b)b.addEventListener("click",function(){move(pair[1]);});
+    var b=el(pair[0]);if(b)b.addEventListener("click",function(){move(pair[1],{source:"button"});});
   });
   var first=el("comicFirstBtn"),last=el("comicLastBtn");
   if(first)first.addEventListener("click",function(){goTo(0,true);});
@@ -1458,23 +1491,37 @@ function bind(){
   document.addEventListener("keydown",function(event){
     if(!active()&&!readingMode)return;
     var target=event.target;
-    if(target&&/INPUT|TEXTAREA|SELECT/.test(target.tagName))return;
-    if(event.key==="Escape"){
+    if(target&&(/INPUT|TEXTAREA|SELECT/.test(target.tagName)||target.isContentEditable))return;
+    var key=event.key||"";
+    var code=event.code||"";
+    if(key==="Escape"){
       if(el("comicLibraryModal")&&el("comicLibraryModal").classList.contains("show")){closeLibrary();return;}
       if(focusReturn){cancelFocus();render();return;}
       if(readingMode){setReadingMode(false);return;}
     }
-    if(event.key==="ArrowLeft"){event.preventDefault();move(-1);}
-    if(event.key==="ArrowRight"){event.preventDefault();move(1);}
-    if(event.key==="Home"){event.preventDefault();goTo(0,true);}
-    if(event.key==="End"){event.preventDefault();goTo(Math.max(0,pages().length-1),true);}
-    if(event.key==="+"||event.key==="="){event.preventDefault();zoom(.1);}
-    if(event.key==="-"){event.preventDefault();zoom(-.1);}
-    if(event.key.toLowerCase()==="f"){event.preventDefault();setFit("screen");}
-    if(event.key.toLowerCase()==="w"){event.preventDefault();setFit("width");}
-    if(event.key==="1"){event.preventDefault();setFit("actual");}
-    if(event.key.toLowerCase()==="r"){event.preventDefault();setReadingMode(!readingMode);}
-  });
+    if(!event.altKey&&!event.ctrlKey&&!event.metaKey){
+      if(key==="ArrowLeft"||code==="ArrowLeft"){
+        event.preventDefault();
+        event.stopPropagation();
+        move(-1,{source:"keyboard",queue:true});
+        return;
+      }
+      if(key==="ArrowRight"||code==="ArrowRight"){
+        event.preventDefault();
+        event.stopPropagation();
+        move(1,{source:"keyboard",queue:true});
+        return;
+      }
+    }
+    if(key==="Home"){event.preventDefault();clearQueuedTurn();goTo(0,true);}
+    if(key==="End"){event.preventDefault();clearQueuedTurn();goTo(Math.max(0,pages().length-1),true);}
+    if(key==="+"||key==="="){event.preventDefault();zoom(.1);}
+    if(key==="-"){event.preventDefault();zoom(-.1);}
+    if(key.toLowerCase()==="f"){event.preventDefault();setFit("screen");}
+    if(key.toLowerCase()==="w"){event.preventDefault();setFit("width");}
+    if(key==="1"){event.preventDefault();setFit("actual");}
+    if(key.toLowerCase()==="r"){event.preventDefault();setReadingMode(!readingMode);}
+  },true);
   document.addEventListener("fullscreenchange",function(){
     var button=el("comicFullscreenBtn");if(button)button.classList.toggle("active",!!document.fullscreenElement);
   });
