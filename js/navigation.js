@@ -100,7 +100,7 @@ function toggleChangelog(){
 }
 
 
-var COMIC_ASSET_VERSION="20261120-reader-v4g";
+var COMIC_ASSET_VERSION="20261120-reader-v4h";
 var OPEN_PAGE_FLIP_VERSION="0.7.0";
 var comicStylesPromise = null;
 var comicPhysicsPromise = null;
