@@ -160,15 +160,28 @@
 .comic-reader.comic-spread-single-left[data-view-mode="spread"] .comic-page-frame{
   grid-column:1;align-items:flex-end
 }
+.comic-reader.comic-spread-cover-centered[data-view-mode="spread"] .comic-pages-viewport{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)
+}
+.comic-reader.comic-spread-cover-centered[data-view-mode="spread"] .comic-page-frame{
+  grid-column:1/-1!important;
+  justify-self:center;
+  width:calc(50% - 3.5px);
+  align-items:center!important
+}
+.comic-reader.comic-spread-cover-centered[data-view-mode="spread"] .comic-pages-viewport::before,
+.comic-reader.comic-spread-cover-centered[data-view-mode="spread"] .comic-pages-viewport::after{
+  display:none
+}
 .comic-reader[data-view-mode="spread"][data-fit-effective="screen"] .comic-page-surface{
-  width:min(100%,46vh);aspect-ratio:2/3;background:#09080a
+  width:min(100%,46vh);background:transparent
 }
 .comic-reader[data-view-mode="spread"][data-fit-effective="width"] .comic-page-surface{
-  width:100%;aspect-ratio:2/3;background:#09080a
+  width:100%;background:transparent
 }
 .comic-reader[data-view-mode="spread"][data-fit-effective="screen"] .comic-page-image,
 .comic-reader[data-view-mode="spread"][data-fit-effective="width"] .comic-page-image{
-  width:100%;height:100%;max-width:none;max-height:none;object-fit:contain
+  width:100%;height:auto;max-width:none;max-height:none;object-fit:contain
 }
 .comic-reader[data-view-mode="continuous"] .comic-pages-viewport{
   flex-direction:column;align-items:center;gap:26px;width:100%;max-width:1040px
@@ -1051,6 +1064,9 @@ body.comic-reading-active{overflow:hidden!important}
   }
   .comic-reader[data-compact-book="true"] .comic-page-frame{
     width:100%!important;grid-column:1!important;align-items:center!important
+  }
+  .comic-reader.comic-spread-cover-centered[data-compact-book="true"] .comic-page-frame{
+    width:100%!important;grid-column:1!important
   }
   .comic-reader[data-compact-book="true"] .comic-pages-viewport::before,
   .comic-reader[data-compact-book="true"] .comic-pages-viewport::after{display:none}
