@@ -148,23 +148,47 @@ function showToast(msg, type, duration){
 
 function showConfirm(title, msg, onConfirm, confirmLabel){
   var modal = document.getElementById('confirmModal');
+  if(!modal) return;
+
+  if(typeof modal._terraOmegaConfirmCleanup === 'function'){
+    modal._terraOmegaConfirmCleanup();
+  }
+
   document.getElementById('confirmTitle').textContent = title;
   document.getElementById('confirmMsg').textContent = msg;
   document.getElementById('confirmOk').textContent = confirmLabel || 'Confirmar';
-  modal.classList.add('show');
-  document.body.style.overflow = 'hidden';
+
+  var previousOverflow = document.body.style.overflow;
   var okBtn = document.getElementById('confirmOk');
   var cancelBtn = document.getElementById('confirmCancel');
+  var finished = false;
+
   function cleanup(){
+    if(finished) return;
+    finished = true;
     modal.classList.remove('show');
-    document.body.style.overflow = '';
+    document.body.style.overflow = previousOverflow;
     okBtn.removeEventListener('click', onOk);
     cancelBtn.removeEventListener('click', onCancel);
+    modal.removeEventListener('click', onBackdrop);
+    if(modal._terraOmegaConfirmCleanup === cleanup) modal._terraOmegaConfirmCleanup = null;
   }
-  function onOk(){ cleanup(); if(onConfirm) onConfirm(); }
+  function onOk(){
+    okBtn.disabled = true;
+    cleanup();
+    okBtn.disabled = false;
+    if(onConfirm) onConfirm();
+  }
   function onCancel(){ cleanup(); }
+  function onBackdrop(event){ if(event.target === modal) onCancel(); }
+
+  modal._terraOmegaConfirmCleanup = cleanup;
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden';
   okBtn.addEventListener('click', onOk);
   cancelBtn.addEventListener('click', onCancel);
+  modal.addEventListener('click', onBackdrop);
+  setTimeout(function(){ try{ okBtn.focus(); }catch(error){} },0);
 }
 
 function escapeHtml(s){
