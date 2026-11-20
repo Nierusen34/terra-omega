@@ -1086,6 +1086,37 @@ function clearQueuedTurn(){
   queuedTurnDirection=0;
   queuedTurnSource="";
 }
+function dispatchPhysicalCornerClick(direction){
+  if(!physicalBookHost)return false;
+  var rect=physicalBookHost.getBoundingClientRect();
+  if(rect.width<40||rect.height<40)return false;
+
+  var x=direction>0?rect.right-10:rect.left+10;
+  var y=rect.bottom-12;
+  var pointerId=991;
+
+  try{
+    physicalBookHost.dispatchEvent(new PointerEvent("pointerleave",{
+      bubbles:false,cancelable:true,pointerType:"mouse",
+      pointerId:pointerId,clientX:x,clientY:y
+    }));
+  }catch(error){}
+
+  try{
+    physicalBookHost.dispatchEvent(new PointerEvent("pointerdown",{
+      bubbles:true,cancelable:true,pointerType:"mouse",button:0,buttons:1,
+      pointerId:pointerId,clientX:x,clientY:y
+    }));
+    physicalBookHost.dispatchEvent(new PointerEvent("pointerup",{
+      bubbles:true,cancelable:true,pointerType:"mouse",button:0,buttons:0,
+      pointerId:pointerId,clientX:x,clientY:y
+    }));
+    return true;
+  }catch(error){
+    console.warn("Terra Omega Comics: falha ao sintetizar canto físico.",error);
+    return false;
+  }
+}
 function keyboardTurn(direction){
   var list=pages();
   if(!list.length)return;
@@ -1093,28 +1124,15 @@ function keyboardTurn(direction){
 
   if(viewMode==="spread"&&physicalBook&&physicalEngineEnabled()){
     clearQueuedTurn();
-
     try{physicalBook.update();}catch(error){}
 
-    var current=Number(physicalBook.page);
-    if(!Number.isFinite(current))current=pageIndex;
-    current=clamp(current,0,list.length-1);
-
-    var target;
-    if(compactBookMode()){
-      target=clamp(current+direction,0,list.length-1);
-    }else if(direction>0){
-      target=current===0?Math.min(1,list.length-1):Math.min(current+2,list.length-1);
-    }else{
-      target=current<=1?0:Math.max(1,current-2);
-    }
-    if(target===current)return;
-
     requestAnimationFrame(function(){
-      var action=physicalBook.flipTo(target,"bottom");
-      Promise.resolve(action).catch(function(error){
-        console.warn("Terra Omega Comics: navegação por teclado falhou.",error);
-      });
+      if(!dispatchPhysicalCornerClick(direction)){
+        var action=direction>0?physicalBook.flipNext("bottom"):physicalBook.flipPrev("bottom");
+        Promise.resolve(action).catch(function(error){
+          console.warn("Terra Omega Comics: navegação por teclado falhou.",error);
+        });
+      }
     });
     return;
   }
