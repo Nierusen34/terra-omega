@@ -205,6 +205,18 @@ function pageRange(){
   if(viewMode==="spread")return compactBookMode()?[pageIndex]:spreadIndicesFor(pageIndex,list.length);
   return [pageIndex];
 }
+function updateBookStackState(){
+  var reader=el("comicReader"),list=pages();
+  if(!reader||!list.length)return;
+  var denominator=Math.max(1,list.length-1);
+  var left=clamp(pageIndex/denominator,0,1);
+  var right=1-left;
+  reader.style.setProperty("--comic-stack-left",left.toFixed(3));
+  reader.style.setProperty("--comic-stack-right",right.toFixed(3));
+  reader.setAttribute("data-book-start",pageIndex===0?"true":"false");
+  reader.setAttribute("data-book-end",pageIndex>=list.length-1?"true":"false");
+}
+
 function normalizeIndexForView(index){
   var list=pages();
   index=clamp(index,0,Math.max(0,list.length-1));
@@ -500,7 +512,7 @@ function render(){
     });
   }
 
-  updateViewButtons();updateThumbs();renderThumbs();updateProgressUI();applySizing();setupContinuousObservers();
+  updateViewButtons();updateThumbs();renderThumbs();updateProgressUI();applySizing();updateBookStackState();setupContinuousObservers();
   preloadAround();saveProgress();
 }
 
@@ -646,15 +658,18 @@ function animateSpreadTurn(direction,targetIndex){
   layer.style.height=imageRect.height+"px";
   layer.innerHTML=
     '<div class="comic-page-turn-cast-shadow"></div>'+
+    '<div class="comic-page-turn-hinge"></div>'+
     '<div class="comic-page-turn-sheet">'+
       '<div class="comic-page-turn-bend">'+
         '<div class="comic-page-turn-face comic-page-turn-front">'+
           '<img src="'+esc(sourceImage.currentSrc||sourceImage.src)+'" alt="">'+
+          '<span class="comic-page-turn-curl"></span>'+
           '<span class="comic-page-turn-ridge"></span>'+
         '</div>'+
         '<div class="comic-page-turn-face comic-page-turn-back">'+
           (backSrc?'<img src="'+esc(backSrc)+'" alt="">':'')+
           '<span class="comic-page-turn-paper"></span>'+
+          '<span class="comic-page-turn-curl comic-page-turn-curl-back"></span>'+
         '</div>'+
         '<span class="comic-page-turn-edge"></span>'+
       '</div>'+
