@@ -24,6 +24,7 @@ var touchState=null;
 var pinchState=null;
 var pageTurnAnimating=false;
 var pageTurnEnabled=true;
+var preloadedPageUrls=new Set();
 var libraryReturnFocus=null;
 var helpReturnFocus=null;
 
@@ -185,7 +186,8 @@ function reducedMotion(){
   return !!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 }
 function pageTurnAvailable(){
-  return pageTurnEnabled&&!reducedMotion()&&viewMode==="spread"&&!focusReturn&&!pageTurnAnimating;
+  var fit=effectiveFit();
+  return pageTurnEnabled&&!reducedMotion()&&viewMode==="spread"&&!focusReturn&&!pageTurnAnimating&&(fit==="screen"||fit==="width");
 }
 function updatePageTurnToggle(){
   var button=el("comicPageTurnToggleBtn");
@@ -343,17 +345,21 @@ function highlightThumbs(){
   }
 }
 function renderThumbs(){
-  var root=el("comicThumbs"),list=pages();
+  var root=el("comicThumbs"),list=pages(),edition=currentSeries();
   if(!root)return;
-  root.innerHTML=list.map(function(item,index){
-    var src=item.thumb||item.src;
-    return '<button type="button" class="comic-thumb" data-comic-page="'+index+'" data-page="'+(index+1)+'" aria-label="Abrir página '+(index+1)+'">'+
-      '<img src="'+esc(src)+'" alt="" loading="lazy" decoding="async">'+
-    '</button>';
-  }).join("");
-  root.querySelectorAll("[data-comic-page]").forEach(function(button){
-    button.addEventListener("click",function(){goTo(Number(button.getAttribute("data-comic-page"))||0,true);});
-  });
+  var thumbKey=(edition&&edition.id||"")+"|"+list.map(function(item){return item.thumb||item.src||"";}).join("|");
+  if(root.getAttribute("data-thumb-key")!==thumbKey){
+    root.innerHTML=list.map(function(item,index){
+      var src=item.thumb||item.src;
+      return '<button type="button" class="comic-thumb" data-comic-page="'+index+'" data-page="'+(index+1)+'" aria-label="Abrir página '+(index+1)+'">'+
+        '<img src="'+esc(src)+'" alt="" loading="lazy" decoding="async">'+
+      '</button>';
+    }).join("");
+    root.setAttribute("data-thumb-key",thumbKey);
+    root.querySelectorAll("[data-comic-page]").forEach(function(button){
+      button.addEventListener("click",function(){goTo(Number(button.getAttribute("data-comic-page"))||0,true);});
+    });
+  }
   highlightThumbs();
 }
 
@@ -405,6 +411,13 @@ function render(){
 
   pageIndex=clamp(pageIndex,0,list.length-1);
   var indices=pageRange();
+  var readerNode=el("comicReader");
+  if(readerNode){
+    readerNode.classList.remove("comic-spread-single-right","comic-spread-single-left");
+    if(viewMode==="spread"&&indices.length===1){
+      readerNode.classList.add(((indices[0]+1)%2===1)?"comic-spread-single-right":"comic-spread-single-left");
+    }
+  }
   if(empty)empty.hidden=true;
   if(viewport){
     viewport.hidden=false;
@@ -422,13 +435,19 @@ function render(){
   preloadAround();saveProgress();
 }
 
+function preloadPage(index){
+  var list=pages(),row=list[index];
+  if(!row||!row.src||preloadedPageUrls.has(row.src))return;
+  preloadedPageUrls.add(row.src);
+  var img=new Image();
+  img.decoding="async";
+  try{img.fetchPriority="low";}catch(error){}
+  img.src=row.src;
+  if(img.decode)img.decode().catch(function(){});
+}
 function preloadAround(){
   if(viewMode==="continuous")return;
-  var list=pages();
-  [pageIndex+1,pageIndex+2,pageIndex-1].forEach(function(index){
-    var row=list[index];if(!row||!row.src)return;
-    var img=new Image();img.src=row.src;
-  });
+  [pageIndex+1,pageIndex+2,pageIndex+3,pageIndex-1,pageIndex-2].forEach(preloadPage);
 }
 
 function goTo(index,scroll,options){
@@ -468,10 +487,11 @@ function animateSpreadTurn(direction,targetIndex){
   var frames=Array.from(viewport.querySelectorAll(".comic-page-frame"));
   if(!frames.length){goTo(targetIndex,true);return;}
   var sourceFrame=direction>0?frames[frames.length-1]:frames[0];
+  var sourceSurface=sourceFrame&&sourceFrame.querySelector(".comic-page-surface");
   var sourceImage=sourceFrame&&sourceFrame.querySelector(".comic-page-image");
-  if(!sourceImage){goTo(targetIndex,true);return;}
+  if(!sourceSurface||!sourceImage){goTo(targetIndex,true);return;}
 
-  var imageRect=sourceImage.getBoundingClientRect();
+  var imageRect=sourceSurface.getBoundingClientRect();
   var stageRect=stage.getBoundingClientRect();
   if(imageRect.width<20||imageRect.height<20){goTo(targetIndex,true);return;}
 
@@ -499,15 +519,16 @@ function animateSpreadTurn(direction,targetIndex){
     '<div class="comic-page-turn-spine-shadow"></div>';
   stage.appendChild(layer);
 
-  pageIndex=normalizeIndexForView(targetIndex);
-  render();
-  syncComicRoute({replace:true});
-
   var readerNode=el("comicReader");
   if(readerNode)readerNode.classList.add("comic-page-turning");
 
   requestAnimationFrame(function(){
-    requestAnimationFrame(function(){layer.classList.add("is-turning");});
+    layer.classList.add("is-turning");
+    requestAnimationFrame(function(){
+      pageIndex=normalizeIndexForView(targetIndex);
+      render();
+      syncComicRoute({replace:true});
+    });
   });
 
   var finished=false;
@@ -522,7 +543,7 @@ function animateSpreadTurn(direction,targetIndex){
   }
   var sheet=layer.querySelector(".comic-page-turn-sheet");
   if(sheet)sheet.addEventListener("animationend",cleanup,{once:true});
-  setTimeout(cleanup,1450);
+  setTimeout(cleanup,1200);
 }
 
 function move(direction){

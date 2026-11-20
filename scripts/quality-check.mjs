@@ -559,8 +559,10 @@ function checkComics(){
      !reader.includes("PAGE_TURN_KEY") ||
      !reader.includes("prefers-reduced-motion") ||
      !reader.includes("comic-page-turn-bend") ||
+     !reader.includes("preloadedPageUrls") ||
+     !reader.includes("comic-spread-single-right") ||
      !html.includes('id="comicPageTurnToggleBtn"')){
-    fail("Modo Livro está sem animação fluida de virar páginas, toggle ou respeito a movimento reduzido.");
+    fail("Modo Livro está sem geometria estável, preloading, animação fluida ou respeito a movimento reduzido.");
   }
   if(!router.includes("kind:'comic'") ||
      !router.includes("function comicRoute") ||
