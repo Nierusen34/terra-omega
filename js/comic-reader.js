@@ -573,9 +573,11 @@ function animateSpreadTurn(direction,targetIndex){
   });
 
   var finished=false;
+  var cleanupTimer=null;
   function cleanup(){
     if(finished)return;
     finished=true;
+    if(cleanupTimer)clearTimeout(cleanupTimer);
     layer.remove();
     pageTurnAnimating=false;
     var readerNode=el("comicReader");
@@ -583,8 +585,14 @@ function animateSpreadTurn(direction,targetIndex){
     stage.scrollTo({top:0,left:0,behavior:"auto"});
   }
   var sheet=layer.querySelector(".comic-page-turn-sheet");
-  if(sheet)sheet.addEventListener("animationend",cleanup,{once:true});
-  setTimeout(cleanup,1200);
+  var expectedTurnAnimation=direction>0?"comicPageTurnForward":"comicPageTurnBackward";
+  if(sheet)sheet.addEventListener("animationend",function(event){
+    if(event.target!==sheet||event.animationName!==expectedTurnAnimation)return;
+    requestAnimationFrame(function(){
+      requestAnimationFrame(cleanup);
+    });
+  });
+  cleanupTimer=setTimeout(cleanup,1400);
 }
 
 function move(direction){
