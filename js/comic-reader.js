@@ -114,9 +114,23 @@ function publishedEditions(data){
   return rows.filter(function(row){return row&&row.status!=="draft";});
 }
 function currentSeries(){return editions[seriesIndex]||null;}
-function pages(){
+function storyPages(){
   var edition=currentSeries();
   return edition&&Array.isArray(edition.pages)?edition.pages:[];
+}
+function pages(){
+  var edition=currentSeries();
+  var story=storyPages();
+  if(!edition||!edition.cover)return story;
+  var cover=String(edition.cover||"").trim();
+  if(!cover)return story;
+  return [{
+    order:0,
+    label:"Capa",
+    src:cover,
+    alt:(edition.title||"Quadrinho")+" — capa",
+    isCover:true
+  }].concat(story);
 }
 function collections(){
   var seen=new Set(),out=[];
@@ -162,19 +176,28 @@ function restoreProgressForCurrent(){
   var edition=currentSeries(),list=pages();
   if(!edition||!list.length){pageIndex=0;return;}
   var saved=savedProgress(edition.id);
-  pageIndex=saved?clamp(Number(saved.page)||0,0,list.length-1):0;
+  if(!saved){pageIndex=0;return;}
+  var savedPage=Number(saved.page)||0;
+  var storyCount=Array.isArray(edition.pages)?edition.pages.length:0;
+  if(edition.cover&&Number(saved.total)===storyCount&&list.length===storyCount+1){
+    savedPage+=1;
+  }
+  pageIndex=clamp(savedPage,0,list.length-1);
 }
 
+function spreadIndicesFor(index,length){
+  if(!length)return [];
+  index=clamp(index,0,length-1);
+  if(index===0)return [0];
+  var spreadStart=index%2===0?index-1:index;
+  return [spreadStart,spreadStart+1].filter(function(i){return i<length;});
+}
 function pageRange(){
   var list=pages();
   if(!list.length)return [];
   pageIndex=clamp(pageIndex,0,list.length-1);
   if(viewMode==="continuous")return list.map(function(_,i){return i;});
-  if(viewMode==="spread"){
-    if(pageIndex===0)return [0];
-    var spreadStart=pageIndex%2===0?pageIndex-1:pageIndex;
-    return [spreadStart,spreadStart+1].filter(function(i){return i<list.length;});
-  }
+  if(viewMode==="spread")return spreadIndicesFor(pageIndex,list.length);
   return [pageIndex];
 }
 function normalizeIndexForView(index){
@@ -237,7 +260,7 @@ function imageMarkup(item,index){
     '<div class="comic-page-surface">'+
       '<img class="comic-page-image" src="'+src+'"'+dataSrc+' alt="'+esc(alt)+'" draggable="false" decoding="async">'+
     '</div>'+
-    '<figcaption>Página '+(index+1)+'</figcaption>'+
+    '<figcaption>'+(item.isCover?"Capa":("Página "+(index+1-(currentSeries()&&currentSeries().cover?1:0))))+'</figcaption>'+
   '</figure>';
 }
 
@@ -520,6 +543,38 @@ function spreadTarget(direction){
   return Math.max(1,pageIndex-2);
 }
 
+function blankSpreadPageMarkup(){
+  return '<figure class="comic-page-frame comic-page-turn-placeholder" aria-hidden="true">'+
+    '<div class="comic-page-surface"></div>'+
+  '</figure>';
+}
+function spreadSideIndex(indices,side){
+  var parity=side==="left"?1:0;
+  for(var i=0;i<indices.length;i++){
+    if(indices[i]%2===parity)return indices[i];
+  }
+  return -1;
+}
+function renderSpreadTurnUnderlay(direction,targetIndex,currentIndices){
+  var viewport=el("comicPagesViewport"),readerNode=el("comicReader"),list=pages();
+  if(!viewport||!readerNode)return;
+  var targetIndices=spreadIndicesFor(targetIndex,list.length);
+  var currentLeft=spreadSideIndex(currentIndices,"left");
+  var currentRight=spreadSideIndex(currentIndices,"right");
+  var targetLeft=spreadSideIndex(targetIndices,"left");
+  var targetRight=spreadSideIndex(targetIndices,"right");
+
+  var leftIndex=direction>0?currentLeft:targetLeft;
+  var rightIndex=direction>0?targetRight:currentRight;
+
+  readerNode.classList.remove("comic-spread-single-right","comic-spread-single-left");
+  viewport.hidden=false;
+  viewport.innerHTML=
+    (leftIndex>=0?imageMarkup(list[leftIndex],leftIndex):blankSpreadPageMarkup())+
+    (rightIndex>=0?imageMarkup(list[rightIndex],rightIndex):blankSpreadPageMarkup());
+  applySizing();
+}
+
 function animateSpreadTurn(direction,targetIndex){
   var stage=el("comicReaderStage"),viewport=el("comicPagesViewport");
   if(!stage||!viewport||!pageTurnAvailable()){
@@ -527,11 +582,18 @@ function animateSpreadTurn(direction,targetIndex){
     return;
   }
 
+  var currentIndices=pageRange();
   var frames=Array.from(viewport.querySelectorAll(".comic-page-frame"));
   if(!frames.length){goTo(targetIndex,true);return;}
-  var sourceFrame=direction>0?frames[frames.length-1]:frames[0];
-  var sourceSurface=sourceFrame&&sourceFrame.querySelector(".comic-page-surface");
-  var sourceImage=sourceFrame&&sourceFrame.querySelector(".comic-page-image");
+
+  var sourceIndex=direction>0
+    ? spreadSideIndex(currentIndices,"right")
+    : spreadSideIndex(currentIndices,"left");
+  var sourceFrame=viewport.querySelector('[data-comic-rendered-page="'+sourceIndex+'"]');
+  if(!sourceFrame){goTo(targetIndex,true);return;}
+
+  var sourceSurface=sourceFrame.querySelector(".comic-page-surface");
+  var sourceImage=sourceFrame.querySelector(".comic-page-image");
   if(!sourceSurface||!sourceImage){goTo(targetIndex,true);return;}
 
   var imageRect=sourceSurface.getBoundingClientRect();
@@ -539,7 +601,11 @@ function animateSpreadTurn(direction,targetIndex){
   if(imageRect.width<20||imageRect.height<20){goTo(targetIndex,true);return;}
 
   var list=pages();
-  var backIndex=direction>0?targetIndex:(targetIndex===0?0:Math.min(targetIndex+1,list.length-1));
+  var targetIndices=spreadIndicesFor(targetIndex,list.length);
+  var backIndex=direction>0
+    ? spreadSideIndex(targetIndices,"left")
+    : spreadSideIndex(targetIndices,"right");
+  if(backIndex<0)backIndex=targetIndex;
   var backPage=list[backIndex]||null;
   var backSrc=backPage&&backPage.src?versionedPageSrc(backPage.src):"";
   preloadPage(backIndex,"high");
@@ -564,14 +630,14 @@ function animateSpreadTurn(direction,targetIndex){
           (backSrc?'<img src="'+esc(backSrc)+'" alt="">':'')+
           '<span class="comic-page-turn-paper"></span>'+
         '</div>'+
+        '<span class="comic-page-turn-edge"></span>'+
       '</div>'+
     '</div>'+
     '<div class="comic-page-turn-spine-shadow"></div>';
   stage.appendChild(layer);
 
   pageIndex=normalizeIndexForView(targetIndex);
-  render();
-  syncComicRoute({replace:true});
+  renderSpreadTurnUnderlay(direction,pageIndex,currentIndices);
 
   var readerNode=el("comicReader");
   if(readerNode)readerNode.classList.add("comic-page-turning");
@@ -590,6 +656,8 @@ function animateSpreadTurn(direction,targetIndex){
     pageTurnAnimating=false;
     var readerNode=el("comicReader");
     if(readerNode)readerNode.classList.remove("comic-page-turning");
+    render();
+    syncComicRoute({replace:true});
     stage.scrollTo({top:0,left:0,behavior:"auto"});
   }
   var sheet=layer.querySelector(".comic-page-turn-sheet");
@@ -600,7 +668,7 @@ function animateSpreadTurn(direction,targetIndex){
       requestAnimationFrame(cleanup);
     });
   });
-  cleanupTimer=setTimeout(cleanup,1400);
+  cleanupTimer=setTimeout(cleanup,1800);
 }
 
 function move(direction){
