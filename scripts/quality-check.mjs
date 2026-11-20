@@ -1021,11 +1021,14 @@ function checkModuleRegistry(){
   const html=read("index.html");
   const loader=read("js/admin-loader.js");
   const publicLoader=read("js/navigation.js");
+  const normalizeScriptPath=value=>String(value||"").replace(/^\.\//,"").split(/[?#]/)[0];
   const direct=[...html.matchAll(/<script[^>]+src=["']([^"']+)["']/g)]
-    .map(match=>String(match[1]||"").replace(/^\.\//,""))
+    .map(match=>normalizeScriptPath(match[1]))
     .filter(path=>path.startsWith("js/"));
-  const lazy=[...loader.matchAll(/["'](js\/[^"']+\.js)["']/g)].map(match=>match[1]);
-  const publicLazy=[...publicLoader.matchAll(/script\.src\s*=\s*["'](js\/[^"']+\.js)["']/g)].map(match=>match[1]);
+  const lazy=[...loader.matchAll(/["'](js\/[^"']+\.js(?:\?[^"']*)?)["']/g)]
+    .map(match=>normalizeScriptPath(match[1]));
+  const publicLazy=[...publicLoader.matchAll(/script\.src\s*=\s*["'](js\/[^"']+\.js(?:\?[^"']*)?)["']/g)]
+    .map(match=>normalizeScriptPath(match[1]));
   const registered=direct.concat(lazy,publicLazy);
   const duplicates=registered.filter((path,index)=>registered.indexOf(path)!==index);
 
