@@ -376,10 +376,10 @@ function highlightThumbs(){
 function renderThumbs(){
   var root=el("comicThumbs"),list=pages(),edition=currentSeries();
   if(!root)return;
-  var thumbKey=(edition&&edition.id||"")+"|"+list.map(function(item){return item.thumb||item.src||"";}).join("|");
+  var thumbKey=(edition&&edition.id||"")+"|"+assetRevision+"|"+list.map(function(item){return item.thumb||item.src||"";}).join("|");
   if(root.getAttribute("data-thumb-key")!==thumbKey){
     root.innerHTML=list.map(function(item,index){
-      var src=item.thumb||item.src;
+      var src=versionedPageSrc(item.thumb||item.src);
       return '<button type="button" class="comic-thumb" data-comic-page="'+index+'" data-page="'+(index+1)+'" aria-label="Abrir página '+(index+1)+'">'+
         '<img src="'+esc(src)+'" alt="" loading="lazy" decoding="async">'+
       '</button>';
