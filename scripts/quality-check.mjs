@@ -582,6 +582,9 @@ function checkComics(){
      !comicCss.includes("comic-page-turn-edge") ||
      !comicCss.includes("comic-page-turn-hinge") ||
      !comicCss.includes("comic-page-turn-curl") ||
+     !comicCss.includes("has-embedded-margin") ||
+     !reader.includes("embeddedMarginCache") ||
+     !reader.includes("analyzeEmbeddedMargins") ||
      !reader.includes("comic-page-turn-hinge") ||
      !reader.includes("comic-page-turn-curl") ||
      comicCss.includes("rotateY(-94deg) translateZ") ||
