@@ -181,6 +181,8 @@ function restoreProgressForCurrent(){
   var storyCount=Array.isArray(edition.pages)?edition.pages.length:0;
   if(edition.cover&&Number(saved.total)===storyCount&&list.length===storyCount+1){
     savedPage+=1;
+  }else if(!edition.cover&&Number(saved.total)===storyCount+1&&list.length===storyCount){
+    savedPage=Math.max(0,savedPage-1);
   }
   pageIndex=clamp(savedPage,0,list.length-1);
 }
@@ -403,7 +405,9 @@ function renderThumbs(){
   if(root.getAttribute("data-thumb-key")!==thumbKey){
     root.innerHTML=list.map(function(item,index){
       var src=versionedPageSrc(item.thumb||item.src);
-      return '<button type="button" class="comic-thumb" data-comic-page="'+index+'" data-page="'+(index+1)+'" aria-label="Abrir página '+(index+1)+'">'+
+      var pageNumber=index+1-(edition&&edition.cover?1:0);
+      var pageLabel=item.isCover?"Abrir capa":("Abrir página "+pageNumber);
+      return '<button type="button" class="comic-thumb" data-comic-page="'+index+'" data-page="'+(index+1)+'" aria-label="'+esc(pageLabel)+'">'+
         '<img src="'+esc(src)+'" alt="" loading="lazy" decoding="async">'+
       '</button>';
     }).join("");
@@ -426,7 +430,15 @@ function updateProgressUI(){
   if(jump){jump.disabled=!list.length;jump.max=String(Math.max(1,list.length));jump.value=list.length?String(pageIndex+1):"";}
   var percent=list.length?Math.round(((pageIndex+1)/list.length)*100):0;
   if(fill)fill.style.width=percent+"%";
-  if(text)text.textContent=list.length?("Página "+(pageIndex+1)+" de "+list.length+" · "+percent+"%"):"—";
+  if(text){
+    if(!list.length)text.textContent="—";
+    else if(current&&current.isCover)text.textContent="Capa · "+percent+"%";
+    else{
+      var storyNumber=pageIndex+1-(currentSeries()&&currentSeries().cover?1:0);
+      var storyTotal=storyPages().length;
+      text.textContent="Página "+storyNumber+" de "+storyTotal+" · "+percent+"%";
+    }
+  }
 
   var atStart=pageIndex<=0;
   var lastIndex=list.length-1;
