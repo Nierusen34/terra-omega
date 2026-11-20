@@ -609,7 +609,7 @@ function renderSpreadTurnUnderlay(direction,targetIndex,currentIndices){
   var leftIndex=direction>0?currentLeft:targetLeft;
   var rightIndex=direction>0?targetRight:currentRight;
 
-  readerNode.classList.remove("comic-spread-single-right","comic-spread-single-left");
+  readerNode.classList.remove("comic-spread-single-right","comic-spread-single-left","comic-spread-cover-centered");
   viewport.hidden=false;
   viewport.innerHTML=
     (leftIndex>=0?imageMarkup(list[leftIndex],leftIndex):blankSpreadPageMarkup())+
@@ -643,19 +643,9 @@ function animateSpreadTurn(direction,targetIndex){
   var stageRect=stage.getBoundingClientRect();
   if(imageRect.width<20||imageRect.height<20){goTo(targetIndex,true);return;}
 
+  var list=pages();
   var centeredCoverTurn=!compact&&sourceIndex===0&&currentIndices.length===1&&list[sourceIndex]&&list[sourceIndex].isCover;
   var physicalRect=imageRect;
-  if(centeredCoverTurn&&direction>0){
-    var viewportRect=viewport.getBoundingClientRect();
-    physicalRect={
-      left:viewportRect.left+(viewportRect.width/2),
-      top:imageRect.top,
-      width:imageRect.width,
-      height:imageRect.height
-    };
-  }
-
-  var list=pages();
   var targetIndices=compact?[targetIndex]:spreadIndicesFor(targetIndex,list.length);
   var backIndex=compact?targetIndex:(direction>0
     ? spreadSideIndex(targetIndices,"left")
@@ -667,7 +657,7 @@ function animateSpreadTurn(direction,targetIndex){
 
   pageTurnAnimating=true;
   var layer=document.createElement("div");
-  layer.className="comic-page-turn-layer "+(direction>0?"is-forward":"is-backward");
+  layer.className="comic-page-turn-layer "+(direction>0?"is-forward":"is-backward")+(centeredCoverTurn?" is-centered-cover":"");
   layer.setAttribute("aria-hidden","true");
   layer.style.left=(physicalRect.left-stageRect.left+stage.scrollLeft)+"px";
   layer.style.top=(physicalRect.top-stageRect.top+stage.scrollTop)+"px";
