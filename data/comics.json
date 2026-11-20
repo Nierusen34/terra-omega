@@ -55,6 +55,13 @@
           "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-06.webp",
           "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-06-thumb.webp",
           "alt": ""
+        },
+        {
+          "order": 7,
+          "label": "Página 7",
+          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-07.webp",
+          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-07-thumb.webp",
+          "alt": ""
         }
       ]
     }
