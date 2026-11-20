@@ -1050,7 +1050,6 @@ html.pwa-standalone .comic-reader.comic-reading-mode .comic-reader-meta{
   .comic-page-turn-layer{display:none!important}
   .comic-reader.comic-page-turning .comic-pages-viewport{animation:none!important}
 }
-}
 
 .comic-reader-build{
   display:block;margin-top:4px;padding-top:7px;border-top:1px solid rgba(194,161,106,.16);
