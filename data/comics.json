@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "series": [
     {
       "id": "tristan-queen-o-quarto-ficou-frio",
@@ -111,15 +111,9 @@
           "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-10.webp",
           "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-10-thumb.webp",
           "alt": ""
-        },
-        {
-          "order": 15,
-          "label": "Fim de Capa",
-          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-11.webp",
-          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-11-thumb.webp",
-          "alt": ""
         }
-      ]
+      ],
+      "endCover": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-11.webp"
     }
   ]
 }
