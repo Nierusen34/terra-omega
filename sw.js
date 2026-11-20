@@ -193,7 +193,7 @@ self.addEventListener("fetch",event=>{
 
   if(request.destination==="image"){
     if(/^\/images\/comics\//i.test(url.pathname)){
-      event.respondWith(comicImageNetworkFirst(request));
+      event.respondWith(comicImageCacheFirst(request));
     }else{
       event.respondWith(imageCacheFirst(request));
     }
