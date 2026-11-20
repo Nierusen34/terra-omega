@@ -450,12 +450,14 @@ function imageMarkup(item,index){
   var fillMarkup=isBookPage&&!continuous
     ? '<img class="comic-page-fill" src="'+esc(freshSrc)+'" alt="" aria-hidden="true" draggable="false" decoding="async">'
     : '';
-  return '<figure class="comic-page-frame'+(continuous?' comic-page-lazy':'')+(item.isCover?' comic-page-cover-frame':'')+'" data-comic-rendered-page="'+index+'">'+
+  var coverClass=item.isEndCover?' comic-page-end-cover-frame':(item.isCover?' comic-page-cover-frame':'');
+  var caption=item.isEndCover?"Capa final":(item.isCover?"Capa":("Página "+storyNumberForIndex(index)));
+  return '<figure class="comic-page-frame'+(continuous?' comic-page-lazy':'')+coverClass+'" data-comic-rendered-page="'+index+'">'+
     '<div class="comic-page-surface">'+
       fillMarkup+
       '<img class="comic-page-image" src="'+src+'"'+dataSrc+' alt="'+esc(alt)+'" draggable="false" decoding="async">'+
     '</div>'+
-    '<figcaption>'+(item.isCover?"Capa":("Página "+(index+1-(currentSeries()&&currentSeries().cover?1:0))))+'</figcaption>'+
+    '<figcaption>'+caption+'</figcaption>'+
   '</figure>';
 }
 
@@ -467,17 +469,20 @@ function physicalEngineEnabled(){
 }
 function physicalNeedsTail(list,edition){
   if(!list.length)return false;
+  if(edition&&edition.endCover)return false;
   if(edition&&edition.cover)return (storyPages().length%2)===1;
   return (list.length%2)===1;
 }
 function physicalPageMarkup(item,index){
   if(item&&item.isSynthetic){
-    return '<div class="comic-opf-page comic-opf-blank" data-comic-rendered-page="'+index+'" aria-hidden="true"></div>';
+    return '<div class="comic-opf-page comic-opf-blank" data-comic-engine-page="'+index+'" aria-hidden="true"></div>';
   }
   var freshSrc=versionedPageSrc(item.src);
   var alt=item.alt||((currentSeries()&&currentSeries().title||"Quadrinho")+" — página "+(index+1));
   var isCover=!!item.isCover;
-  return '<div class="comic-opf-page'+(isCover?' comic-opf-cover':'')+'" data-comic-rendered-page="'+index+'"'+(isCover?' data-density="hard"':'')+'>'+
+  var readerIndex=Number.isFinite(Number(item.readerIndex))?Number(item.readerIndex):index;
+  var coverClass=item.isEndCover?' comic-opf-end-cover':(isCover?' comic-opf-cover':'');
+  return '<div class="comic-opf-page'+coverClass+'" data-comic-rendered-page="'+readerIndex+'" data-comic-engine-page="'+index+'"'+(isCover?' data-density="hard"':'')+'>'+
     '<div class="comic-page-surface">'+
       (!isCover?'<img class="comic-page-fill" src="'+esc(freshSrc)+'" alt="" aria-hidden="true" draggable="false" decoding="async">':'')+
       '<img class="comic-page-image" src="'+esc(freshSrc)+'" alt="'+esc(alt)+'" draggable="false" decoding="async">'+
@@ -489,9 +494,14 @@ function setPhysicalCoverShift(value){
   if(!host)return;
   host.style.setProperty("--comic-opf-shift",String(compactBookMode()?0:value)+"%");
 }
+function coverShiftForReaderIndex(index){
+  if(compactBookMode())return 0;
+  var list=pages(),item=list[Number(index)];
+  if(!item||!item.isCover)return 0;
+  return item.isEndCover?25:-25;
+}
 function updatePhysicalCoverShift(index){
-  var edition=currentSeries();
-  setPhysicalCoverShift(!compactBookMode()&&edition&&edition.cover&&Number(index)===0?-25:0);
+  setPhysicalCoverShift(coverShiftForReaderIndex(index));
 }
 function teardownPhysicalBook(clear){
   physicalBookUnsubs.forEach(function(unsub){try{unsub();}catch(error){}});
@@ -514,11 +524,26 @@ function teardownPhysicalBook(clear){
   if(reader)reader.classList.remove("comic-page-turning","comic-physical-book");
 }
 function physicalEngineItems(list,edition){
-  var out=list.slice();
-  if(physicalNeedsTail(list,edition)){
-    out.push({isSynthetic:true,label:"Folha final"});
+  var out=list.map(function(item,index){
+    return Object.assign({},item,{readerIndex:index});
+  });
+
+  if(edition&&edition.endCover&&(storyPages().length%2)===1){
+    var endIndex=out.findIndex(function(item){return item&&item.isEndCover;});
+    if(endIndex>=0)out.splice(endIndex,0,{isSynthetic:true,label:"Folha de apoio",readerIndex:null});
+  }else if(physicalNeedsTail(list,edition)){
+    out.push({isSynthetic:true,label:"Folha final",readerIndex:null});
   }
   return out;
+}
+function physicalIndexForReader(items,readerIndex){
+  var found=items.findIndex(function(item){return item&&!item.isSynthetic&&Number(item.readerIndex)===Number(readerIndex);});
+  return found>=0?found:0;
+}
+function readerIndexForPhysical(items,engineIndex,fallback){
+  var item=items[Number(engineIndex)];
+  if(item&&!item.isSynthetic&&Number.isFinite(Number(item.readerIndex)))return Number(item.readerIndex);
+  return Number.isFinite(Number(fallback))?Number(fallback):0;
 }
 function physicalEngineKeyFor(list,edition){
   return [
