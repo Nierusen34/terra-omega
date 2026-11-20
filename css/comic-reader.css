@@ -241,6 +241,30 @@
   will-change:transform;
   isolation:isolate
 }
+.comic-opf-book::before,
+.comic-opf-book::after{
+  content:"";
+  position:absolute;
+  top:3px;
+  bottom:3px;
+  width:5px;
+  z-index:9;
+  pointer-events:none;
+  background:repeating-linear-gradient(
+    180deg,
+    rgba(239,229,211,.72) 0 1px,
+    rgba(87,68,48,.34) 1px 2px
+  );
+  box-shadow:0 0 4px rgba(0,0,0,.28)
+}
+.comic-opf-book::before{
+  left:-4px;
+  opacity:calc(.12 + var(--comic-stack-left,0) * .52)
+}
+.comic-opf-book::after{
+  right:-4px;
+  opacity:calc(.12 + var(--comic-stack-right,1) * .52)
+}
 .comic-opf-page{
   margin:0!important;
   padding:0!important;
@@ -1209,6 +1233,8 @@ body.comic-reading-active{overflow:hidden!important}
     margin:0 auto;
     transform:none!important
   }
+  .comic-reader.comic-physical-book .comic-opf-book::before,
+  .comic-reader.comic-physical-book .comic-opf-book::after{display:none}
   .comic-reader.comic-physical-book .comic-opf-page.opf-page--turning{
     filter:none
   }
