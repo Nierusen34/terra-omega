@@ -100,8 +100,10 @@ function toggleChangelog(){
 }
 
 
-var COMIC_ASSET_VERSION="20261120-reader-v3e";
+var COMIC_ASSET_VERSION="20261120-reader-v4a";
+var OPEN_PAGE_FLIP_VERSION="0.7.0";
 var comicStylesPromise = null;
+var comicPhysicsPromise = null;
 function ensureComicStyles(){
   if(document.getElementById('comicStylesheet')) return Promise.resolve(true);
   if(comicStylesPromise) return comicStylesPromise;
@@ -121,9 +123,60 @@ function ensureComicStyles(){
   return comicStylesPromise;
 }
 
+function ensureComicPhysics(){
+  if(window.OpenPageFlip && typeof window.OpenPageFlip.createBook==="function"){
+    return Promise.resolve(window.OpenPageFlip);
+  }
+  if(comicPhysicsPromise) return comicPhysicsPromise;
+
+  comicPhysicsPromise=new Promise(function(resolve,reject){
+    var cssId="openPageFlipStylesheet";
+    if(!document.getElementById(cssId)){
+      var link=document.createElement("link");
+      link.id=cssId;
+      link.rel="stylesheet";
+      link.href="https://cdn.jsdelivr.net/npm/@openpageflip/core@"+OPEN_PAGE_FLIP_VERSION+"/dist/styles.css";
+      link.crossOrigin="anonymous";
+      document.head.appendChild(link);
+    }
+
+    var existing=document.querySelector("script[data-open-page-flip]");
+    if(existing){
+      if(window.OpenPageFlip && typeof window.OpenPageFlip.createBook==="function"){
+        resolve(window.OpenPageFlip);
+        return;
+      }
+      existing.addEventListener("load",function(){resolve(window.OpenPageFlip||null);},{once:true});
+      existing.addEventListener("error",reject,{once:true});
+      return;
+    }
+
+    var script=document.createElement("script");
+    script.src="https://cdn.jsdelivr.net/npm/@openpageflip/core@"+OPEN_PAGE_FLIP_VERSION+"/dist/index.iife.js";
+    script.defer=true;
+    script.crossOrigin="anonymous";
+    script.setAttribute("data-open-page-flip",OPEN_PAGE_FLIP_VERSION);
+    script.addEventListener("load",function(){
+      if(window.OpenPageFlip && typeof window.OpenPageFlip.createBook==="function") resolve(window.OpenPageFlip);
+      else reject(new Error("OpenPageFlip carregou sem expor createBook."));
+    },{once:true});
+    script.addEventListener("error",function(){
+      comicPhysicsPromise=null;
+      reject(new Error("Falha ao carregar o motor físico de páginas."));
+    },{once:true});
+    document.head.appendChild(script);
+  });
+
+  return comicPhysicsPromise;
+}
+
 var comicReaderPromise = null;
 function ensureComicReader(){
   var styles=ensureComicStyles();
+  var physics=ensureComicPhysics().catch(function(error){
+    console.warn("Terra Omega Comics: motor físico indisponível, usando fallback.",error);
+    return null;
+  });
 
   if(window.TerraOmegaApp && window.TerraOmegaApp.comicReader){
     return styles.then(function(){
@@ -133,7 +186,7 @@ function ensureComicReader(){
   }
   if(comicReaderPromise) return comicReaderPromise;
 
-  comicReaderPromise = styles.then(function(){
+  comicReaderPromise = Promise.all([styles,physics]).then(function(){
     return new Promise(function(resolve,reject){
       var existing=document.querySelector('script[data-comic-reader]');
       if(existing){
@@ -171,6 +224,7 @@ function ensureComicReader(){
 
 window.TerraOmegaApp=window.TerraOmegaApp||{};
 window.TerraOmegaApp.ensureComicStyles=ensureComicStyles;
+window.TerraOmegaApp.ensureComicPhysics=ensureComicPhysics;
 
 document.querySelectorAll('.tab-btn').forEach(function(btn){
   btn.addEventListener('click', function(){
