@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION="terra-omega-pwa-v2.0.0-20261120-reader-v3e";
+const VERSION="terra-omega-pwa-v2.0.0-20261120-reader-v3f";
 const CORE_CACHE=VERSION+"-core";
 const IMAGE_CACHE=VERSION+"-images";
 const TRANSLATION_CACHE=VERSION+"-translation";
@@ -119,6 +119,20 @@ async function imageCacheFirst(request){
   return response;
 }
 
+async function comicImageNetworkFirst(request){
+  const cache=await caches.open(IMAGE_CACHE);
+  try{
+    const freshRequest=new Request(request,{cache:"no-store"});
+    const response=await fetch(freshRequest);
+    await putSafe(cache,request,response);
+    return response;
+  }catch(error){
+    const hit=await cache.match(request,{ignoreSearch:true});
+    if(hit) return hit;
+    throw error;
+  }
+}
+
 function translationAsset(url){
   const host=String(url.hostname || "").toLowerCase();
   return host==="bergamot.s3.amazonaws.com" ||
@@ -178,7 +192,11 @@ self.addEventListener("fetch",event=>{
   }
 
   if(request.destination==="image"){
-    event.respondWith(imageCacheFirst(request));
+    if(/^\/images\/comics\//i.test(url.pathname)){
+      event.respondWith(comicImageNetworkFirst(request));
+    }else{
+      event.respondWith(imageCacheFirst(request));
+    }
     return;
   }
 
