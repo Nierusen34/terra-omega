@@ -15,6 +15,7 @@ var busy=false;
 var pendingReplaceSrc="";
 var modalReturnFocus=null;
 var coverPreviewOverride={id:"",src:""};
+var pagePreviewRevision=Date.now();
 
 function el(id){return document.getElementById(id);}
 function backend(){return window.TerraOmegaApp&&window.TerraOmegaApp.backend;}
@@ -28,6 +29,12 @@ function rawRepoPreviewUrl(path){
   if(!repo||!clean||!/^images\/comics\//i.test(clean))return "";
   return "https://raw.githubusercontent.com/"+repo+"/"+encodeURIComponent(branch)+"/"+clean;
 }
+function pagePreviewUrl(path){
+  var src=rawRepoPreviewUrl(path)||String(path||"");
+  if(!src)return "";
+  return src+(src.indexOf("?")>=0?"&":"?")+"rev="+encodeURIComponent(String(pagePreviewRevision));
+}
+function refreshPagePreviewRevision(){pagePreviewRevision=Date.now();}
 function setCoverStatus(message,state){
   var node=el("comicManagerCoverStatus");if(!node)return;
   node.textContent=message||"";
@@ -174,7 +181,7 @@ function ensureModal(){
 function setBusy(value,message){
   busy=!!value;
   var modal=el("comicManagerModal");
-  if(modal)modal.classList.toggle("is-busy",busy);
+  if(modal){modal.classList.toggle("is-busy",busy);modal.setAttribute("aria-busy",busy?"true":"false");}
   var status=el("comicManagerUploadStatus");
   if(status&&message){status.textContent=message;status.setAttribute("data-state",busy?"working":"idle");}
   ["comicManagerSaveEdition","comicManagerRenameStory","comicManagerQuickAddPages","comicManagerDeleteEdition","comicManagerAddPages","comicManagerSavePages","comicManagerUploadCover","comicManagerRemoveCover","comicManagerGenerateThumbs"].forEach(function(id){
@@ -186,6 +193,7 @@ async function load(){
   var response=await fetch("data/comics.json?bust="+Date.now(),{cache:"no-store"});
   if(!response.ok)throw new Error("Não foi possível carregar o catálogo de quadrinhos.");
   var data=await response.json();
+  refreshPagePreviewRevision();
   catalog=data&&typeof data==="object"?data:{version:3,series:[]};
   if(!Array.isArray(catalog.series))catalog.series=[];
   return catalog;
@@ -275,7 +283,7 @@ function renderPages(){
   root.innerHTML=pages.length?pages.map(function(page,index){
     return '<article class="comic-manager-page-row" draggable="true" data-comic-page-row="'+escapeAttr(page.src)+'">'+
       '<div class="comic-manager-page-drag" title="Arraste para reordenar">⋮⋮</div>'+
-      '<img src="'+escapeAttr(page.thumb||page.src)+'" alt="" loading="lazy" decoding="async">'+
+      '<img src="'+escapeAttr(pagePreviewUrl(page.thumb||page.src))+'" alt="" loading="lazy" decoding="async">'+
       '<div class="comic-manager-page-fields">'+
         '<strong>Página '+(index+1)+'</strong>'+
         '<label>Nome da página<input data-page-label type="text" maxlength="120" value="'+escapeAttr(page.label||("Página "+(index+1)))+'" placeholder="Ex.: Página 1"></label>'+
@@ -298,11 +306,11 @@ function bindPageRows(){
   var dragging=null;
 
   root.querySelectorAll(".comic-manager-page-row").forEach(function(row){
-    row.addEventListener("dragstart",function(){dragging=row;row.classList.add("dragging");});
+    row.addEventListener("dragstart",function(event){if(busy){event.preventDefault();return;}dragging=row;row.classList.add("dragging");});
     row.addEventListener("dragend",function(){row.classList.remove("dragging");dragging=null;});
     row.addEventListener("dragover",function(event){
       event.preventDefault();
-      if(!dragging||dragging===row)return;
+      if(busy||!dragging||dragging===row)return;
       var rect=row.getBoundingClientRect();
       var before=event.clientY<rect.top+rect.height/2;
       root.insertBefore(dragging,before?row:row.nextSibling);
@@ -313,9 +321,10 @@ function bindPageRows(){
     var down=row.querySelector("[data-page-down]");
     var replace=row.querySelector("[data-page-replace]");
     var del=row.querySelector("[data-page-delete]");
-    if(up)up.addEventListener("click",function(){var prev=row.previousElementSibling;if(prev){root.insertBefore(row,prev);refreshPageRowNumbers();}});
-    if(down)down.addEventListener("click",function(){var next=row.nextElementSibling;if(next){root.insertBefore(next,row);refreshPageRowNumbers();}});
+    if(up)up.addEventListener("click",function(){if(busy)return;var prev=row.previousElementSibling;if(prev){root.insertBefore(row,prev);refreshPageRowNumbers();}});
+    if(down)down.addEventListener("click",function(){if(busy)return;var next=row.nextElementSibling;if(next){root.insertBefore(next,row);refreshPageRowNumbers();}});
     if(replace)replace.addEventListener("click",function(){
+      if(busy)return;
       pendingReplaceSrc=row.getAttribute("data-comic-page-row")||"";
       var input=el("comicManagerFileInput");input.multiple=false;input.value="";input.click();
     });
@@ -335,6 +344,7 @@ function refreshPageRowNumbers(){
 function render(){renderList();renderForm();}
 
 function openPagePicker(){
+  if(busy){showToast("Aguarde a operação atual terminar.","warning",3000);return;}
   if(!selectedId){showToast("Salve a história antes de adicionar páginas.","warning",4000);return;}
   pendingReplaceSrc="";
   var input=el("comicManagerFileInput");
@@ -574,7 +584,7 @@ async function generateMissingThumbnails(){
       var page=missing[i];
       var status=el("comicManagerUploadStatus");
       if(status){status.textContent="Miniatura "+(i+1)+" de "+missing.length+"…";status.setAttribute("data-state","working");}
-      var response=await fetch(page.src,{cache:"no-store"});
+      var response=await fetch(pagePreviewUrl(page.src),{cache:"no-store"});
       if(!response.ok)throw new Error("Não foi possível carregar "+(page.label||page.src)+".");
       var thumbnailBase64=await thumbnailFromBlob(await response.blob());
       var result=await request({action:"comic-page-thumbnail",id:selectedId,src:page.src,thumbnailBase64:thumbnailBase64});
@@ -588,8 +598,9 @@ async function generateMissingThumbnails(){
 }
 
 async function uploadFiles(files,replaceSrc){
-  if(!selectedId)return;
+  if(!selectedId||busy)return;
   setBusy(true,replaceSrc?"Otimizando página substituta…":"Preparando páginas…");
+  var added=0,skipped=0;
   try{
     var queue=replaceSrc?files.slice(0,1):files;
     for(var i=0;i<queue.length;i++){
@@ -599,23 +610,45 @@ async function uploadFiles(files,replaceSrc){
       var page=current&&replaceSrc?(current.pages||[]).find(function(row){return row.src===replaceSrc;}):null;
       var status=el("comicManagerUploadStatus");
       if(status){status.textContent=(replaceSrc?"Substituindo página":"Enviando página "+(i+1)+" de "+queue.length)+"…";status.setAttribute("data-state","working");}
-      var result=await request({
-        action:"comic-page-upload",
-        id:selectedId,
-        replaceSrc:replaceSrc||"",
-        mimeType:optimized.mimeType,
-        contentBase64:optimized.contentBase64,
-        thumbnailMimeType:optimized.thumbnailMimeType,
-        thumbnailBase64:optimized.thumbnailBase64,
-        label:page&&page.label?page.label:"",
-        alt:page&&page.alt?page.alt:""
-      });
-      catalog=result.catalog||catalog;
+      try{
+        var result=await request({
+          action:"comic-page-upload",
+          id:selectedId,
+          replaceSrc:replaceSrc||"",
+          mimeType:optimized.mimeType,
+          contentBase64:optimized.contentBase64,
+          thumbnailMimeType:optimized.thumbnailMimeType,
+          thumbnailBase64:optimized.thumbnailBase64,
+          label:page&&page.label?page.label:"",
+          alt:page&&page.alt?page.alt:""
+        });
+        catalog=result.catalog||catalog;
+        refreshPagePreviewRevision();
+        added++;
+        render();
+      }catch(error){
+        if(error&&error.payload&&error.payload.error==="duplicate_comic_page"){
+          skipped++;
+          if(status){status.textContent=error.message;status.setAttribute("data-state","error");}
+          continue;
+        }
+        throw error;
+      }
     }
-    pendingReplaceSrc="";render();notifyReader(selectedId);
+    pendingReplaceSrc="";
+    notifyReader(selectedId);
     var statusDone=el("comicManagerUploadStatus");
-    if(statusDone){statusDone.textContent=replaceSrc?"Página substituída.":queue.length+" página"+(queue.length===1?" adicionada.":"s adicionadas.");statusDone.setAttribute("data-state","success");}
-    showToast(replaceSrc?"Página substituída.":"Páginas adicionadas.","success",3500);
+    if(statusDone){
+      statusDone.textContent=skipped
+        ? (added+" adicionada"+(added===1?"":"s")+" · "+skipped+" duplicada"+(skipped===1?" ignorada":"s ignoradas"))
+        : (replaceSrc?"Página substituída.":added+" página"+(added===1?" adicionada.":"s adicionadas."));
+      statusDone.setAttribute("data-state",skipped&&added===0?"error":"success");
+    }
+    if(skipped){
+      showToast(skipped+" imagem"+(skipped===1?" duplicada foi ignorada.":"s duplicadas foram ignoradas."),added?"warning":"info",5000);
+    }else{
+      showToast(replaceSrc?"Página substituída.":"Páginas adicionadas.","success",3500);
+    }
   }catch(error){
     console.error(error);
     var statusError=el("comicManagerUploadStatus");
@@ -635,24 +668,25 @@ function collectPageRows(){
 }
 
 async function savePages(){
-  if(!selectedId)return;
+  if(!selectedId||busy)return;
   setBusy(true,"Salvando ordem e textos das páginas…");
   try{
     var result=await request({action:"comic-pages-update",id:selectedId,pages:collectPageRows()});
-    catalog=result.catalog||catalog;render();notifyReader(selectedId);
+    catalog=result.catalog||catalog;refreshPagePreviewRevision();render();notifyReader(selectedId);
     showToast("Ordem e textos das páginas salvos.","success",3500);
   }catch(error){console.error(error);showToast(error.message||"Falha ao salvar páginas.","error",5500);}
   finally{setBusy(false,"");}
 }
 
 function deletePage(src){
+  if(busy)return;
   var row=selected();if(!row||!src)return;
   var index=(row.pages||[]).findIndex(function(page){return page.src===src;});
   showConfirm("Excluir página","Remover a página "+(index+1)+" desta edição e apagar o arquivo do projeto?",async function(){
     setBusy(true,"Excluindo página…");
     try{
       var result=await request({action:"comic-page-delete",id:selectedId,src:src});
-      catalog=result.catalog||catalog;render();notifyReader(selectedId);showToast("Página excluída.","success",3200);
+      catalog=result.catalog||catalog;refreshPagePreviewRevision();render();notifyReader(selectedId);showToast("Página excluída.","success",3200);
     }catch(error){showToast(error.message||"Falha ao excluir página.","error",5500);}
     finally{setBusy(false,"");}
   });
