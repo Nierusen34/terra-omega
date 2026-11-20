@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION="terra-omega-pwa-v2.0.0-20261120-reader-v4j";
+const VERSION="terra-omega-pwa-v2.0.0-20261120-reader-v4k";
 const CORE_CACHE=VERSION+"-core";
 const IMAGE_CACHE=VERSION+"-images";
 const TRANSLATION_CACHE=VERSION+"-translation";
