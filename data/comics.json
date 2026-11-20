@@ -48,6 +48,13 @@
           "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-05.webp",
           "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-05-thumb.webp",
           "alt": "O Quarto Ficou Frio — página 5: Tristan caminha sem rumo"
+        },
+        {
+          "order": 6,
+          "label": "Página 6",
+          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-06.webp",
+          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-06-thumb.webp",
+          "alt": ""
         }
       ]
     }
