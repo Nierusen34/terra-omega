@@ -239,8 +239,11 @@ function restoreProgressForCurrent(){
   if(!saved){pageIndex=0;return;}
   var savedPage=Number(saved.page)||0;
   var storyCount=Array.isArray(edition.pages)?edition.pages.length:0;
-  if(edition.cover&&Number(saved.total)===storyCount&&list.length===storyCount+1){
-    savedPage+=1;
+  var frontOffset=edition.cover?1:0;
+  var specialTotal=storyCount+frontOffset+(edition.endCover?1:0);
+
+  if(Number(saved.total)===storyCount&&specialTotal>storyCount){
+    savedPage+=frontOffset;
   }else if(!edition.cover&&Number(saved.total)===storyCount+1&&list.length===storyCount){
     savedPage=Math.max(0,savedPage-1);
   }
@@ -459,7 +462,7 @@ function imageMarkup(item,index){
   var fillMarkup=isBookPage&&!continuous
     ? '<img class="comic-page-fill" src="'+esc(freshSrc)+'" alt="" aria-hidden="true" draggable="false" decoding="async">'
     : '';
-  var coverClass=item.isEndCover?' comic-page-end-cover-frame':(item.isCover?' comic-page-cover-frame':'');
+  var coverClass=item.isCover?' comic-page-cover-frame'+(item.isEndCover?' comic-page-end-cover-frame':''):'';
   var caption=item.isEndCover?"Capa final":(item.isCover?"Capa":("Página "+storyNumberForIndex(index)));
   return '<figure class="comic-page-frame'+(continuous?' comic-page-lazy':'')+coverClass+'" data-comic-rendered-page="'+index+'">'+
     '<div class="comic-page-surface">'+
