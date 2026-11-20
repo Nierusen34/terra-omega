@@ -852,6 +852,41 @@ export default async function handler(req,res){
         return res.status(200).json(comicResult(req,commit,catalog,{edition:found.edition}));
       }
 
+      if(action === "comic-page-promote-cover"){
+        const found=findComicEdition(catalog,requestBody.id);
+        if(!found.edition) return res.status(404).json({error:"comic_not_found",message:"Edição não encontrada."});
+        const src=String(requestBody.src || "").trim();
+        const role=String(requestBody.role || "").trim();
+        if(role!=="start"&&role!=="end"){
+          return res.status(400).json({error:"invalid_comic_cover_role",message:"Escolha capa inicial ou capa final."});
+        }
+        const index=found.edition.pages.findIndex(page=>page&&page.src===src);
+        if(index<0) return res.status(404).json({error:"comic_page_not_found",message:"Página não encontrada."});
+
+        const promoted=found.edition.pages[index];
+        const oldCover=role==="start"?found.edition.cover:found.edition.endCover;
+        found.edition.pages.splice(index,1);
+        found.edition.pages=found.edition.pages.map((page,i)=>({...page,order:i+1,label:page.label||("Página "+(i+1))}));
+        if(role==="start") found.edition.cover=promoted.src;
+        else found.edition.endCover=promoted.src;
+
+        const files=[{path:"data/comics.json",content:renderComicCatalog(catalog),encoding:"utf-8"}];
+        if(validComicPath(promoted.thumb)){
+          try{await readBinaryFile(promoted.thumb);files.unshift({path:promoted.thumb,delete:true});}catch(error){if(!error||error.status!==404)throw error;}
+        }
+        if(validComicPath(oldCover)&&oldCover!==promoted.src){
+          const stillUsed=found.edition.pages.some(page=>page&&page.src===oldCover) ||
+            found.edition.cover===oldCover || found.edition.endCover===oldCover;
+          if(!stillUsed){
+            try{await readBinaryFile(oldCover);files.unshift({path:oldCover,delete:true});}catch(error){if(!error||error.status!==404)throw error;}
+          }
+        }
+
+        const label=role==="start"?"capa inicial":"capa final";
+        const commit=await commitFiles(files,"comics: promover página para "+label+" de "+found.edition.title,head);
+        return res.status(200).json(comicResult(req,commit,catalog,{edition:found.edition,role}));
+      }
+
       if(action === "comic-pages-update"){
         const found=findComicEdition(catalog,requestBody.id);
         if(!found.edition) return res.status(404).json({error:"comic_not_found",message:"Edição não encontrada."});
