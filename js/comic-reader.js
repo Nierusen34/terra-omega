@@ -160,6 +160,20 @@ function active(){
   var rect=reader.getBoundingClientRect();
   return rect.width>0&&rect.height>0;
 }
+function comicKeyboardContextActive(){
+  var reader=el("comicReader"),section=el("sub-capa-quadrinhos");
+  if(!reader||!section)return false;
+  if(readingMode)return true;
+  if(document.fullscreenElement&&(document.fullscreenElement===reader||reader.contains(document.fullscreenElement)))return true;
+
+  var route=String(location.hash||"").replace(/^#/,"");
+  if(route.indexOf("/capa/quadrinhos")===0)return true;
+
+  var rect=reader.getBoundingClientRect();
+  var sectionRects=section.getClientRects?section.getClientRects():[];
+  var readerRects=reader.getClientRects?reader.getClientRects():[];
+  return !section.hidden && sectionRects.length>0 && readerRects.length>0 && rect.width>0 && rect.height>0;
+}
 function editionLabel(row){
   if(!row)return "Sem título";
   var issue=Number(row.issueNumber)||0;
@@ -1079,9 +1093,28 @@ function keyboardTurn(direction){
 
   if(viewMode==="spread"&&physicalBook&&physicalEngineEnabled()){
     clearQueuedTurn();
-    var action=direction>0?physicalBook.flipNext("bottom"):physicalBook.flipPrev("bottom");
-    Promise.resolve(action).catch(function(error){
-      console.warn("Terra Omega Comics: navegação por teclado falhou.",error);
+
+    try{physicalBook.update();}catch(error){}
+
+    var current=Number(physicalBook.page);
+    if(!Number.isFinite(current))current=pageIndex;
+    current=clamp(current,0,list.length-1);
+
+    var target;
+    if(compactBookMode()){
+      target=clamp(current+direction,0,list.length-1);
+    }else if(direction>0){
+      target=current===0?Math.min(1,list.length-1):Math.min(current+2,list.length-1);
+    }else{
+      target=current<=1?0:Math.max(1,current-2);
+    }
+    if(target===current)return;
+
+    requestAnimationFrame(function(){
+      var action=physicalBook.flipTo(target,"bottom");
+      Promise.resolve(action).catch(function(error){
+        console.warn("Terra Omega Comics: navegação por teclado falhou.",error);
+      });
     });
     return;
   }
@@ -1458,7 +1491,7 @@ function isTextEditingTarget(target){
 }
 function handleComicArrowKey(event){
   if(event.__terraOmegaComicArrowHandled)return;
-  if(!active()&&!readingMode)return;
+  if(!comicKeyboardContextActive())return;
   if(comicModalOpen())return;
   if(event.altKey||event.ctrlKey||event.metaKey)return;
 
@@ -1474,7 +1507,11 @@ function handleComicArrowKey(event){
   if(isTextEditingTarget(target)&&!targetInsideReader)return;
 
   event.__terraOmegaComicArrowHandled=true;
-  if(reader)reader.setAttribute("data-keyboard-ready","true");
+  if(reader){
+    reader.setAttribute("data-keyboard-ready","true");
+    reader.setAttribute("data-keyboard-context","site");
+    reader.setAttribute("data-keyboard-key",direction<0?"left":"right");
+  }
   event.preventDefault();
   event.stopImmediatePropagation();
 
