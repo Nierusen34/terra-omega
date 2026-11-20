@@ -274,8 +274,13 @@ function imageMarkup(item,index){
   var freshSrc=versionedPageSrc(item.src);
   var src=continuous?'data:image/gif;base64,R0lGODlhAQABAAAAACw=':esc(freshSrc);
   var dataSrc=continuous?' data-src="'+esc(freshSrc)+'"':"";
-  return '<figure class="comic-page-frame'+(continuous?' comic-page-lazy':'')+'" data-comic-rendered-page="'+index+'">'+
+  var isBookPage=viewMode==="spread"&&!item.isCover;
+  var fillMarkup=isBookPage&&!continuous
+    ? '<img class="comic-page-fill" src="'+esc(freshSrc)+'" alt="" aria-hidden="true" draggable="false" decoding="async">'
+    : '';
+  return '<figure class="comic-page-frame'+(continuous?' comic-page-lazy':'')+(item.isCover?' comic-page-cover-frame':'')+'" data-comic-rendered-page="'+index+'">'+
     '<div class="comic-page-surface">'+
+      fillMarkup+
       '<img class="comic-page-image" src="'+src+'"'+dataSrc+' alt="'+esc(alt)+'" draggable="false" decoding="async">'+
     '</div>'+
     '<figcaption>'+(item.isCover?"Capa":("Página "+(index+1-(currentSeries()&&currentSeries().cover?1:0))))+'</figcaption>'+
@@ -672,12 +677,13 @@ function animateSpreadTurn(direction,targetIndex){
     '<div class="comic-page-turn-sheet">'+
       '<div class="comic-page-turn-bend">'+
         '<div class="comic-page-turn-face comic-page-turn-front">'+
-          '<img src="'+esc(sourceImage.currentSrc||sourceImage.src)+'" alt="">'+
+          '<img class="comic-page-turn-fill" src="'+esc(sourceImage.currentSrc||sourceImage.src)+'" alt="" aria-hidden="true">'+
+          '<img class="comic-page-turn-image" src="'+esc(sourceImage.currentSrc||sourceImage.src)+'" alt="">'+
           '<span class="comic-page-turn-curl"></span>'+
           '<span class="comic-page-turn-ridge"></span>'+
         '</div>'+
         '<div class="comic-page-turn-face comic-page-turn-back">'+
-          (backSrc?'<img src="'+esc(backSrc)+'" alt="">':'')+
+          (backSrc?'<img class="comic-page-turn-fill" src="'+esc(backSrc)+'" alt="" aria-hidden="true"><img class="comic-page-turn-image" src="'+esc(backSrc)+'" alt="">':'')+
           '<span class="comic-page-turn-paper"></span>'+
           '<span class="comic-page-turn-curl comic-page-turn-curl-back"></span>'+
         '</div>'+
