@@ -616,7 +616,7 @@ function renderPhysicalBook(){
       try{physicalBook.turnTo(targetPhysical);}catch(error){}
     }
     updatePhysicalCoverShift(target);
-    hydratePhysicalAround(target,4);
+    hydratePhysicalAround(target,3);
     preparePageMargins(physicalBookHost);
     return true;
   }
@@ -631,7 +631,7 @@ function renderPhysicalBook(){
   host.innerHTML=items.map(function(item,index){return physicalPageMarkup(item,index);}).join("");
   viewport.appendChild(host);
   physicalBookHost=host;
-  hydratePhysicalAround(pageIndex,4);
+  hydratePhysicalAround(pageIndex,3);
   preparePageMargins(host);
 
   var compact=compactBookMode();
@@ -677,7 +677,7 @@ function renderPhysicalBook(){
     var mapped=readerIndexForPhysical(items,Number(event.page),pageIndex);
     var next=clamp(mapped,0,list.length-1);
     pageIndex=normalizeIndexForView(next);
-    hydratePhysicalAround(pageIndex,4);
+    hydratePhysicalAround(pageIndex,3);
     updatePhysicalCoverShift(pageIndex);
     updateViewButtons();
     updateThumbs();
@@ -692,7 +692,7 @@ function renderPhysicalBook(){
     var progress=clamp(Number(event.progress)||0,0,1);
     var fromReader=readerIndexForPhysical(items,Number(event.from),pageIndex);
     var toReader=readerIndexForPhysical(items,Number(event.to),pageIndex);
-    hydratePhysicalAround(toReader,4);
+    hydratePhysicalAround(toReader,3);
     var fromShift=coverShiftForReaderIndex(fromReader);
     var toShift=coverShiftForReaderIndex(toReader);
     setPhysicalCoverShift(fromShift+((toShift-fromShift)*progress));
@@ -986,7 +986,7 @@ function preloadPage(index,priority){
 }
 function preloadAround(){
   if(viewMode==="continuous")return;
-  hydratePhysicalAround(pageIndex,4);
+  hydratePhysicalAround(pageIndex,3);
   preloadPage(pageIndex+1,"high");
   preloadPage(pageIndex+2,"high");
   preloadPage(pageIndex+3,"low");
