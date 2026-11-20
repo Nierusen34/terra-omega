@@ -592,8 +592,7 @@ function checkComics(){
      !reader.includes("event.stopImmediatePropagation()") ||
      !reader.includes('physicalBook.flipNext("bottom")') ||
      !reader.includes('physicalBook.flipPrev("bottom")') ||
-     !reader.includes("if(!event.repeat)keyboardTurn(-1)") ||
-     !reader.includes("if(!event.repeat)keyboardTurn(1)") ||
+     !reader.includes("if(!event.repeat)keyboardTurn(direction)") ||
      !reader.includes('return viewMode==="spread"&&window.innerWidth<=700') ||
      !comicCss.includes("comic-opf-book") ||
      !comicCss.includes("comic-opf-page") ||
