@@ -388,7 +388,7 @@ function imageMarkup(item,index){
 }
 
 function physicalEngineAvailable(){
-  return !!(window.OpenPageFlip&&typeof window.OpenPageFlip.createBook==="function");
+  return !!(window.__TerraOmegaOpenPageFlipReady&&window.OpenPageFlip&&typeof window.OpenPageFlip.createBook==="function");
 }
 function physicalEngineEnabled(){
   return physicalEngineAvailable()&&pageTurnEnabled&&!reducedMotion()&&viewMode==="spread"&&!focusReturn;
