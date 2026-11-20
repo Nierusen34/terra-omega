@@ -1427,9 +1427,54 @@ function bindPanZoom(){
   });
 }
 
+function comicModalOpen(){
+  var library=el("comicLibraryModal"),help=el("comicHelpModal");
+  return !!(
+    (library&&library.classList.contains("show")) ||
+    (help&&help.classList.contains("show"))
+  );
+}
+function isTextEditingTarget(target){
+  if(!target)return false;
+  if(target.isContentEditable)return true;
+  if(target.tagName==="TEXTAREA")return true;
+  if(target.tagName==="INPUT"){
+    var type=String(target.type||"text").toLowerCase();
+    return ["text","search","email","url","tel","number","password"].indexOf(type)!==-1;
+  }
+  return false;
+}
+function handleComicArrowKey(event){
+  if(event.__terraOmegaComicArrowHandled)return;
+  if(!active()&&!readingMode)return;
+  if(comicModalOpen())return;
+  if(event.altKey||event.ctrlKey||event.metaKey)return;
+
+  var key=event.key||"",code=event.code||"";
+  var direction=0;
+  if(key==="ArrowLeft"||code==="ArrowLeft")direction=-1;
+  else if(key==="ArrowRight"||code==="ArrowRight")direction=1;
+  if(!direction)return;
+
+  var target=event.target;
+  if(isTextEditingTarget(target))return;
+
+  event.__terraOmegaComicArrowHandled=true;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+
+  if(target&&target.tagName==="SELECT"&&target.blur){
+    try{target.blur();}catch(error){}
+  }
+
+  if(!event.repeat)keyboardTurn(direction);
+}
+
 function bind(){
   if(mounted)return;
   mounted=true;hydratePreferences();ensureLibrary();
+
+  window.addEventListener("keydown",handleComicArrowKey,true);
 
   var collectionSelect=el("comicCollectionSelect"),editionSelect=el("comicEditionSelect");
   if(collectionSelect)collectionSelect.addEventListener("change",function(){
@@ -1507,27 +1552,13 @@ function bind(){
   document.addEventListener("keydown",function(event){
     if(!active()&&!readingMode)return;
     var target=event.target;
-    if(target&&(/INPUT|TEXTAREA|SELECT/.test(target.tagName)||target.isContentEditable))return;
+    if(target&&(isTextEditingTarget(target)||target.tagName==="SELECT"))return;
     var key=event.key||"";
     var code=event.code||"";
     if(key==="Escape"){
       if(el("comicLibraryModal")&&el("comicLibraryModal").classList.contains("show")){closeLibrary();return;}
       if(focusReturn){cancelFocus();render();return;}
       if(readingMode){setReadingMode(false);return;}
-    }
-    if(!event.altKey&&!event.ctrlKey&&!event.metaKey){
-      if(key==="ArrowLeft"||code==="ArrowLeft"){
-        event.preventDefault();
-        event.stopPropagation();
-        if(!event.repeat)keyboardTurn(-1);
-        return;
-      }
-      if(key==="ArrowRight"||code==="ArrowRight"){
-        event.preventDefault();
-        event.stopPropagation();
-        if(!event.repeat)keyboardTurn(1);
-        return;
-      }
     }
     if(key==="Home"){event.preventDefault();clearQueuedTurn();goTo(0,true);}
     if(key==="End"){event.preventDefault();clearQueuedTurn();goTo(Math.max(0,pages().length-1),true);}
