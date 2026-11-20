@@ -959,3 +959,9 @@ body.comic-reading-active{overflow:hidden!important}
   .comic-reader.comic-page-turning .comic-pages-viewport{animation:none!important}
 }
 }
+
+.comic-reader-build{
+  display:block;margin-top:4px;padding-top:7px;border-top:1px solid rgba(194,161,106,.16);
+  color:var(--ink3);font:700 7px/1.2 'Share Tech Mono',monospace;
+  letter-spacing:.45px;text-transform:uppercase;opacity:.68
+}

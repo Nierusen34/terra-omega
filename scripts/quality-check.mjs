@@ -555,6 +555,11 @@ function checkComics(){
      !reader.includes("root.scrollTo({left:")){
     fail("Etapa 3 do leitor está sem busca da biblioteca, foco acessível, deep-link ou filmstrip horizontal.");
   }
+  if(!html.includes("js/navigation.js?v=20261120-reader-v3c") ||
+     !read("js/navigation.js").includes("COMIC_ASSET_VERSION=\"20261120-reader-v3c\"") ||
+     !html.includes("comicReaderBuild")){
+    fail("Leitor de quadrinhos está sem cache bust explícito ou identificação de build.");
+  }
   if(!reader.includes("animateSpreadTurn") ||
      !reader.includes("PAGE_TURN_KEY") ||
      !reader.includes("prefers-reduced-motion") ||

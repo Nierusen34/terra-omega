@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION="terra-omega-pwa-v2.0.0-20261119-comics-page-turn-v3b";
+const VERSION="terra-omega-pwa-v2.0.0-20261120-reader-v3c";
 const CORE_CACHE=VERSION+"-core";
 const IMAGE_CACHE=VERSION+"-images";
 const TRANSLATION_CACHE=VERSION+"-translation";

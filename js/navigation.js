@@ -100,6 +100,7 @@ function toggleChangelog(){
 }
 
 
+var COMIC_ASSET_VERSION="20261120-reader-v3c";
 var comicStylesPromise = null;
 function ensureComicStyles(){
   if(document.getElementById('comicStylesheet')) return Promise.resolve(true);
@@ -109,7 +110,7 @@ function ensureComicStyles(){
     var link=document.createElement('link');
     link.id='comicStylesheet';
     link.rel='stylesheet';
-    link.href='css/comic-reader.css';
+    link.href='css/comic-reader.css?v='+encodeURIComponent(COMIC_ASSET_VERSION);
     link.addEventListener('load',function(){ resolve(true); },{once:true});
     link.addEventListener('error',function(){
       comicStylesPromise=null;
@@ -146,7 +147,7 @@ function ensureComicReader(){
       }
 
       var script=document.createElement('script');
-      script.src='js/comic-reader.js';
+      script.src='js/comic-reader.js?v='+encodeURIComponent(COMIC_ASSET_VERSION);
       script.defer=true;
       script.setAttribute('data-comic-reader','1');
       script.addEventListener('load',function(){
