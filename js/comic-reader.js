@@ -32,7 +32,8 @@ var physicalBookHost=null;
 var physicalBookUnsubs=[];
 var preloadedPageImages=new Map();
 var embeddedMarginCache=new Map();
-var assetRevision=Date.now();
+var assetRevision=String(window.TerraOmegaApp&&window.TerraOmegaApp.comicAssetVersion||"20261120-reader-v4k");
+var PHYSICAL_PIXEL='data:image/gif;base64,R0lGODlhAQABAAAAACw=';
 var libraryReturnFocus=null;
 var helpReturnFocus=null;
 
@@ -440,6 +441,7 @@ function applyEmbeddedMargins(image){
 function preparePageMargins(root){
   if(viewMode!=="spread"||!root)return;
   root.querySelectorAll(".comic-page-image").forEach(function(image){
+    if(image.hasAttribute("data-src"))return;
     if(image.complete&&image.naturalWidth)applyEmbeddedMargins(image);
     else image.addEventListener("load",function(){applyEmbeddedMargins(image);},{once:true});
   });
@@ -496,10 +498,28 @@ function physicalPageMarkup(item,index){
   var coverClass=item.isEndCover?' comic-opf-end-cover':(isCover?' comic-opf-cover':'');
   return '<div class="comic-opf-page'+coverClass+'" data-comic-rendered-page="'+readerIndex+'" data-comic-engine-page="'+index+'"'+(isCover?' data-density="hard"':'')+'>'+
     '<div class="comic-page-surface">'+
-      (!isCover?'<img class="comic-page-fill" src="'+esc(freshSrc)+'" alt="" aria-hidden="true" draggable="false" decoding="async">':'')+
-      '<img class="comic-page-image" src="'+esc(freshSrc)+'" alt="'+esc(alt)+'" draggable="false" decoding="async">'+
+      (!isCover?'<img class="comic-page-fill" src="'+PHYSICAL_PIXEL+'" data-src="'+esc(freshSrc)+'" alt="" aria-hidden="true" draggable="false" decoding="async">':'')+
+      '<img class="comic-page-image" src="'+PHYSICAL_PIXEL+'" data-src="'+esc(freshSrc)+'" alt="'+esc(alt)+'" draggable="false" decoding="async">'+
     '</div>'+
   '</div>';
+}
+function hydratePhysicalAround(readerIndex,radius){
+  if(!physicalBookHost)return;
+  radius=Math.max(1,Number(radius)||3);
+  var center=Number(readerIndex);
+  physicalBookHost.querySelectorAll("[data-comic-rendered-page]").forEach(function(frame){
+    var idx=Number(frame.getAttribute("data-comic-rendered-page"));
+    if(!Number.isFinite(idx)||!Number.isFinite(center)||Math.abs(idx-center)>radius)return;
+    frame.querySelectorAll("img[data-src]").forEach(function(image){
+      var src=image.getAttribute("data-src");
+      if(!src)return;
+      image.removeAttribute("data-src");
+      if(image.classList.contains("comic-page-image")){
+        image.addEventListener("load",function(){applyEmbeddedMargins(image);},{once:true});
+      }
+      image.src=src;
+    });
+  });
 }
 function setPhysicalCoverShift(value){
   var host=physicalBookHost;
@@ -596,6 +616,7 @@ function renderPhysicalBook(){
       try{physicalBook.turnTo(targetPhysical);}catch(error){}
     }
     updatePhysicalCoverShift(target);
+    hydratePhysicalAround(target,4);
     preparePageMargins(physicalBookHost);
     return true;
   }
@@ -610,6 +631,7 @@ function renderPhysicalBook(){
   host.innerHTML=items.map(function(item,index){return physicalPageMarkup(item,index);}).join("");
   viewport.appendChild(host);
   physicalBookHost=host;
+  hydratePhysicalAround(pageIndex,4);
   preparePageMargins(host);
 
   var compact=compactBookMode();
@@ -655,6 +677,7 @@ function renderPhysicalBook(){
     var mapped=readerIndexForPhysical(items,Number(event.page),pageIndex);
     var next=clamp(mapped,0,list.length-1);
     pageIndex=normalizeIndexForView(next);
+    hydratePhysicalAround(pageIndex,4);
     updatePhysicalCoverShift(pageIndex);
     updateViewButtons();
     updateThumbs();
@@ -669,6 +692,7 @@ function renderPhysicalBook(){
     var progress=clamp(Number(event.progress)||0,0,1);
     var fromReader=readerIndexForPhysical(items,Number(event.from),pageIndex);
     var toReader=readerIndexForPhysical(items,Number(event.to),pageIndex);
+    hydratePhysicalAround(toReader,4);
     var fromShift=coverShiftForReaderIndex(fromReader);
     var toShift=coverShiftForReaderIndex(toReader);
     setPhysicalCoverShift(fromShift+((toShift-fromShift)*progress));
@@ -962,6 +986,7 @@ function preloadPage(index,priority){
 }
 function preloadAround(){
   if(viewMode==="continuous")return;
+  hydratePhysicalAround(pageIndex,4);
   preloadPage(pageIndex+1,"high");
   preloadPage(pageIndex+2,"high");
   preloadPage(pageIndex+3,"low");
@@ -1762,7 +1787,7 @@ async function load(){
   loadingPromise=fetch("data/comics.json?bust="+Date.now(),{cache:"no-store"})
     .then(function(response){if(!response.ok)throw new Error("Catálogo de quadrinhos indisponível.");return response.json();})
     .then(function(data){
-      assetRevision=Date.now();
+      assetRevision=String(window.TerraOmegaApp&&window.TerraOmegaApp.comicAssetVersion||assetRevision);
       preloadedPageImages.clear();
       embeddedMarginCache.clear();
       catalog=data&&typeof data==="object"?data:{series:[]};
