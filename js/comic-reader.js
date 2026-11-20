@@ -1060,6 +1060,22 @@ function clearQueuedTurn(){
   queuedTurnDirection=0;
   queuedTurnSource="";
 }
+function keyboardTurn(direction){
+  var list=pages();
+  if(!list.length)return;
+  direction=direction<0?-1:1;
+
+  if(viewMode==="spread"&&physicalBook&&physicalEngineEnabled()){
+    clearQueuedTurn();
+    var action=direction>0?physicalBook.flipNext("bottom"):physicalBook.flipPrev("bottom");
+    Promise.resolve(action).catch(function(error){
+      console.warn("Terra Omega Comics: navegação por teclado falhou.",error);
+    });
+    return;
+  }
+
+  move(direction,{source:"keyboard",queue:true});
+}
 function flushQueuedTurn(){
   if(!queuedTurnDirection||pageTurnAnimating)return;
   var direction=queuedTurnDirection;
@@ -1503,13 +1519,13 @@ function bind(){
       if(key==="ArrowLeft"||code==="ArrowLeft"){
         event.preventDefault();
         event.stopPropagation();
-        move(-1,{source:"keyboard",queue:true});
+        if(!event.repeat)keyboardTurn(-1);
         return;
       }
       if(key==="ArrowRight"||code==="ArrowRight"){
         event.preventDefault();
         event.stopPropagation();
-        move(1,{source:"keyboard",queue:true});
+        if(!event.repeat)keyboardTurn(1);
         return;
       }
     }
