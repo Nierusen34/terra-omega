@@ -22,6 +22,8 @@ var chromeTimer=null;
 var dragState=null;
 var touchState=null;
 var pinchState=null;
+var pageTurnAnimating=false;
+var pageTurnEnabled=true;
 var libraryReturnFocus=null;
 var helpReturnFocus=null;
 
@@ -31,6 +33,7 @@ var THUMBS_KEY="terraOmega_comic_thumbs_v3";
 var ZOOM_KEY="terraOmega_comic_zoom_v3";
 var PROGRESS_KEY="terraOmega_comic_progress_v3";
 var LAST_EDITION_KEY="terraOmega_comic_last_edition_v3";
+var PAGE_TURN_KEY="terraOmega_comic_page_turn_v1";
 
 function el(id){return document.getElementById(id);}
 function clamp(value,min,max){return Math.max(min,Math.min(max,value));}
@@ -88,6 +91,7 @@ function hydratePreferences(){
   if(["auto","screen","width","actual","custom"].indexOf(savedFit)!==-1)fitMode=savedFit;
   customZoom=clamp(Number(loadValue(ZOOM_KEY,"1"))||1,.5,3);
   thumbsVisible=loadValue(THUMBS_KEY,"1")!=="0";
+  pageTurnEnabled=loadValue(PAGE_TURN_KEY,"1")!=="0";
 
   if(window.innerWidth<720 && viewMode==="spread") viewMode="single";
 }
@@ -176,6 +180,27 @@ function rangeLabel(indices){
 function effectiveFit(){
   if(fitMode!=="auto")return fitMode;
   return viewMode==="continuous"?"width":"screen";
+}
+function reducedMotion(){
+  return !!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+}
+function pageTurnAvailable(){
+  return pageTurnEnabled&&!reducedMotion()&&viewMode==="spread"&&!focusReturn&&!pageTurnAnimating;
+}
+function updatePageTurnToggle(){
+  var button=el("comicPageTurnToggleBtn");
+  if(!button)return;
+  var effective=pageTurnEnabled&&!reducedMotion();
+  button.textContent=(effective?"✓ ":"○ ")+"Animação de página";
+  button.setAttribute("aria-pressed",effective?"true":"false");
+  button.title=reducedMotion()
+    ?"Desativada porque o sistema está configurado para reduzir movimentos"
+    :(pageTurnEnabled?"Desativar animação de virar página":"Ativar animação de virar página");
+}
+function setPageTurnEnabled(value){
+  pageTurnEnabled=!!value;
+  saveValue(PAGE_TURN_KEY,pageTurnEnabled?"1":"0");
+  updatePageTurnToggle();
 }
 
 function setEmpty(message){
@@ -421,12 +446,79 @@ function goTo(index,scroll,options){
     var stage=el("comicReaderStage");if(stage)stage.scrollTo({top:0,left:0,behavior:"auto"});
   }
 }
+
+function spreadTarget(direction){
+  var list=pages();
+  if(!list.length)return pageIndex;
+  if(direction>0){
+    if(pageIndex===0)return Math.min(1,list.length-1);
+    return Math.min(pageIndex+2,list.length-1);
+  }
+  if(pageIndex<=1)return 0;
+  return Math.max(1,pageIndex-2);
+}
+
+function animateSpreadTurn(direction,targetIndex){
+  var stage=el("comicReaderStage"),viewport=el("comicPagesViewport");
+  if(!stage||!viewport||!pageTurnAvailable()){
+    goTo(targetIndex,true);
+    return;
+  }
+
+  var frames=Array.from(viewport.querySelectorAll(".comic-page-frame"));
+  if(!frames.length){goTo(targetIndex,true);return;}
+  var sourceFrame=direction>0?frames[frames.length-1]:frames[0];
+  var sourceImage=sourceFrame&&sourceFrame.querySelector(".comic-page-image");
+  if(!sourceImage){goTo(targetIndex,true);return;}
+
+  var imageRect=sourceImage.getBoundingClientRect();
+  var stageRect=stage.getBoundingClientRect();
+  if(imageRect.width<20||imageRect.height<20){goTo(targetIndex,true);return;}
+
+  pageTurnAnimating=true;
+  var layer=document.createElement("div");
+  layer.className="comic-page-turn-layer "+(direction>0?"is-forward":"is-backward");
+  layer.setAttribute("aria-hidden","true");
+  layer.style.left=(imageRect.left-stageRect.left+stage.scrollLeft)+"px";
+  layer.style.top=(imageRect.top-stageRect.top+stage.scrollTop)+"px";
+  layer.style.width=imageRect.width+"px";
+  layer.style.height=imageRect.height+"px";
+  layer.innerHTML=
+    '<div class="comic-page-turn-sheet">'+
+      '<div class="comic-page-turn-face comic-page-turn-front"><img src="'+esc(sourceImage.currentSrc||sourceImage.src)+'" alt=""></div>'+
+      '<div class="comic-page-turn-face comic-page-turn-back"></div>'+
+    '</div>'+
+    '<div class="comic-page-turn-shadow"></div>';
+  stage.appendChild(layer);
+
+  pageIndex=normalizeIndexForView(targetIndex);
+  render();
+  syncComicRoute({replace:true});
+
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){layer.classList.add("is-turning");});
+  });
+
+  var finished=false;
+  function cleanup(){
+    if(finished)return;
+    finished=true;
+    layer.remove();
+    pageTurnAnimating=false;
+    stage.scrollTo({top:0,left:0,behavior:"auto"});
+  }
+  layer.addEventListener("transitionend",cleanup,{once:true});
+  setTimeout(cleanup,780);
+}
+
 function move(direction){
-  var list=pages();if(!list.length)return;
+  var list=pages();if(!list.length||pageTurnAnimating)return;
   var step=1;
   if(viewMode==="spread"){
-    if(direction>0){if(pageIndex===0)goTo(1,true);else goTo(pageIndex+2,true);}
-    else{if(pageIndex<=1)goTo(0,true);else goTo(pageIndex-2,true);}
+    var target=spreadTarget(direction);
+    if(target===pageIndex)return;
+    if(pageTurnAvailable())animateSpreadTurn(direction,target);
+    else goTo(target,true);
     return;
   }
   goTo(pageIndex+(direction*step),true);
@@ -762,6 +854,16 @@ function bind(){
   if(zoomOut)zoomOut.addEventListener("click",function(){zoom(-.1);});
   var thumbToggle=el("comicThumbToggleBtn");
   if(thumbToggle)thumbToggle.addEventListener("click",function(){thumbsVisible=!thumbsVisible;saveValue(THUMBS_KEY,thumbsVisible?"1":"0");updateThumbs();});
+  var pageTurnToggle=el("comicPageTurnToggleBtn");
+  if(pageTurnToggle)pageTurnToggle.addEventListener("click",function(){
+    setPageTurnEnabled(!pageTurnEnabled);
+    var menu=el("comicMoreMenu");if(menu)menu.open=false;
+  });
+  updatePageTurnToggle();
+  if(window.matchMedia){
+    var motionQuery=window.matchMedia("(prefers-reduced-motion: reduce)");
+    if(motionQuery.addEventListener)motionQuery.addEventListener("change",updatePageTurnToggle);
+  }
   var fullscreen=el("comicFullscreenBtn");if(fullscreen)fullscreen.addEventListener("click",function(){toggleFullscreen();var menu=el("comicMoreMenu");if(menu)menu.open=false;});
   var copyLink=el("comicCopyLinkBtn");if(copyLink)copyLink.addEventListener("click",function(){copyComicLink();var menu=el("comicMoreMenu");if(menu)menu.open=false;});
   var help=el("comicHelpBtn");if(help)help.addEventListener("click",function(){var menu=el("comicMoreMenu");if(menu)menu.open=false;openHelp();});
@@ -833,7 +935,8 @@ async function reload(options){
 
 window.TerraOmegaApp.comicReader={
   mount:mount,reload:reload,next:function(){move(1);},previous:function(){move(-1);},
-  goTo:goTo,setView:setView,setFit:setFit,openLibrary:openLibrary,openRoute:openRoute,currentRoute:currentComicRoute,
+  goTo:goTo,setView:setView,setFit:setFit,setPageTurnEnabled:setPageTurnEnabled,
+  openLibrary:openLibrary,openRoute:openRoute,currentRoute:currentComicRoute,
   getState:function(){return {viewMode:viewMode,fitMode:fitMode,pageIndex:pageIndex,edition:currentSeries(),readingMode:readingMode};}
 };
 

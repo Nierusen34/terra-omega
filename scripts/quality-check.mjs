@@ -555,6 +555,12 @@ function checkComics(){
      !reader.includes("root.scrollTo({left:")){
     fail("Etapa 3 do leitor está sem busca da biblioteca, foco acessível, deep-link ou filmstrip horizontal.");
   }
+  if(!reader.includes("animateSpreadTurn") ||
+     !reader.includes("PAGE_TURN_KEY") ||
+     !reader.includes("prefers-reduced-motion") ||
+     !html.includes('id="comicPageTurnToggleBtn"')){
+    fail("Modo Livro está sem animação opcional de virar páginas ou respeito a movimento reduzido.");
+  }
   if(!router.includes("kind:'comic'") ||
      !router.includes("function comicRoute") ||
      !router.includes("setComic:setComic")){
