@@ -261,6 +261,7 @@ function setPageTurnEnabled(value){
   pageTurnEnabled=!!value;
   saveValue(PAGE_TURN_KEY,pageTurnEnabled?"1":"0");
   updatePageTurnToggle();
+  if(mounted&&catalog)render();
 }
 
 function setEmpty(message){
@@ -390,7 +391,7 @@ function physicalEngineAvailable(){
   return !!(window.OpenPageFlip&&typeof window.OpenPageFlip.createBook==="function");
 }
 function physicalEngineEnabled(){
-  return physicalEngineAvailable()&&pageTurnEnabled&&viewMode==="spread"&&!focusReturn;
+  return physicalEngineAvailable()&&pageTurnEnabled&&!reducedMotion()&&viewMode==="spread"&&!focusReturn;
 }
 function physicalNeedsTail(list,edition){
   if(!list.length)return false;
@@ -414,11 +415,11 @@ function physicalPageMarkup(item,index){
 function setPhysicalCoverShift(value){
   var host=physicalBookHost;
   if(!host)return;
-  host.style.setProperty("--comic-opf-shift",String(value)+"%");
+  host.style.setProperty("--comic-opf-shift",String(compactBookMode()?0:value)+"%");
 }
 function updatePhysicalCoverShift(index){
   var edition=currentSeries();
-  setPhysicalCoverShift(edition&&edition.cover&&Number(index)===0?-25:0);
+  setPhysicalCoverShift(!compactBookMode()&&edition&&edition.cover&&Number(index)===0?-25:0);
 }
 function teardownPhysicalBook(clear){
   physicalBookUnsubs.forEach(function(unsub){try{unsub();}catch(error){}});
@@ -551,7 +552,7 @@ function renderPhysicalBook(){
     syncComicRoute({replace:true});
   }));
   physicalBookUnsubs.push(physicalBook.on("flipProgress",function(event){
-    if(!edition.cover)return;
+    if(!edition.cover||compactBookMode())return;
     var progress=clamp(Number(event.progress)||0,0,1);
     if(Number(event.from)===0){
       setPhysicalCoverShift(-25*(1-progress));
@@ -1345,6 +1346,7 @@ function bindPanZoom(){
   stage.addEventListener("pointerup",stopPan);stage.addEventListener("pointercancel",stopPan);
 
   stage.addEventListener("touchstart",function(event){
+    if(physicalBook&&physicalEngineEnabled()){touchState=null;pinchState=null;return;}
     if(event.touches.length===2){
       var a=event.touches[0],b=event.touches[1];
       pinchState={distance:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),zoom:fitMode==="custom"?customZoom:1};
@@ -1355,6 +1357,7 @@ function bindPanZoom(){
     }
   },{passive:false});
   stage.addEventListener("touchmove",function(event){
+    if(physicalBook&&physicalEngineEnabled())return;
     if(pinchState&&event.touches.length===2){
       var a=event.touches[0],b=event.touches[1];
       var distance=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
@@ -1363,6 +1366,7 @@ function bindPanZoom(){
     }
   },{passive:false});
   stage.addEventListener("touchend",function(event){
+    if(physicalBook&&physicalEngineEnabled()){touchState=null;pinchState=null;return;}
     if(pinchState){
       saveValue(FIT_KEY,fitMode);saveValue(ZOOM_KEY,customZoom);pinchState=null;return;
     }
@@ -1415,7 +1419,10 @@ function bind(){
   updatePageTurnToggle();
   if(window.matchMedia){
     var motionQuery=window.matchMedia("(prefers-reduced-motion: reduce)");
-    if(motionQuery.addEventListener)motionQuery.addEventListener("change",updatePageTurnToggle);
+    if(motionQuery.addEventListener)motionQuery.addEventListener("change",function(){
+      updatePageTurnToggle();
+      if(catalog)render();
+    });
   }
   var fullscreen=el("comicFullscreenBtn");if(fullscreen)fullscreen.addEventListener("click",function(){toggleFullscreen();var menu=el("comicMoreMenu");if(menu)menu.open=false;});
   var copyLink=el("comicCopyLinkBtn");if(copyLink)copyLink.addEventListener("click",function(){copyComicLink();var menu=el("comicMoreMenu");if(menu)menu.open=false;});
