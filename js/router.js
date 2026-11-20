@@ -350,8 +350,14 @@ function openComicFromRoute(parsed,attempt){
   attempt=attempt||0;
   var reader=window.TerraOmegaApp&&window.TerraOmegaApp.comicReader;
   if(reader&&reader.openRoute){
-    var opened=reader.openRoute(parsed.id,parsed.page,{fromRouter:true});
-    if(!opened)warnOnce('comic:'+parsed.id,'Edição de quadrinhos não encontrada neste link.');
+    var ready=reader.ready?reader.ready():Promise.resolve();
+    Promise.resolve(ready).then(function(){
+      var opened=reader.openRoute(parsed.id,parsed.page,{fromRouter:true});
+      if(!opened)warnOnce('comic:'+parsed.id,'Edição de quadrinhos não encontrada neste link.');
+    }).catch(function(error){
+      console.error("Terra Omega Comics route:",error);
+      warnOnce('comic-loader:'+parsed.id,'O leitor de quadrinhos não terminou de carregar.');
+    });
     return;
   }
   if(attempt<25)setTimeout(function(){openComicFromRoute(parsed,attempt+1);},80);

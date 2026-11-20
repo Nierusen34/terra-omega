@@ -990,7 +990,7 @@ async function reload(options){
 window.TerraOmegaApp.comicReader={
   mount:mount,reload:reload,next:function(){move(1);},previous:function(){move(-1);},
   goTo:goTo,setView:setView,setFit:setFit,setPageTurnEnabled:setPageTurnEnabled,
-  openLibrary:openLibrary,openRoute:openRoute,currentRoute:currentComicRoute,
+  ready:load,openLibrary:openLibrary,openRoute:openRoute,currentRoute:currentComicRoute,
   getState:function(){return {viewMode:viewMode,fitMode:fitMode,pageIndex:pageIndex,edition:currentSeries(),readingMode:readingMode};}
 };
 

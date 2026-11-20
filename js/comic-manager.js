@@ -683,7 +683,7 @@ async function open(){
     try{await ensureStyles();}catch(error){console.error("Terra Omega comic styles:",error);}
   }else if(!document.getElementById("comicStylesheet")){
     var link=document.createElement("link");
-    link.id="comicStylesheet";link.rel="stylesheet";link.href="css/comic-reader.css?v=20261120-reader-v3c";
+    link.id="comicStylesheet";link.rel="stylesheet";link.href="css/comic-reader.css?v=20261120-reader-v3d";
     document.head.appendChild(link);
   }
   ensureModal();
