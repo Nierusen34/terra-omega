@@ -16,93 +16,93 @@
       "pages": [
         {
           "order": 1,
-          "label": "Página 2",
-          "src": "images/comics/tristan-queen/o-quarto-ficou-frio-01.webp",
-          "thumb": "images/comics/tristan-queen/o-quarto-ficou-frio-01-thumb.webp",
+          "label": "Página 1",
+          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-13.webp",
+          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-13-thumb.webp",
           "alt": ""
         },
         {
           "order": 2,
-          "label": "Página 3",
-          "src": "images/comics/tristan-queen/o-quarto-ficou-frio-02.webp",
-          "thumb": "images/comics/tristan-queen/o-quarto-ficou-frio-02-thumb.webp",
-          "alt": ""
-        },
-        {
-          "order": 3,
-          "label": "Página 4",
-          "src": "images/comics/tristan-queen/o-quarto-ficou-frio-03.webp",
-          "thumb": "images/comics/tristan-queen/o-quarto-ficou-frio-03-thumb.webp",
-          "alt": ""
-        },
-        {
-          "order": 4,
-          "label": "Página 5",
-          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-04.webp",
-          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-04-thumb.webp",
-          "alt": ""
-        },
-        {
-          "order": 5,
-          "label": "Página 6",
-          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-05.webp",
-          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-05-thumb.webp",
-          "alt": ""
-        },
-        {
-          "order": 6,
-          "label": "Página 7",
-          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-06.webp",
-          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-06-thumb.webp",
-          "alt": ""
-        },
-        {
-          "order": 7,
-          "label": "Página 8",
-          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-07.webp",
-          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-07-thumb.webp",
-          "alt": ""
-        },
-        {
-          "order": 8,
-          "label": "Página 9",
-          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-09.webp",
-          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-09-thumb.webp",
-          "alt": ""
-        },
-        {
-          "order": 9,
-          "label": "Página 10",
-          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-08.webp",
-          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-08-thumb.webp",
-          "alt": ""
-        },
-        {
-          "order": 10,
-          "label": "Página 11",
-          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-10.webp",
-          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-10-thumb.webp",
-          "alt": ""
-        },
-        {
-          "order": 11,
-          "label": "Página 1",
-          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-11.webp",
-          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-11-thumb.webp",
-          "alt": ""
-        },
-        {
-          "order": 12,
-          "label": "Página 12",
+          "label": "Página 2",
           "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-12.webp",
           "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-12-thumb.webp",
           "alt": ""
         },
         {
+          "order": 3,
+          "label": "Página 3",
+          "src": "images/comics/tristan-queen/o-quarto-ficou-frio-01.webp",
+          "thumb": "images/comics/tristan-queen/o-quarto-ficou-frio-01-thumb.webp",
+          "alt": ""
+        },
+        {
+          "order": 4,
+          "label": "Página 4",
+          "src": "images/comics/tristan-queen/o-quarto-ficou-frio-02.webp",
+          "thumb": "images/comics/tristan-queen/o-quarto-ficou-frio-02-thumb.webp",
+          "alt": ""
+        },
+        {
+          "order": 5,
+          "label": "Página 5",
+          "src": "images/comics/tristan-queen/o-quarto-ficou-frio-03.webp",
+          "thumb": "images/comics/tristan-queen/o-quarto-ficou-frio-03-thumb.webp",
+          "alt": ""
+        },
+        {
+          "order": 6,
+          "label": "Página 6",
+          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-04.webp",
+          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-04-thumb.webp",
+          "alt": ""
+        },
+        {
+          "order": 7,
+          "label": "Página 7",
+          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-05.webp",
+          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-05-thumb.webp",
+          "alt": ""
+        },
+        {
+          "order": 8,
+          "label": "Página 8",
+          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-06.webp",
+          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-06-thumb.webp",
+          "alt": ""
+        },
+        {
+          "order": 9,
+          "label": "Página 9",
+          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-07.webp",
+          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-07-thumb.webp",
+          "alt": ""
+        },
+        {
+          "order": 10,
+          "label": "Página 10",
+          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-09.webp",
+          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-09-thumb.webp",
+          "alt": ""
+        },
+        {
+          "order": 11,
+          "label": "Página 11",
+          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-08.webp",
+          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-08-thumb.webp",
+          "alt": ""
+        },
+        {
+          "order": 12,
+          "label": "Página 12",
+          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-10.webp",
+          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-10-thumb.webp",
+          "alt": ""
+        },
+        {
           "order": 13,
-          "label": "Página 13",
-          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-13.webp",
-          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-13-thumb.webp",
+          "label": "Fim de Capa",
+          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-11.webp",
+          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-11-thumb.webp",
           "alt": ""
         }
       ]
