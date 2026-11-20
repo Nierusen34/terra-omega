@@ -507,7 +507,8 @@ function animateSpreadTurn(direction,targetIndex){
     pageTurnAnimating=false;
     stage.scrollTo({top:0,left:0,behavior:"auto"});
   }
-  layer.addEventListener("transitionend",cleanup,{once:true});
+  var sheet=layer.querySelector(".comic-page-turn-sheet");
+  if(sheet)sheet.addEventListener("transitionend",cleanup,{once:true});
   setTimeout(cleanup,780);
 }
 
