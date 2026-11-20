@@ -127,17 +127,44 @@ function storyPages(){
 }
 function pages(){
   var edition=currentSeries();
-  var story=storyPages();
-  if(!edition||!edition.cover)return story;
+  var story=storyPages().slice();
+  if(!edition)return story;
+
+  var out=story;
   var cover=String(edition.cover||"").trim();
-  if(!cover)return story;
-  return [{
-    order:0,
-    label:"Capa",
-    src:cover,
-    alt:(edition.title||"Quadrinho")+" — capa",
-    isCover:true
-  }].concat(story);
+  var endCover=String(edition.endCover||"").trim();
+
+  if(cover){
+    out=[{
+      order:0,
+      label:"Capa",
+      src:cover,
+      alt:(edition.title||"Quadrinho")+" — capa",
+      isCover:true,
+      coverRole:"start"
+    }].concat(out);
+  }
+
+  if(endCover){
+    out=out.concat([{
+      order:story.length+1,
+      label:"Capa final",
+      src:endCover,
+      alt:(edition.title||"Quadrinho")+" — capa final",
+      isCover:true,
+      isEndCover:true,
+      coverRole:"end"
+    }]);
+  }
+
+  return out;
+}
+function storyStartIndex(){
+  var edition=currentSeries();
+  return edition&&edition.cover?1:0;
+}
+function storyNumberForIndex(index){
+  return index-storyStartIndex()+1;
 }
 function collections(){
   var seen=new Set(),out=[];
@@ -221,11 +248,20 @@ function restoreProgressForCurrent(){
 }
 
 function spreadIndicesFor(index,length){
-  if(!length)return [];
+  var list=pages();
+  if(!length||!list.length)return [];
   index=clamp(index,0,length-1);
-  if(index===0)return [0];
-  var spreadStart=index%2===0?index-1:index;
-  return [spreadStart,spreadStart+1].filter(function(i){return i<length;});
+  if(list[index]&&list[index].isCover)return [index];
+
+  var start=storyStartIndex();
+  var relative=Math.max(0,index-start);
+  var spreadStart=relative%2===0?index:index-1;
+  var indices=[spreadStart,spreadStart+1].filter(function(i){
+    return i>=start&&i<length;
+  });
+  return indices.filter(function(i){
+    return !(list[i]&&list[i].isCover);
+  });
 }
 function compactBookMode(){
   return viewMode==="spread"&&window.innerWidth<=700;
@@ -235,7 +271,10 @@ function pageRange(){
   if(!list.length)return [];
   pageIndex=clamp(pageIndex,0,list.length-1);
   if(viewMode==="continuous")return list.map(function(_,i){return i;});
-  if(viewMode==="spread")return compactBookMode()?[pageIndex]:spreadIndicesFor(pageIndex,list.length);
+  if(viewMode==="spread"){
+    if(list[pageIndex]&&list[pageIndex].isCover)return [pageIndex];
+    return compactBookMode()?[pageIndex]:spreadIndicesFor(pageIndex,list.length);
+  }
   return [pageIndex];
 }
 function updateBookStackState(){
@@ -253,7 +292,12 @@ function updateBookStackState(){
 function normalizeIndexForView(index){
   var list=pages();
   index=clamp(index,0,Math.max(0,list.length-1));
-  if(viewMode==="spread"&&!compactBookMode()&&index>0)return index%2===0?index-1:index;
+  if(list[index]&&list[index].isCover)return index;
+  if(viewMode==="spread"&&!compactBookMode()){
+    var start=storyStartIndex();
+    var relative=Math.max(0,index-start);
+    return relative%2===0?index:Math.max(start,index-1);
+  }
   return index;
 }
 function rangeLabel(indices){
