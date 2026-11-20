@@ -147,7 +147,19 @@ function collections(){
   });
   return out;
 }
-function active(){var section=el("sub-capa-quadrinhos");return !!(section&&section.classList.contains("active"));}
+function active(){
+  var section=el("sub-capa-quadrinhos"),reader=el("comicReader");
+  if(!section||!reader)return false;
+  if(section.classList.contains("active"))return true;
+  if(document.fullscreenElement&&(document.fullscreenElement===reader||document.fullscreenElement.contains(reader)||reader.contains(document.fullscreenElement)))return true;
+  var sectionStyle=window.getComputedStyle?window.getComputedStyle(section):null;
+  var readerStyle=window.getComputedStyle?window.getComputedStyle(reader):null;
+  var sectionVisible=sectionStyle?sectionStyle.display!=="none"&&sectionStyle.visibility!=="hidden":section.offsetParent!==null;
+  var readerVisible=readerStyle?readerStyle.display!=="none"&&readerStyle.visibility!=="hidden":reader.offsetParent!==null;
+  if(!sectionVisible||!readerVisible)return false;
+  var rect=reader.getBoundingClientRect();
+  return rect.width>0&&rect.height>0;
+}
 function editionLabel(row){
   if(!row)return "Sem título";
   var issue=Number(row.issueNumber)||0;
@@ -1460,6 +1472,8 @@ function handleComicArrowKey(event){
   if(isTextEditingTarget(target))return;
 
   event.__terraOmegaComicArrowHandled=true;
+  var reader=el("comicReader");
+  if(reader)reader.setAttribute("data-keyboard-ready","true");
   event.preventDefault();
   event.stopImmediatePropagation();
 
