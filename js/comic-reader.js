@@ -24,6 +24,10 @@ var touchState=null;
 var pinchState=null;
 var pageTurnAnimating=false;
 var pageTurnEnabled=true;
+var physicalBook=null;
+var physicalBookKey="";
+var physicalBookHost=null;
+var physicalBookUnsubs=[];
 var preloadedPageImages=new Map();
 var embeddedMarginCache=new Map();
 var assetRevision=Date.now();
@@ -260,6 +264,7 @@ function setPageTurnEnabled(value){
 }
 
 function setEmpty(message){
+  teardownPhysicalBook(false);
   var viewport=el("comicPagesViewport"),empty=el("comicReaderEmpty");
   if(viewport){viewport.hidden=true;viewport.innerHTML="";}
   if(empty){
@@ -379,6 +384,195 @@ function imageMarkup(item,index){
     '</div>'+
     '<figcaption>'+(item.isCover?"Capa":("Página "+(index+1-(currentSeries()&&currentSeries().cover?1:0))))+'</figcaption>'+
   '</figure>';
+}
+
+function physicalEngineAvailable(){
+  return !!(window.OpenPageFlip&&typeof window.OpenPageFlip.createBook==="function");
+}
+function physicalEngineEnabled(){
+  return physicalEngineAvailable()&&pageTurnEnabled&&viewMode==="spread"&&!focusReturn;
+}
+function physicalNeedsTail(list,edition){
+  if(!list.length)return false;
+  if(edition&&edition.cover)return (storyPages().length%2)===1;
+  return (list.length%2)===1;
+}
+function physicalPageMarkup(item,index){
+  if(item&&item.isSynthetic){
+    return '<div class="comic-opf-page comic-opf-blank" data-comic-rendered-page="'+index+'" aria-hidden="true"></div>';
+  }
+  var freshSrc=versionedPageSrc(item.src);
+  var alt=item.alt||((currentSeries()&&currentSeries().title||"Quadrinho")+" — página "+(index+1));
+  var isCover=!!item.isCover;
+  return '<div class="comic-opf-page'+(isCover?' comic-opf-cover':'')+'" data-comic-rendered-page="'+index+'"'+(isCover?' data-density="hard"':'')+'>'+
+    '<div class="comic-page-surface">'+
+      (!isCover?'<img class="comic-page-fill" src="'+esc(freshSrc)+'" alt="" aria-hidden="true" draggable="false" decoding="async">':'')+
+      '<img class="comic-page-image" src="'+esc(freshSrc)+'" alt="'+esc(alt)+'" draggable="false" decoding="async">'+
+    '</div>'+
+  '</div>';
+}
+function setPhysicalCoverShift(value){
+  var host=physicalBookHost;
+  if(!host)return;
+  host.style.setProperty("--comic-opf-shift",String(value)+"%");
+}
+function updatePhysicalCoverShift(index){
+  var edition=currentSeries();
+  setPhysicalCoverShift(edition&&edition.cover&&Number(index)===0?-25:0);
+}
+function teardownPhysicalBook(clear){
+  physicalBookUnsubs.forEach(function(unsub){try{unsub();}catch(error){}});
+  physicalBookUnsubs=[];
+  if(physicalBook){
+    try{physicalBook.destroy();}catch(error){console.warn("Terra Omega Comics: falha ao desmontar motor físico.",error);}
+  }
+  physicalBook=null;
+  physicalBookKey="";
+  physicalBookHost=null;
+  pageTurnAnimating=false;
+  var viewport=el("comicPagesViewport");
+  if(viewport){
+    viewport.classList.remove("comic-opf-shell");
+    viewport.style.removeProperty("--comic-zoom");
+    if(clear)viewport.innerHTML="";
+  }
+  var reader=el("comicReader");
+  if(reader)reader.classList.remove("comic-page-turning","comic-physical-book");
+}
+function physicalEngineItems(list,edition){
+  var out=list.slice();
+  if(physicalNeedsTail(list,edition)){
+    out.push({isSynthetic:true,label:"Folha final"});
+  }
+  return out;
+}
+function physicalEngineKeyFor(list,edition){
+  return [
+    edition&&edition.id||"",
+    assetRevision,
+    compactBookMode()?"single":"spread",
+    list.map(function(item){return item.isSynthetic?"blank":(item.src||"");}).join("|")
+  ].join("::");
+}
+function bindPhysicalPageFocus(root){
+  if(!root)return;
+  root.querySelectorAll(".comic-opf-page:not(.comic-opf-blank)").forEach(function(frame){
+    frame.addEventListener("dblclick",function(event){
+      event.preventDefault();
+      var idx=Number(frame.getAttribute("data-comic-rendered-page"));
+      if(Number.isFinite(idx)&&idx<pages().length)togglePageFocus(idx);
+    });
+  });
+}
+function renderPhysicalBook(){
+  if(!physicalEngineEnabled())return false;
+  var viewport=el("comicPagesViewport"),reader=el("comicReader");
+  var edition=currentSeries(),list=pages();
+  if(!viewport||!reader||!edition||!list.length)return false;
+
+  teardownObservers();
+  var items=physicalEngineItems(list,edition);
+  var key=physicalEngineKeyFor(items,edition);
+  viewport.hidden=false;
+  viewport.classList.add("comic-opf-shell");
+  reader.classList.add("comic-physical-book");
+  reader.classList.remove("comic-spread-single-right","comic-spread-single-left","comic-spread-cover-centered");
+
+  if(physicalBook&&physicalBookKey===key&&physicalBookHost){
+    var target=clamp(pageIndex,0,list.length-1);
+    if(physicalBook.state==="read"&&physicalBook.page!==target){
+      try{physicalBook.turnTo(target);}catch(error){}
+    }
+    updatePhysicalCoverShift(target);
+    preparePageMargins(physicalBookHost);
+    return true;
+  }
+
+  teardownPhysicalBook(true);
+  viewport.classList.add("comic-opf-shell");
+  reader.classList.add("comic-physical-book");
+
+  var host=document.createElement("div");
+  host.className="comic-opf-book";
+  host.setAttribute("aria-label","Livro interativo");
+  host.innerHTML=items.map(function(item,index){return physicalPageMarkup(item,index);}).join("");
+  viewport.appendChild(host);
+  physicalBookHost=host;
+  preparePageMargins(host);
+
+  var compact=compactBookMode();
+  var start=clamp(pageIndex,0,list.length-1);
+  var easing=function(t){
+    return t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
+  };
+
+  try{
+    physicalBook=window.OpenPageFlip.createBook(host,{
+      width:1000,
+      height:1500,
+      size:"stretch",
+      minWidth:compact?240:260,
+      maxWidth:compact?680:560,
+      layout:compact?"single":"spread",
+      binding:"left",
+      cover:!!edition.cover,
+      startPage:start,
+      flipDuration:620,
+      easing:easing,
+      shadows:true,
+      shadowOpacity:.46,
+      autoSize:true,
+      click:"edges",
+      drag:true,
+      swipe:true,
+      swipeDistance:32,
+      hover:!compact
+    });
+  }catch(error){
+    console.error("Terra Omega Comics: motor físico falhou, usando fallback.",error);
+    teardownPhysicalBook(true);
+    return false;
+  }
+
+  physicalBookKey=key;
+  updatePhysicalCoverShift(start);
+  bindPhysicalPageFocus(host);
+
+  physicalBookUnsubs.push(physicalBook.on("flip",function(event){
+    var next=clamp(Number(event.page)||0,0,list.length-1);
+    pageIndex=normalizeIndexForView(next);
+    updatePhysicalCoverShift(pageIndex);
+    updateViewButtons();
+    updateThumbs();
+    updateProgressUI();
+    updateBookStackState();
+    preloadAround();
+    saveProgress();
+    syncComicRoute({replace:true});
+  }));
+  physicalBookUnsubs.push(physicalBook.on("flipProgress",function(event){
+    if(!edition.cover)return;
+    var progress=clamp(Number(event.progress)||0,0,1);
+    if(Number(event.from)===0){
+      setPhysicalCoverShift(-25*(1-progress));
+    }else if(Number(event.to)===0){
+      setPhysicalCoverShift(-25*progress);
+    }else{
+      setPhysicalCoverShift(0);
+    }
+  }));
+  physicalBookUnsubs.push(physicalBook.on("changeState",function(event){
+    var state=event&&event.state||"read";
+    pageTurnAnimating=state==="flipping"||state==="user_fold";
+    reader.classList.toggle("comic-page-turning",pageTurnAnimating);
+    if(state==="read")updatePhysicalCoverShift(pageIndex);
+  }));
+  physicalBookUnsubs.push(physicalBook.on("changeOrientation",function(){
+    updateViewButtons();
+    updateProgressUI();
+  }));
+
+  return true;
 }
 
 function teardownObservers(){
@@ -590,6 +784,15 @@ function render(){
   }
 
   pageIndex=clamp(pageIndex,0,list.length-1);
+
+  if(renderPhysicalBook()){
+    if(empty)empty.hidden=true;
+    updateViewButtons();updateThumbs();renderThumbs();updateProgressUI();applySizing();updateBookStackState();
+    preloadAround();saveProgress();
+    return;
+  }
+
+  teardownPhysicalBook(false);
   var indices=pageRange();
   var readerNode=el("comicReader");
   if(readerNode){
@@ -654,7 +857,14 @@ function goTo(index,scroll,options){
   options=options||{};
   var list=pages();if(!list.length)return;
   pageIndex=normalizeIndexForView(index);
-  render();
+
+  if(physicalBook&&physicalEngineEnabled()&&physicalBookHost){
+    try{physicalBook.turnTo(pageIndex);}catch(error){}
+    updatePhysicalCoverShift(pageIndex);
+    updateViewButtons();updateThumbs();updateProgressUI();updateBookStackState();preloadAround();saveProgress();
+  }else{
+    render();
+  }
   if(!options.silentRoute)syncComicRoute({replace:true});
   if(viewMode==="continuous"&&scroll){
     requestAnimationFrame(function(){
@@ -838,6 +1048,16 @@ function move(direction){
   var list=pages();if(!list.length||pageTurnAnimating)return;
   var step=1;
   if(viewMode==="spread"){
+    if(physicalBook&&physicalEngineEnabled()){
+      pageTurnAnimating=true;
+      var action=direction>0?physicalBook.flipNext("bottom"):physicalBook.flipPrev("bottom");
+      Promise.resolve(action).catch(function(error){
+        console.warn("Terra Omega Comics: virada física falhou.",error);
+      }).finally(function(){
+        if(physicalBook&&physicalBook.state==="read")pageTurnAnimating=false;
+      });
+      return;
+    }
     var target=spreadTarget(direction);
     if(target===pageIndex)return;
     if(pageTurnAvailable())animateSpreadTurn(direction,target);
@@ -856,6 +1076,7 @@ function cancelFocus(){
 }
 function togglePageFocus(index){
   if(focusReturn){cancelFocus();render();return;}
+  teardownPhysicalBook(false);
   focusReturn={view:viewMode,fit:fitMode,zoom:customZoom,page:pageIndex};
   pageIndex=index;viewMode="single";fitMode="custom";customZoom=Math.max(1.25,customZoom);
   var reader=el("comicReader");if(reader)reader.classList.add("comic-page-focus");
