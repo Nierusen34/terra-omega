@@ -365,10 +365,20 @@ function startNew(){
   setTimeout(function(){var input=el("comicManagerEditionTitle");if(input)input.focus();},0);
 }
 
-async function request(body){
+async function request(body,retryCount){
   var b=backend();
   if(!b||!b.isAuthenticated||!b.isAuthenticated())throw new Error("Entre como editor para continuar.");
-  return b.request("/api/media",{method:"POST",body:body});
+  retryCount=Number(retryCount)||0;
+  try{
+    return await b.request("/api/media",{method:"POST",body:body});
+  }catch(error){
+    var isHeadConflict=error && error.status===409 && error.payload && error.payload.error==="head_conflict";
+    if(isHeadConflict && retryCount<2){
+      await new Promise(function(resolve){setTimeout(resolve,180+(retryCount*220));});
+      return request(body,retryCount+1);
+    }
+    throw error;
+  }
 }
 
 async function saveEdition(){
