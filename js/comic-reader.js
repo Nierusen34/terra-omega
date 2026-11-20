@@ -94,6 +94,12 @@ function hydratePreferences(){
   thumbsVisible=loadValue(THUMBS_KEY,"1")!=="0";
   pageTurnEnabled=loadValue(PAGE_TURN_KEY,"1")!=="0";
 
+  if(viewMode==="spread"&&(fitMode==="actual"||fitMode==="custom")){
+    fitMode="screen";
+    customZoom=1;
+    saveValue(FIT_KEY,fitMode);
+    saveValue(ZOOM_KEY,customZoom);
+  }
   if(window.innerWidth<720 && viewMode==="spread") viewMode="single";
 }
 
@@ -297,7 +303,23 @@ function applySizing(){
     else if(effective==="actual")label.textContent="100%";
     else label.textContent=Math.round(customZoom*100)+"%";
   }
-  var fitSelect=el("comicFitSelect");if(fitSelect&&fitMode!=="custom")fitSelect.value=fitMode;
+  var fitSelect=el("comicFitSelect");
+  if(fitSelect){
+    if(fitMode!=="custom")fitSelect.value=fitMode;
+    var actualOption=fitSelect.querySelector('option[value="actual"]');
+    if(actualOption)actualOption.disabled=viewMode==="spread";
+    fitSelect.title=viewMode==="spread"
+      ?"No modo Livro, use Auto, Tela ou Largura para manter o enquadramento e a animação."
+      :"Ajuste da página";
+  }
+  var zoomOut=el("comicZoomOutBtn"),zoomIn=el("comicZoomInBtn");
+  [zoomOut,zoomIn].forEach(function(button){
+    if(!button)return;
+    button.disabled=viewMode==="spread";
+    button.title=viewMode==="spread"
+      ?"Zoom manual fica desativado no modo Livro para preservar o enquadramento e a virada."
+      :(button===zoomOut?"Diminuir zoom":"Aumentar zoom");
+  });
 }
 
 function renderSelectors(){
@@ -597,15 +619,24 @@ function togglePageFocus(index){
 function setView(mode){
   if(["single","spread","continuous"].indexOf(mode)===-1)return;
   if(focusReturn)cancelFocus();
-  viewMode=mode;pageIndex=normalizeIndexForView(pageIndex);
+  viewMode=mode;
+  if(viewMode==="spread"&&(fitMode==="actual"||fitMode==="custom")){
+    fitMode="screen";
+    customZoom=1;
+    saveValue(FIT_KEY,fitMode);
+    saveValue(ZOOM_KEY,customZoom);
+  }
+  pageIndex=normalizeIndexForView(pageIndex);
   saveValue(VIEW_KEY,viewMode);render();
 }
 function setFit(mode){
   if(["auto","screen","width","actual","custom"].indexOf(mode)===-1)return;
+  if(viewMode==="spread"&&(mode==="actual"||mode==="custom"))mode="screen";
   fitMode=mode;if(mode==="actual")customZoom=1;
   saveValue(FIT_KEY,fitMode);saveValue(ZOOM_KEY,customZoom);applySizing();
 }
 function zoom(delta){
+  if(viewMode==="spread")return;
   if(fitMode!=="custom")customZoom=fitMode==="actual"?1:1;
   fitMode="custom";customZoom=clamp(Math.round((customZoom+delta)*10)/10,.5,3);
   saveValue(FIT_KEY,fitMode);saveValue(ZOOM_KEY,customZoom);applySizing();
