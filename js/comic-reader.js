@@ -484,16 +484,27 @@ function animateSpreadTurn(direction,targetIndex){
   layer.style.width=imageRect.width+"px";
   layer.style.height=imageRect.height+"px";
   layer.innerHTML=
+    '<div class="comic-page-turn-cast-shadow"></div>'+
     '<div class="comic-page-turn-sheet">'+
-      '<div class="comic-page-turn-face comic-page-turn-front"><img src="'+esc(sourceImage.currentSrc||sourceImage.src)+'" alt=""></div>'+
-      '<div class="comic-page-turn-face comic-page-turn-back"></div>'+
+      '<div class="comic-page-turn-bend">'+
+        '<div class="comic-page-turn-face comic-page-turn-front">'+
+          '<img src="'+esc(sourceImage.currentSrc||sourceImage.src)+'" alt="">'+
+          '<span class="comic-page-turn-ridge"></span>'+
+        '</div>'+
+        '<div class="comic-page-turn-face comic-page-turn-back">'+
+          '<span class="comic-page-turn-paper"></span>'+
+        '</div>'+
+      '</div>'+
     '</div>'+
-    '<div class="comic-page-turn-shadow"></div>';
+    '<div class="comic-page-turn-spine-shadow"></div>';
   stage.appendChild(layer);
 
   pageIndex=normalizeIndexForView(targetIndex);
   render();
   syncComicRoute({replace:true});
+
+  var readerNode=el("comicReader");
+  if(readerNode)readerNode.classList.add("comic-page-turning");
 
   requestAnimationFrame(function(){
     requestAnimationFrame(function(){layer.classList.add("is-turning");});
@@ -505,11 +516,13 @@ function animateSpreadTurn(direction,targetIndex){
     finished=true;
     layer.remove();
     pageTurnAnimating=false;
+    var readerNode=el("comicReader");
+    if(readerNode)readerNode.classList.remove("comic-page-turning");
     stage.scrollTo({top:0,left:0,behavior:"auto"});
   }
   var sheet=layer.querySelector(".comic-page-turn-sheet");
-  if(sheet)sheet.addEventListener("transitionend",cleanup,{once:true});
-  setTimeout(cleanup,780);
+  if(sheet)sheet.addEventListener("animationend",cleanup,{once:true});
+  setTimeout(cleanup,1450);
 }
 
 function move(direction){

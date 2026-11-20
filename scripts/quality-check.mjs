@@ -558,8 +558,9 @@ function checkComics(){
   if(!reader.includes("animateSpreadTurn") ||
      !reader.includes("PAGE_TURN_KEY") ||
      !reader.includes("prefers-reduced-motion") ||
+     !reader.includes("comic-page-turn-bend") ||
      !html.includes('id="comicPageTurnToggleBtn"')){
-    fail("Modo Livro está sem animação opcional de virar páginas ou respeito a movimento reduzido.");
+    fail("Modo Livro está sem animação fluida de virar páginas, toggle ou respeito a movimento reduzido.");
   }
   if(!router.includes("kind:'comic'") ||
      !router.includes("function comicRoute") ||
