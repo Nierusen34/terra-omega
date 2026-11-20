@@ -114,7 +114,7 @@ function ensureModal(){
             </div>
             <div class="comic-manager-cover-copy">
               <strong>Capa da história</strong>
-              <small>Usada na Biblioteca. Se não houver uma capa própria, a primeira página será usada automaticamente.</small>
+              <small>Usada na Biblioteca e como a primeira folha da leitura. Se não houver uma capa própria, a primeira página será usada automaticamente como capa.</small>
               <div>
                 <button id="comicManagerUploadCover" type="button">🖼 Enviar capa</button>
                 <button id="comicManagerRemoveCover" type="button">Remover capa</button>
