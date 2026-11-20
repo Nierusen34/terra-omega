@@ -494,9 +494,14 @@ function render(){
   var indices=pageRange();
   var readerNode=el("comicReader");
   if(readerNode){
-    readerNode.classList.remove("comic-spread-single-right","comic-spread-single-left");
+    readerNode.classList.remove("comic-spread-single-right","comic-spread-single-left","comic-spread-cover-centered");
     if(viewMode==="spread"&&!compactBookMode()&&indices.length===1){
-      readerNode.classList.add(((indices[0]+1)%2===1)?"comic-spread-single-right":"comic-spread-single-left");
+      var onlyPage=list[indices[0]];
+      if(onlyPage&&onlyPage.isCover){
+        readerNode.classList.add("comic-spread-cover-centered");
+      }else{
+        readerNode.classList.add(((indices[0]+1)%2===1)?"comic-spread-single-right":"comic-spread-single-left");
+      }
     }
   }
   if(empty)empty.hidden=true;
@@ -589,7 +594,7 @@ function renderSpreadTurnUnderlay(direction,targetIndex,currentIndices){
   var viewport=el("comicPagesViewport"),readerNode=el("comicReader"),list=pages();
   if(!viewport||!readerNode)return;
   if(compactBookMode()){
-    readerNode.classList.remove("comic-spread-single-right","comic-spread-single-left");
+    readerNode.classList.remove("comic-spread-single-right","comic-spread-single-left","comic-spread-cover-centered");
     viewport.hidden=false;
     viewport.innerHTML=imageMarkup(list[targetIndex],targetIndex);
     applySizing();
@@ -638,6 +643,18 @@ function animateSpreadTurn(direction,targetIndex){
   var stageRect=stage.getBoundingClientRect();
   if(imageRect.width<20||imageRect.height<20){goTo(targetIndex,true);return;}
 
+  var centeredCoverTurn=!compact&&sourceIndex===0&&currentIndices.length===1&&list[sourceIndex]&&list[sourceIndex].isCover;
+  var physicalRect=imageRect;
+  if(centeredCoverTurn&&direction>0){
+    var viewportRect=viewport.getBoundingClientRect();
+    physicalRect={
+      left:viewportRect.left+(viewportRect.width/2),
+      top:imageRect.top,
+      width:imageRect.width,
+      height:imageRect.height
+    };
+  }
+
   var list=pages();
   var targetIndices=compact?[targetIndex]:spreadIndicesFor(targetIndex,list.length);
   var backIndex=compact?targetIndex:(direction>0
@@ -652,10 +669,10 @@ function animateSpreadTurn(direction,targetIndex){
   var layer=document.createElement("div");
   layer.className="comic-page-turn-layer "+(direction>0?"is-forward":"is-backward");
   layer.setAttribute("aria-hidden","true");
-  layer.style.left=(imageRect.left-stageRect.left+stage.scrollLeft)+"px";
-  layer.style.top=(imageRect.top-stageRect.top+stage.scrollTop)+"px";
-  layer.style.width=imageRect.width+"px";
-  layer.style.height=imageRect.height+"px";
+  layer.style.left=(physicalRect.left-stageRect.left+stage.scrollLeft)+"px";
+  layer.style.top=(physicalRect.top-stageRect.top+stage.scrollTop)+"px";
+  layer.style.width=physicalRect.width+"px";
+  layer.style.height=physicalRect.height+"px";
   layer.innerHTML=
     '<div class="comic-page-turn-cast-shadow"></div>'+
     '<div class="comic-page-turn-hinge"></div>'+
@@ -676,6 +693,10 @@ function animateSpreadTurn(direction,targetIndex){
     '</div>'+
     '<div class="comic-page-turn-spine-shadow"></div>';
   stage.appendChild(layer);
+
+  if(centeredCoverTurn){
+    sourceFrame.style.visibility="hidden";
+  }
 
   pageIndex=normalizeIndexForView(targetIndex);
   renderSpreadTurnUnderlay(direction,pageIndex,currentIndices);
