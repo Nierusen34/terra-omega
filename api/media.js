@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import { applyCors } from "./_lib/cors.js";
 import { requireEditor } from "./_lib/auth.js";
 import { getHead, readTextFile, readBinaryFile, commitFiles } from "./_lib/github.js";
@@ -516,6 +517,26 @@ function comicCoverPath(edition){
   return "images/comics/covers/"+edition.id+".webp";
 }
 
+async function findDuplicateComicPage(edition,buffer,ignoreSrc=""){
+  if(!edition || !Array.isArray(edition.pages) || !buffer || !buffer.length) return null;
+  const digest=crypto.createHash("sha256").update(buffer).digest("hex");
+  for(let index=0;index<edition.pages.length;index++){
+    const page=edition.pages[index];
+    if(!page || !validComicPath(page.src) || page.src===ignoreSrc) continue;
+    try{
+      const existing=await readBinaryFile(page.src);
+      if(existing.buffer.length!==buffer.length) continue;
+      const existingDigest=crypto.createHash("sha256").update(existing.buffer).digest("hex");
+      if(existingDigest===digest){
+        return {index,page};
+      }
+    }catch(error){
+      if(!error || error.status!==404) throw error;
+    }
+  }
+  return null;
+}
+
 function decodeComicImage(value,mime,maxBytes=MAX_BYTES){
   const normalizedMime=String(mime || "").toLowerCase();
   if(!EXTENSIONS[normalizedMime]){
@@ -723,6 +744,16 @@ export default async function handler(req,res){
         }
 
         const replaceSrc=String(requestBody.replaceSrc || "").trim();
+        const duplicate=await findDuplicateComicPage(found.edition,main.buffer,replaceSrc);
+        if(duplicate){
+          return res.status(409).json({
+            error:"duplicate_comic_page",
+            message:"Esta imagem já existe como Página "+(duplicate.index+1)+". A duplicata não foi adicionada.",
+            existing_src:duplicate.page.src,
+            existing_page:duplicate.index+1
+          });
+        }
+
         let pagePath="";
         let thumbPath="";
         let pageIndex=-1;
