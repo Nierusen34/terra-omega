@@ -106,7 +106,7 @@ function hydratePreferences(){
     saveValue(FIT_KEY,fitMode);
     saveValue(ZOOM_KEY,customZoom);
   }
-  if(window.innerWidth<720 && viewMode==="spread") viewMode="single";
+  /* No celular o modo Livro usa uma folha por vez, preservando a virada física sem miniaturizar duas páginas. */
 }
 
 function publishedEditions(data){
@@ -194,18 +194,21 @@ function spreadIndicesFor(index,length){
   var spreadStart=index%2===0?index-1:index;
   return [spreadStart,spreadStart+1].filter(function(i){return i<length;});
 }
+function compactBookMode(){
+  return viewMode==="spread"&&window.innerWidth<=700;
+}
 function pageRange(){
   var list=pages();
   if(!list.length)return [];
   pageIndex=clamp(pageIndex,0,list.length-1);
   if(viewMode==="continuous")return list.map(function(_,i){return i;});
-  if(viewMode==="spread")return spreadIndicesFor(pageIndex,list.length);
+  if(viewMode==="spread")return compactBookMode()?[pageIndex]:spreadIndicesFor(pageIndex,list.length);
   return [pageIndex];
 }
 function normalizeIndexForView(index){
   var list=pages();
   index=clamp(index,0,Math.max(0,list.length-1));
-  if(viewMode==="spread"&&index>0)return index%2===0?index-1:index;
+  if(viewMode==="spread"&&!compactBookMode()&&index>0)return index%2===0?index-1:index;
   return index;
 }
 function rangeLabel(indices){
@@ -217,6 +220,7 @@ function rangeLabel(indices){
 }
 function effectiveFit(){
   if(fitMode!=="auto")return fitMode;
+  if(window.innerWidth<=700)return "width";
   return viewMode==="continuous"?"width":"screen";
 }
 function reducedMotion(){
@@ -317,6 +321,7 @@ function applySizing(){
   reader.setAttribute("data-view-mode",viewMode);
   reader.setAttribute("data-fit-mode",fitMode);
   reader.setAttribute("data-fit-effective",effective);
+  reader.setAttribute("data-compact-book",compactBookMode()?"true":"false");
   viewport.style.setProperty("--comic-zoom",String(customZoom));
 
   viewport.querySelectorAll(".comic-page-image").forEach(function(image){
@@ -478,7 +483,7 @@ function render(){
   var readerNode=el("comicReader");
   if(readerNode){
     readerNode.classList.remove("comic-spread-single-right","comic-spread-single-left");
-    if(viewMode==="spread"&&indices.length===1){
+    if(viewMode==="spread"&&!compactBookMode()&&indices.length===1){
       readerNode.classList.add(((indices[0]+1)%2===1)?"comic-spread-single-right":"comic-spread-single-left");
     }
   }
@@ -547,6 +552,7 @@ function goTo(index,scroll,options){
 function spreadTarget(direction){
   var list=pages();
   if(!list.length)return pageIndex;
+  if(compactBookMode())return clamp(pageIndex+direction,0,list.length-1);
   if(direction>0){
     if(pageIndex===0)return Math.min(1,list.length-1);
     return Math.min(pageIndex+2,list.length-1);
@@ -570,6 +576,13 @@ function spreadSideIndex(indices,side){
 function renderSpreadTurnUnderlay(direction,targetIndex,currentIndices){
   var viewport=el("comicPagesViewport"),readerNode=el("comicReader"),list=pages();
   if(!viewport||!readerNode)return;
+  if(compactBookMode()){
+    readerNode.classList.remove("comic-spread-single-right","comic-spread-single-left");
+    viewport.hidden=false;
+    viewport.innerHTML=imageMarkup(list[targetIndex],targetIndex);
+    applySizing();
+    return;
+  }
   var targetIndices=spreadIndicesFor(targetIndex,list.length);
   var currentLeft=spreadSideIndex(currentIndices,"left");
   var currentRight=spreadSideIndex(currentIndices,"right");
@@ -598,9 +611,10 @@ function animateSpreadTurn(direction,targetIndex){
   var frames=Array.from(viewport.querySelectorAll(".comic-page-frame"));
   if(!frames.length){goTo(targetIndex,true);return;}
 
-  var sourceIndex=direction>0
+  var compact=compactBookMode();
+  var sourceIndex=compact?pageIndex:(direction>0
     ? spreadSideIndex(currentIndices,"right")
-    : spreadSideIndex(currentIndices,"left");
+    : spreadSideIndex(currentIndices,"left"));
   var sourceFrame=viewport.querySelector('[data-comic-rendered-page="'+sourceIndex+'"]');
   if(!sourceFrame){goTo(targetIndex,true);return;}
 
@@ -613,10 +627,10 @@ function animateSpreadTurn(direction,targetIndex){
   if(imageRect.width<20||imageRect.height<20){goTo(targetIndex,true);return;}
 
   var list=pages();
-  var targetIndices=spreadIndicesFor(targetIndex,list.length);
-  var backIndex=direction>0
+  var targetIndices=compact?[targetIndex]:spreadIndicesFor(targetIndex,list.length);
+  var backIndex=compact?targetIndex:(direction>0
     ? spreadSideIndex(targetIndices,"left")
-    : spreadSideIndex(targetIndices,"right");
+    : spreadSideIndex(targetIndices,"right"));
   if(backIndex<0)backIndex=targetIndex;
   var backPage=list[backIndex]||null;
   var backSrc=backPage&&backPage.src?versionedPageSrc(backPage.src):"";
@@ -1057,6 +1071,24 @@ function bind(){
     ["mousemove","pointerdown","touchstart"].forEach(function(type){reader.addEventListener(type,showChrome,{passive:true});});
   }
   bindPanZoom();
+
+  var lastCompact=compactBookMode();
+  var resizeTimer=null;
+  function refreshResponsiveBook(){
+    clearTimeout(resizeTimer);
+    resizeTimer=setTimeout(function(){
+      var nextCompact=compactBookMode();
+      if(nextCompact!==lastCompact){
+        lastCompact=nextCompact;
+        pageIndex=normalizeIndexForView(pageIndex);
+        render();
+      }else{
+        applySizing();
+      }
+    },90);
+  }
+  window.addEventListener("resize",refreshResponsiveBook,{passive:true});
+  window.addEventListener("orientationchange",refreshResponsiveBook,{passive:true});
 
   document.addEventListener("keydown",function(event){
     if(!active()&&!readingMode)return;
