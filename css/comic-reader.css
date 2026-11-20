@@ -710,6 +710,7 @@ body.comic-reading-active{overflow:hidden!important}
 
 
 /* ===== VIRADA DE PÁGINA · MODO LIVRO ===== */
+/* A camada 3D permanece até o animationend da rotação principal; efeitos filhos não encerram a virada. */
 .comic-reader[data-view-mode="spread"] .comic-reader-stage{
   perspective:2600px;perspective-origin:50% 46%
 }
