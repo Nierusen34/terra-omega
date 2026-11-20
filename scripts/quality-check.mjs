@@ -578,8 +578,11 @@ function checkComics(){
      !reader.includes('spreadSideIndex(targetIndices,"left")') ||
      !reader.includes('spreadSideIndex(targetIndices,"right")') ||
      !reader.includes("comic-spread-single-right") ||
-     !comicCss.includes("overflow:visible;contain:none") ||
+     !comicCss.includes("overflow:visible;contain:layout style") ||
      !comicCss.includes("comic-page-turn-edge") ||
+     !reader.includes("compactBookMode") ||
+     !reader.includes('return viewMode==="spread"&&window.innerWidth<=700') ||
+     !comicCss.includes('data-compact-book="true"') ||
      !comicCss.includes("rotateY(-180deg)") ||
      !comicCss.includes("rotateY(180deg)") ||
      !html.includes('id="comicPageTurnToggleBtn"')){
