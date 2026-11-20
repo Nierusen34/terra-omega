@@ -556,9 +556,9 @@ function checkComics(){
      !reader.includes("root.scrollTo({left:")){
     fail("Etapa 3 do leitor está sem busca da biblioteca, foco acessível, deep-link ou filmstrip horizontal.");
   }
-  if(!html.includes("js/navigation.js?v=20261120-reader-v4b") ||
-     !read("js/navigation.js").includes("COMIC_ASSET_VERSION=\"20261120-reader-v4b\"") ||
-     !html.includes("Leitor 20261120-reader-v4b")){
+  if(!html.includes("js/navigation.js?v=20261120-reader-v4c") ||
+     !read("js/navigation.js").includes("COMIC_ASSET_VERSION=\"20261120-reader-v4c\"") ||
+     !html.includes("Leitor 20261120-reader-v4c")){
     fail("Leitor de quadrinhos está sem cache bust explícito ou identificação de build.");
   }
   if(!reader.includes('viewMode==="spread"&&(fitMode==="actual"||fitMode==="custom")') ||
@@ -586,8 +586,11 @@ function checkComics(){
      !reader.includes("compactBookMode") ||
      !reader.includes("queuedTurnDirection") ||
      !reader.includes("flushQueuedTurn") ||
-     !reader.includes('move(-1,{source:"keyboard",queue:true})') ||
-     !reader.includes('move(1,{source:"keyboard",queue:true})') ||
+     !reader.includes("function keyboardTurn") ||
+     !reader.includes('physicalBook.flipNext("bottom")') ||
+     !reader.includes('physicalBook.flipPrev("bottom")') ||
+     !reader.includes("if(!event.repeat)keyboardTurn(-1)") ||
+     !reader.includes("if(!event.repeat)keyboardTurn(1)") ||
      !reader.includes('return viewMode==="spread"&&window.innerWidth<=700') ||
      !comicCss.includes("comic-opf-book") ||
      !comicCss.includes("comic-opf-page") ||
