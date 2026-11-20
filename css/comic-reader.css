@@ -549,6 +549,10 @@ body.comic-reading-active{overflow:hidden!important}
   padding:22px;border:1px dashed var(--line);color:var(--ink3);font-size:10px;text-align:center
 }
 .comic-manager-modal.is-busy .comic-manager-card{cursor:progress}
+.comic-manager-modal.is-busy .comic-manager-page-actions,
+.comic-manager-modal.is-busy .comic-manager-page-drag,
+.comic-manager-modal.is-busy .comic-manager-order-actions{pointer-events:none;opacity:.45}
+.comic-manager-modal.is-busy .comic-manager-page-row{user-select:none}
 .comic-manager-modal button:disabled{opacity:.4;cursor:not-allowed}
 .comic-manager-cover{
   display:grid;grid-template-columns:110px minmax(0,1fr);align-items:center;gap:14px;
