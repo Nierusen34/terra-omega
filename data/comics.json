@@ -65,17 +65,17 @@
         },
         {
           "order": 8,
-          "label": "Página 8",
-          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-08.webp",
-          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-08-thumb.webp",
-          "alt": "O Quarto Ficou Frio — página 8: A conversa"
-        },
-        {
-          "order": 9,
           "label": "Página 9",
           "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-09.webp",
           "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-09-thumb.webp",
-          "alt": "O Quarto Ficou Frio — página 9: A chegada triunfal"
+          "alt": "O Quarto Ficou Frio — página 8:  A conversa"
+        },
+        {
+          "order": 9,
+          "label": "Página 8",
+          "src": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-08.webp",
+          "thumb": "images/comics/tristan-queen/tristan-queen-o-quarto-ficou-frio-08-thumb.webp",
+          "alt": "O Quarto Ficou Frio — página 9: Entrada triunfal"
         },
         {
           "order": 10,
