@@ -129,24 +129,36 @@ function ensureComicPhysics(){
   }
   if(comicPhysicsPromise) return comicPhysicsPromise;
 
-  comicPhysicsPromise=new Promise(function(resolve,reject){
+  var cssPromise=new Promise(function(resolve,reject){
     var cssId="openPageFlipStylesheet";
-    if(!document.getElementById(cssId)){
-      var link=document.createElement("link");
-      link.id=cssId;
-      link.rel="stylesheet";
-      link.href="https://cdn.jsdelivr.net/npm/@openpageflip/core@"+OPEN_PAGE_FLIP_VERSION+"/dist/styles.css";
-      link.crossOrigin="anonymous";
-      document.head.appendChild(link);
+    var existingLink=document.getElementById(cssId);
+    if(existingLink){
+      if(existingLink.sheet){resolve(true);return;}
+      existingLink.addEventListener("load",function(){resolve(true);},{once:true});
+      existingLink.addEventListener("error",reject,{once:true});
+      return;
     }
+    var link=document.createElement("link");
+    link.id=cssId;
+    link.rel="stylesheet";
+    link.href="https://cdn.jsdelivr.net/npm/@openpageflip/core@"+OPEN_PAGE_FLIP_VERSION+"/dist/styles.css";
+    link.crossOrigin="anonymous";
+    link.addEventListener("load",function(){resolve(true);},{once:true});
+    link.addEventListener("error",function(){reject(new Error("Falha ao carregar os estilos do motor físico."));},{once:true});
+    document.head.appendChild(link);
+  });
 
+  var scriptPromise=new Promise(function(resolve,reject){
     var existing=document.querySelector("script[data-open-page-flip]");
     if(existing){
       if(window.OpenPageFlip && typeof window.OpenPageFlip.createBook==="function"){
         resolve(window.OpenPageFlip);
         return;
       }
-      existing.addEventListener("load",function(){resolve(window.OpenPageFlip||null);},{once:true});
+      existing.addEventListener("load",function(){
+        if(window.OpenPageFlip&&typeof window.OpenPageFlip.createBook==="function")resolve(window.OpenPageFlip);
+        else reject(new Error("OpenPageFlip carregou sem expor createBook."));
+      },{once:true});
       existing.addEventListener("error",reject,{once:true});
       return;
     }
@@ -160,23 +172,26 @@ function ensureComicPhysics(){
       if(window.OpenPageFlip && typeof window.OpenPageFlip.createBook==="function") resolve(window.OpenPageFlip);
       else reject(new Error("OpenPageFlip carregou sem expor createBook."));
     },{once:true});
-    script.addEventListener("error",function(){
-      comicPhysicsPromise=null;
-      reject(new Error("Falha ao carregar o motor físico de páginas."));
-    },{once:true});
+    script.addEventListener("error",function(){reject(new Error("Falha ao carregar o motor físico de páginas."));},{once:true});
     document.head.appendChild(script);
   });
 
+  comicPhysicsPromise=Promise.all([cssPromise,scriptPromise]).then(function(){
+    return window.OpenPageFlip;
+  }).catch(function(error){
+    comicPhysicsPromise=null;
+    throw error;
+  });
   return comicPhysicsPromise;
 }
 
 var comicReaderPromise = null;
 function ensureComicReader(){
-  var styles=ensureComicStyles();
   var physics=ensureComicPhysics().catch(function(error){
     console.warn("Terra Omega Comics: motor físico indisponível, usando fallback.",error);
     return null;
   });
+  var styles=ensureComicStyles();
 
   if(window.TerraOmegaApp && window.TerraOmegaApp.comicReader){
     return styles.then(function(){
