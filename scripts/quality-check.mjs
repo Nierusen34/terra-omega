@@ -580,6 +580,12 @@ function checkComics(){
      !reader.includes("comic-spread-single-right") ||
      !comicCss.includes("overflow:visible;contain:layout style") ||
      !comicCss.includes("comic-page-turn-edge") ||
+     !comicCss.includes("comic-page-turn-hinge") ||
+     !comicCss.includes("comic-page-turn-curl") ||
+     !reader.includes("comic-page-turn-hinge") ||
+     !reader.includes("comic-page-turn-curl") ||
+     comicCss.includes("rotateY(-94deg) translateZ") ||
+     comicCss.includes("rotateY(94deg) translateZ") ||
      !reader.includes("compactBookMode") ||
      !reader.includes('return viewMode==="spread"&&window.innerWidth<=700') ||
      !comicCss.includes('data-compact-book="true"') ||
