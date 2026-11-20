@@ -729,20 +729,20 @@ body.comic-reading-active{overflow:hidden!important}
 }
 .comic-page-turn-layer{
   position:absolute;z-index:24;pointer-events:none;
-  perspective:2600px;transform-style:preserve-3d;
-  contain:layout paint style
+  perspective:3200px;transform-style:preserve-3d;
+  overflow:visible;contain:none
 }
 .comic-page-turn-sheet{
-  position:absolute;inset:0;transform-style:preserve-3d;
-  will-change:transform;animation-duration:920ms;
-  animation-timing-function:cubic-bezier(.18,.72,.22,1);
+  position:absolute;inset:0;z-index:2;transform-style:preserve-3d;
+  will-change:transform;animation-duration:1080ms;
+  animation-timing-function:cubic-bezier(.16,.72,.18,1);
   animation-fill-mode:forwards
 }
 .comic-page-turn-bend{
   position:absolute;inset:0;transform-style:preserve-3d;
   will-change:transform;
-  animation-duration:920ms;
-  animation-timing-function:cubic-bezier(.18,.68,.24,1);
+  animation-duration:1080ms;
+  animation-timing-function:cubic-bezier(.16,.68,.2,1);
   animation-fill-mode:forwards
 }
 .comic-page-turn-layer.is-forward .comic-page-turn-sheet{transform-origin:left center}
@@ -784,7 +784,7 @@ body.comic-reading-active{overflow:hidden!important}
       rgba(0,0,0,.15) 76%,
       rgba(0,0,0,.24) 96%);
   will-change:transform,opacity;
-  animation-duration:920ms;animation-fill-mode:forwards
+  animation-duration:1080ms;animation-fill-mode:forwards
 }
 .comic-page-turn-layer.is-forward.is-turning .comic-page-turn-front::before{
   animation-name:comicPageLightForward
@@ -830,9 +830,9 @@ body.comic-reading-active{overflow:hidden!important}
   opacity:.78
 }
 .comic-page-turn-cast-shadow{
-  position:absolute;top:1.5%;bottom:2%;z-index:-2;width:34%;opacity:0;
+  position:absolute;top:1.5%;bottom:2%;z-index:1;width:44%;opacity:0;
   filter:blur(20px);background:rgba(0,0,0,.68);
-  animation-duration:920ms;animation-timing-function:ease-in-out;animation-fill-mode:forwards
+  animation-duration:1080ms;animation-timing-function:ease-in-out;animation-fill-mode:forwards
 }
 .comic-page-turn-layer.is-forward .comic-page-turn-cast-shadow{left:-6%}
 .comic-page-turn-layer.is-backward .comic-page-turn-cast-shadow{right:-6%}
@@ -854,47 +854,63 @@ body.comic-reading-active{overflow:hidden!important}
   animation-name:comicSpinePulse
 }
 .comic-reader.comic-page-turning .comic-pages-viewport{
-  animation:comicPageUnderReveal 920ms cubic-bezier(.2,.68,.24,1) both;
-  will-change:transform,opacity
+  animation:none;
+  will-change:auto
 }
+.comic-page-turn-edge{
+  position:absolute;top:0;bottom:0;width:2px;z-index:7;opacity:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.75),rgba(190,170,138,.65),rgba(255,255,255,.55));
+  box-shadow:0 0 5px rgba(255,245,225,.34),0 0 9px rgba(0,0,0,.34);
+  animation-duration:1080ms;animation-timing-function:ease-in-out;animation-fill-mode:forwards
+}
+.comic-page-turn-layer.is-forward .comic-page-turn-edge{right:0}
+.comic-page-turn-layer.is-backward .comic-page-turn-edge{left:0}
+.comic-page-turn-layer.is-turning .comic-page-turn-edge{animation-name:comicPageEdgePulse}
+.comic-page-turn-placeholder{pointer-events:none}
+.comic-page-turn-placeholder .comic-page-surface{background:transparent!important}
+.comic-page-turn-placeholder .comic-page-surface::before{display:none!important}
+.comic-page-turn-placeholder figcaption{visibility:hidden}
+
 .comic-more-popover #comicPageTurnToggleBtn[aria-pressed="true"]{color:var(--accent)}
 .comic-more-popover #comicPageTurnToggleBtn[aria-pressed="false"]{color:var(--ink3)}
 
 @keyframes comicPageTurnForward{
   0%{transform:rotateY(0deg) translateZ(0)}
-  10%{transform:rotateY(-5deg) translateZ(3px)}
-  26%{transform:rotateY(-28deg) translateZ(9px)}
-  44%{transform:rotateY(-68deg) translateZ(15px)}
-  58%{transform:rotateY(-108deg) translateZ(16px)}
-  74%{transform:rotateY(-147deg) translateZ(10px)}
-  90%{transform:rotateY(-174deg) translateZ(3px)}
+  8%{transform:rotateY(-4deg) translateZ(4px)}
+  22%{transform:rotateY(-24deg) translateZ(15px)}
+  40%{transform:rotateY(-62deg) translateZ(30px)}
+  54%{transform:rotateY(-94deg) translateZ(36px)}
+  70%{transform:rotateY(-132deg) translateZ(28px)}
+  84%{transform:rotateY(-161deg) translateZ(15px)}
+  94%{transform:rotateY(-182deg) translateZ(3px)}
   100%{transform:rotateY(-180deg) translateZ(0)}
 }
 @keyframes comicPageTurnBackward{
   0%{transform:rotateY(0deg) translateZ(0)}
-  10%{transform:rotateY(5deg) translateZ(3px)}
-  26%{transform:rotateY(28deg) translateZ(9px)}
-  44%{transform:rotateY(68deg) translateZ(15px)}
-  58%{transform:rotateY(108deg) translateZ(16px)}
-  74%{transform:rotateY(147deg) translateZ(10px)}
-  90%{transform:rotateY(174deg) translateZ(3px)}
+  8%{transform:rotateY(4deg) translateZ(4px)}
+  22%{transform:rotateY(24deg) translateZ(15px)}
+  40%{transform:rotateY(62deg) translateZ(30px)}
+  54%{transform:rotateY(94deg) translateZ(36px)}
+  70%{transform:rotateY(132deg) translateZ(28px)}
+  84%{transform:rotateY(161deg) translateZ(15px)}
+  94%{transform:rotateY(182deg) translateZ(3px)}
   100%{transform:rotateY(180deg) translateZ(0)}
 }
 @keyframes comicPageBendForward{
   0%,100%{transform:scaleX(1) skewY(0deg)}
-  16%{transform:scaleX(.992) skewY(-.28deg)}
-  38%{transform:scaleX(.958) skewY(-1deg)}
-  55%{transform:scaleX(.928) skewY(-1.35deg)}
-  70%{transform:scaleX(.95) skewY(.65deg)}
-  86%{transform:scaleX(.988) skewY(.18deg)}
+  14%{transform:scaleX(.99) skewY(-.35deg)}
+  34%{transform:scaleX(.94) skewY(-1.1deg)}
+  52%{transform:scaleX(.84) skewY(-2deg)}
+  68%{transform:scaleX(.91) skewY(.9deg)}
+  86%{transform:scaleX(.98) skewY(.25deg)}
 }
 @keyframes comicPageBendBackward{
   0%,100%{transform:scaleX(1) skewY(0deg)}
-  16%{transform:scaleX(.992) skewY(.28deg)}
-  38%{transform:scaleX(.958) skewY(1deg)}
-  55%{transform:scaleX(.928) skewY(1.35deg)}
-  70%{transform:scaleX(.95) skewY(-.65deg)}
-  86%{transform:scaleX(.988) skewY(-.18deg)}
+  14%{transform:scaleX(.99) skewY(.35deg)}
+  34%{transform:scaleX(.94) skewY(1.1deg)}
+  52%{transform:scaleX(.84) skewY(2deg)}
+  68%{transform:scaleX(.91) skewY(-.9deg)}
+  86%{transform:scaleX(.98) skewY(-.25deg)}
 }
 @keyframes comicPageLightForward{
   0%{opacity:.06;transform:translateX(18%)}
@@ -944,6 +960,13 @@ body.comic-reading-active{overflow:hidden!important}
   52%{opacity:.78}
   82%{opacity:.22}
 }
+@keyframes comicPageEdgePulse{
+  0%,14%,92%,100%{opacity:0}
+  32%{opacity:.25}
+  49%{opacity:.96}
+  64%{opacity:.62}
+  80%{opacity:.18}
+}
 @keyframes comicPageUnderReveal{
   0%{opacity:.86;transform:scale(.998)}
   45%{opacity:.91}
@@ -957,8 +980,9 @@ body.comic-reading-active{overflow:hidden!important}
   .comic-page-turn-front::before,
   .comic-page-turn-ridge,
   .comic-page-turn-cast-shadow,
-  .comic-page-turn-spine-shadow{animation-duration:820ms}
-  .comic-reader.comic-page-turning .comic-pages-viewport{animation-duration:820ms}
+  .comic-page-turn-spine-shadow,
+  .comic-page-turn-edge{animation-duration:960ms}
+  .comic-reader.comic-page-turning .comic-pages-viewport{animation-duration:960ms}
 }
 @media(prefers-reduced-motion:reduce){
   .comic-page-turn-layer{display:none!important}
