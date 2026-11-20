@@ -121,6 +121,9 @@
 }
 .comic-reader-stage:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
 .comic-reader-stage.is-panning{cursor:grabbing!important;user-select:none}
+.comic-reader.comic-physical-book[data-view-mode="spread"] .comic-reader-stage{
+  overflow-x:hidden
+}
 .comic-pages-viewport{
   display:flex;align-items:flex-start;justify-content:center;gap:var(--comic-gap);
   width:100%;min-height:auto;max-width:1320px;margin:28px auto 8px
