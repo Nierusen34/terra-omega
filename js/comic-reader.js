@@ -1469,15 +1469,16 @@ function handleComicArrowKey(event){
   if(!direction)return;
 
   var target=event.target;
-  if(isTextEditingTarget(target))return;
+  var reader=el("comicReader");
+  var targetInsideReader=!!(reader&&target&&reader.contains(target));
+  if(isTextEditingTarget(target)&&!targetInsideReader)return;
 
   event.__terraOmegaComicArrowHandled=true;
-  var reader=el("comicReader");
   if(reader)reader.setAttribute("data-keyboard-ready","true");
   event.preventDefault();
   event.stopImmediatePropagation();
 
-  if(target&&target.tagName==="SELECT"&&target.blur){
+  if(targetInsideReader&&target&&target.blur){
     try{target.blur();}catch(error){}
   }
 
@@ -1613,7 +1614,18 @@ async function load(){
   return loadingPromise;
 }
 
-async function mount(){bind();await load();render();}
+function focusReaderStage(){
+  var stage=el("comicReaderStage");
+  if(!stage)return;
+  try{stage.focus({preventScroll:true});}
+  catch(error){try{stage.focus();}catch(innerError){}}
+}
+async function mount(){
+  bind();
+  await load();
+  render();
+  if(active())setTimeout(focusReaderStage,0);
+}
 async function reload(options){
   var currentId=currentSeries()&&currentSeries().id;
   catalog=null;editions=[];loadingPromise=null;
