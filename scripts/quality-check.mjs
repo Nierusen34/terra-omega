@@ -612,7 +612,7 @@ function checkComics(){
     fail("Editor de Quadrinhos não oferece gestão simples, preview seguro de capas, datas e acessibilidade esperadas.");
   }
   const globalCss=read("terra-omega.css");
-  const comicCss=read("css/comic-reader.css");
+  
   if(globalCss.includes("CAPA · QUADRINHOS") || globalCss.includes("QUADRINHOS 2.0")){
     fail("CSS legado de quadrinhos ainda está misturado ao terra-omega.css.");
   }
