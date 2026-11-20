@@ -24,7 +24,7 @@ var touchState=null;
 var pinchState=null;
 var pageTurnAnimating=false;
 var pageTurnEnabled=true;
-var preloadedPageUrls=new Set();
+var preloadedPageImages=new Map();
 var libraryReturnFocus=null;
 var helpReturnFocus=null;
 
@@ -435,19 +435,32 @@ function render(){
   preloadAround();saveProgress();
 }
 
-function preloadPage(index){
+function preloadPage(index,priority){
   var list=pages(),row=list[index];
-  if(!row||!row.src||preloadedPageUrls.has(row.src))return;
-  preloadedPageUrls.add(row.src);
+  if(!row||!row.src)return null;
+  if(preloadedPageImages.has(row.src))return preloadedPageImages.get(row.src);
   var img=new Image();
+  var entry={img:img,ready:false,promise:null};
   img.decoding="async";
-  try{img.fetchPriority="low";}catch(error){}
+  try{img.fetchPriority=priority||"low";}catch(error){}
+  img.addEventListener("load",function(){entry.ready=true;},{once:true});
   img.src=row.src;
-  if(img.decode)img.decode().catch(function(){});
+  entry.promise=img.decode?img.decode().then(function(){entry.ready=true;}).catch(function(){}):Promise.resolve();
+  preloadedPageImages.set(row.src,entry);
+  while(preloadedPageImages.size>14){
+    var first=preloadedPageImages.keys().next().value;
+    if(!first)break;
+    preloadedPageImages.delete(first);
+  }
+  return entry;
 }
 function preloadAround(){
   if(viewMode==="continuous")return;
-  [pageIndex+1,pageIndex+2,pageIndex+3,pageIndex-1,pageIndex-2].forEach(preloadPage);
+  preloadPage(pageIndex+1,"high");
+  preloadPage(pageIndex+2,"high");
+  preloadPage(pageIndex+3,"low");
+  preloadPage(pageIndex-1,"low");
+  preloadPage(pageIndex-2,"low");
 }
 
 function goTo(index,scroll,options){
@@ -495,6 +508,12 @@ function animateSpreadTurn(direction,targetIndex){
   var stageRect=stage.getBoundingClientRect();
   if(imageRect.width<20||imageRect.height<20){goTo(targetIndex,true);return;}
 
+  var list=pages();
+  var backIndex=direction>0?targetIndex:(targetIndex===0?0:Math.min(targetIndex+1,list.length-1));
+  var backPage=list[backIndex]||null;
+  var backSrc=backPage&&backPage.src?backPage.src:"";
+  preloadPage(backIndex,"high");
+
   pageTurnAnimating=true;
   var layer=document.createElement("div");
   layer.className="comic-page-turn-layer "+(direction>0?"is-forward":"is-backward");
@@ -512,6 +531,7 @@ function animateSpreadTurn(direction,targetIndex){
           '<span class="comic-page-turn-ridge"></span>'+
         '</div>'+
         '<div class="comic-page-turn-face comic-page-turn-back">'+
+          (backSrc?'<img src="'+esc(backSrc)+'" alt="">':'')+
           '<span class="comic-page-turn-paper"></span>'+
         '</div>'+
       '</div>'+
@@ -519,16 +539,15 @@ function animateSpreadTurn(direction,targetIndex){
     '<div class="comic-page-turn-spine-shadow"></div>';
   stage.appendChild(layer);
 
+  pageIndex=normalizeIndexForView(targetIndex);
+  render();
+  syncComicRoute({replace:true});
+
   var readerNode=el("comicReader");
   if(readerNode)readerNode.classList.add("comic-page-turning");
 
   requestAnimationFrame(function(){
-    layer.classList.add("is-turning");
-    requestAnimationFrame(function(){
-      pageIndex=normalizeIndexForView(targetIndex);
-      render();
-      syncComicRoute({replace:true});
-    });
+    requestAnimationFrame(function(){layer.classList.add("is-turning");});
   });
 
   var finished=false;
