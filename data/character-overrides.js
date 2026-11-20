@@ -787,35 +787,35 @@ window.TerraOmegaData.characterOverrides = {
     }
   },
   "Michael Carter": {
-    "eyebrow": "",
+    "eyebrow": "O Viajante do Tempo",
     "sections": [
       {
         "title": "📋 Ficha Básica",
-        "content": "<p><strong>Nome:</strong> <br><strong>Codinome:</strong> <br><strong>Idade:</strong> <br><strong>Local:</strong> </p>",
+        "content": "<p><strong>Nome: Michael Carter</strong><br><strong>Codinome: Gladiador Dourado&nbsp;</strong><br><strong>Idade: 29 anos</strong><br><strong>Local: Por ai, por ali.&nbsp;</strong></p>",
         "visibility": "public",
         "position": 0
       },
       {
         "title": "📖 História",
-        "content": "<p>Escreva aqui a história do personagem.</p>",
+        "content": "<p>Nascido em Gotham em 2442, era um astro promissor do futebol americano universitário, mas sua carreira acabou após escandalos envolvendo apostas nos próprios jogos que ele fazia para pagar a cirurgia da mãe. Durante um emprego como vigia em um museu espacial de metrópolis ele acabou roubando artefatos antigos de heróis, uma maquina do tempo e um robo de inteligência artificial chamado Skeets, viajando no tempo para se tornar um herói celebridade.</p>",
         "visibility": "public",
         "position": 1
       },
       {
         "title": "🎯 Personalidade",
-        "content": "<p>Descreva a personalidade do personagem.</p>",
+        "content": "<p>É um homem egocêntrico, ambicioso e vaidoso que gostava muito dos holofotes, mas sempre foi extremamente altruísta e usa da sua própria personalidade para ser subestimado por heróis e vilões temporais.&nbsp;</p>",
         "visibility": "public",
         "position": 2
       },
       {
         "title": "⚔️ Habilidades",
-        "content": "<ul><li>Adicione uma habilidade.</li></ul>",
+        "content": "<ul><li>Traje especial que concede super força, resistência aprimorada e viagem no tempo.</li><li>Capaz de gerar campos de força.</li><li>Possui manoplas de energia concussiva.</li><li>Anel de voo da legião</li><li>Visor multifuncional; raio x, microscopico, telescopico e de leitura de energia.&nbsp;</li></ul>",
         "visibility": "public",
         "position": 3
       },
       {
         "title": "🔗 Relações",
-        "content": "<ul><li>Adicione uma relação importante.</li></ul>",
+        "content": "<ul><li>Melhor amigo de Ted Kord (Besouro azul original)</li><li>Amigo e parceiro de equipe de Kendra Saunders, Metamorpho e Oliver Queen.&nbsp;</li><li>Se vê como um colega ou até tio de Riot, pois sempre apoiou ele e a decisão de Kendra.&nbsp;</li></ul>",
         "visibility": "public",
         "position": 4
       }

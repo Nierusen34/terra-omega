@@ -341,8 +341,8 @@ window.TerraOmegaData.characterTaxonomy = {
     "Michael Carter": {
       "featured": false,
       "nuclei": [
-        "jlu",
-        "lobo-cadmus"
+        "lobo-cadmus",
+        "jlu"
       ],
       "type": "npc",
       "status": "active",
