@@ -119,18 +119,17 @@ async function imageCacheFirst(request){
   return response;
 }
 
-async function comicImageNetworkFirst(request){
+async function comicImageCacheFirst(request){
   const cache=await caches.open(IMAGE_CACHE);
-  try{
-    const freshRequest=new Request(request,{cache:"no-store"});
-    const response=await fetch(freshRequest);
-    await putSafe(cache,request,response);
-    return response;
-  }catch(error){
-    const hit=await cache.match(request,{ignoreSearch:true});
-    if(hit) return hit;
-    throw error;
+  const hit=await cache.match(request);
+  if(hit)return hit;
+  const response=await fetch(request);
+  await putSafe(cache,request,response);
+  const keys=await cache.keys();
+  if(keys.length>80){
+    await Promise.all(keys.slice(0,keys.length-80).map(key=>cache.delete(key)));
   }
+  return response;
 }
 
 function translationAsset(url){
