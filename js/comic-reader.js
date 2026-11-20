@@ -303,9 +303,18 @@ function normalizeIndexForView(index){
 function rangeLabel(indices){
   var list=pages();
   if(!indices.length||!list.length)return "—";
-  if(viewMode==="continuous")return (pageIndex+1)+" / "+list.length;
-  var first=indices[0]+1,last=indices[indices.length-1]+1;
-  return (first===last?String(first):(first+"–"+last))+" / "+list.length;
+  var firstItem=list[indices[0]];
+  if(indices.length===1&&firstItem&&firstItem.isEndCover)return "Capa final";
+  if(indices.length===1&&firstItem&&firstItem.isCover)return "Capa";
+  if(viewMode==="continuous"){
+    var current=list[pageIndex];
+    if(current&&current.isEndCover)return "Capa final";
+    if(current&&current.isCover)return "Capa";
+    return "Página "+storyNumberForIndex(pageIndex)+" / "+storyPages().length;
+  }
+  var first=storyNumberForIndex(indices[0]);
+  var last=storyNumberForIndex(indices[indices.length-1]);
+  return (first===last?("Página "+first):("Páginas "+first+"–"+last))+" / "+storyPages().length;
 }
 function effectiveFit(){
   if(fitMode!=="auto")return fitMode;
@@ -818,8 +827,8 @@ function renderThumbs(){
   if(root.getAttribute("data-thumb-key")!==thumbKey){
     root.innerHTML=list.map(function(item,index){
       var src=versionedPageSrc(item.thumb||item.src);
-      var pageNumber=index+1-(edition&&edition.cover?1:0);
-      var pageLabel=item.isCover?"Abrir capa":("Abrir página "+pageNumber);
+      var pageNumber=storyNumberForIndex(index);
+      var pageLabel=item.isEndCover?"Abrir capa final":(item.isCover?"Abrir capa":("Abrir página "+pageNumber));
       return '<button type="button" class="comic-thumb" data-comic-page="'+index+'" data-page="'+(index+1)+'" aria-label="'+esc(pageLabel)+'">'+
         '<img src="'+esc(src)+'" alt="" loading="lazy" decoding="async">'+
       '</button>';
@@ -845,9 +854,10 @@ function updateProgressUI(){
   if(fill)fill.style.width=percent+"%";
   if(text){
     if(!list.length)text.textContent="—";
+    else if(current&&current.isEndCover)text.textContent="Capa final · "+percent+"%";
     else if(current&&current.isCover)text.textContent="Capa · "+percent+"%";
     else{
-      var storyNumber=pageIndex+1-(currentSeries()&&currentSeries().cover?1:0);
+      var storyNumber=storyNumberForIndex(pageIndex);
       var storyTotal=storyPages().length;
       text.textContent="Página "+storyNumber+" de "+storyTotal+" · "+percent+"%";
     }
@@ -962,7 +972,10 @@ function goTo(index,scroll,options){
   pageIndex=normalizeIndexForView(index);
 
   if(physicalBook&&physicalEngineEnabled()&&physicalBookHost){
-    try{physicalBook.turnTo(pageIndex);}catch(error){}
+    try{
+      var items=physicalEngineItems(list,currentSeries());
+      physicalBook.turnTo(physicalIndexForReader(items,pageIndex));
+    }catch(error){}
     updatePhysicalCoverShift(pageIndex);
     updateViewButtons();updateThumbs();updateProgressUI();updateBookStackState();preloadAround();saveProgress();
   }else{
@@ -982,13 +995,23 @@ function goTo(index,scroll,options){
 function spreadTarget(direction){
   var list=pages();
   if(!list.length)return pageIndex;
+  direction=direction<0?-1:1;
   if(compactBookMode())return clamp(pageIndex+direction,0,list.length-1);
+
+  var currentRange=pageRange();
+  if(!currentRange.length)return pageIndex;
+
   if(direction>0){
-    if(pageIndex===0)return Math.min(1,list.length-1);
-    return Math.min(pageIndex+2,list.length-1);
+    var next=currentRange[currentRange.length-1]+1;
+    if(next>=list.length)return pageIndex;
+    if(list[next]&&list[next].isCover)return next;
+    return normalizeIndexForView(next);
   }
-  if(pageIndex<=1)return 0;
-  return Math.max(1,pageIndex-2);
+
+  var previous=currentRange[0]-1;
+  if(previous<0)return pageIndex;
+  if(list[previous]&&list[previous].isCover)return previous;
+  return normalizeIndexForView(previous);
 }
 
 function blankSpreadPageMarkup(){
